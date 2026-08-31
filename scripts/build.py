@@ -11,7 +11,7 @@ TEMPLATE_DIR = "templates"
 COURSE_METADATA = {
     "PCCST503": "Machine Learning",
     "PCCST501": "Computer Networks",
-    "PCCST502": "Algorithm Design"
+    "PCCST502": "Design and Analysis of Algorithms", "PECST522": "Artificial Intelligence"
 }
 
 def transform_custom_widgets(markdown_text, md_processor):
@@ -247,3 +247,5 @@ def generate_static_platform():
 
 if __name__ == "__main__":
     generate_static_platform()
+
+

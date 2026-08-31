@@ -1,9 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta http-equiv="refresh" content="0; URL=dist/m1_01_ml_vs_traditional.html" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tarangam - Machine Learning Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  body { font-family: 'Space Grotesk', sans-serif; background-color: #090d16; color: #f3f4f6; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+  .dashboard { max-width: 800px; width: 100%; padding: 2rem; }
+  .header { text-align: center; margin-bottom: 3rem; }
+  .header h1 { font-size: 3rem; margin: 0; color: #3b82f6; }
+  .header p { font-size: 1.2rem; color: #9ca3af; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .card { background-color: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 1.5rem; text-decoration: none; color: inherit; transition: transform 0.2s, border-color 0.2s; }
+  .card:hover { transform: translateY(-4px); border-color: #3b82f6; }
+  .card h2 { margin: 0 0 0.5rem 0; font-size: 1.5rem; }
+  .card p { margin: 0; color: #9ca3af; }
+  .module-tag { display: inline-block; background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; margin-bottom: 1rem; }
+</style>
 </head>
 <body>
-    <p>Redirecting to <a href="dist/m1_01_ml_vs_traditional.html">Machine Learning Platform</a>...</p>
+  <div class="dashboard">
+    <div class="header">
+      <h1>Tarangam</h1>
+      <p>KTU 2024 Scheme &middot; Machine Learning (PCCST503)</p>
+    </div>
+    <div class="card-grid">
+      <a href="dist/m1_01_ml_vs_traditional.html" class="card">
+        <span class="module-tag">Module 1</span>
+        <h2>Parameter Estimation</h2>
+        <p>MLE, MAP, and the mathematical foundations of learning paradigms.</p>
+      </a>
+      <a href="dist/m2_01_logistic_regression.html" class="card">
+        <span class="module-tag">Module 2</span>
+        <h2>Supervised Learning</h2>
+        <p>Logistic Regression, Naive Bayes, KNN, and Decision Trees.</p>
+      </a>
+      <a href="dist/m3_01_generalisation_overfitting.html" class="card">
+        <span class="module-tag">Module 3</span>
+        <h2>SVMs & Neural Networks</h2>
+        <p>Maximum margin hyperplanes, Perceptrons, and Backpropagation.</p>
+      </a>
+      <a href="dist/m4_01_clustering_similarity.html" class="card">
+        <span class="module-tag">Module 4</span>
+        <h2>Unsupervised & Ensembles</h2>
+        <p>K-Means, Hierarchical Clustering, PCA, Bagging, and Boosting.</p>
+      </a>
+    </div>
+  </div>
 </body>
 </html>

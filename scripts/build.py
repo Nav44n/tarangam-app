@@ -81,6 +81,7 @@ def generate_static_platform():
                 current_mod=mod_num,
                 modules=modules,
                 prev_page=prev_page,
+                total_topics=len(pages),
                 next_page=next_page,
                 course_code=course_code,
                 course_name=course_name
@@ -101,3 +102,4 @@ def generate_static_platform():
 
 if __name__ == "__main__":
     generate_static_platform()
+

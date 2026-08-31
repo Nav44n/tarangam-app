@@ -250,9 +250,25 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
     </header>
 
     <main class="content" id="content">
-      <h1 id="naive-bayes">Naïve Bayes</h1>
-<p><strong>Overview of Naïve Bayes</strong></p>
-<p>Content for Naïve Bayes goes here.</p>
+      <h1 id="naive-bayes">Naive Bayes</h1>
+<p><strong>A probabilistic classifier based on applying Bayes' theorem with strong (naive) independence assumptions.</strong></p>
+<p>Naive Bayes methods are a set of supervised learning algorithms based on applying Bayes' theorem with the "naive" assumption of conditional independence between every pair of features given the value of the class variable.</p>
+<h2 id="bayes-theorem">Bayes' Theorem</h2>
+<p>Bayes' theorem provides a way of calculating posterior probability $P(c|x)$ from $P(c)$, $P(x)$ and $P(x|c)$:</p>
+<p>$$ P(c|x) = rac{P(x|c)P(c)}{P(x)} $$</p>
+<p>Where:
+- $P(c|x)$ is the posterior probability of class $c$ given predictor $x$.
+- $P(c)$ is the prior probability of class.
+- $P(x|c)$ is the likelihood which is the probability of predictor given class.
+- $P(x)$ is the prior probability of predictor.</p>
+<h2 id="the-naive-assumption">The "Naive" Assumption</h2>
+<p>The algorithm is called "naive" because it assumes that all features are independent of each other. Mathematically, for a feature vector $X = (x_1, x_2, \dots, x_n)$:</p>
+<p>$$ P(X|c) = \prod_{i=1}^{n} P(x_i|c) $$</p>
+<p>Despite this oversimplified assumption, Naive Bayes classifiers perform extremely well in many real-world situations, such as document classification and spam filtering.</p>
+<h2 id="self-check">Self Check</h2>
+<details class="interactive-toggle"><summary>Q1: Why is the Naive Bayes algorithm called "naive"?</summary><div class="toggle-content">**Answer:** Because it assumes all features are independent.
+
+*Explanation:* It assumes that the presence of a particular feature in a class is unrelated to the presence of any other feature, which is rarely true in the real world (e.g., in text, "machine" and "learning" often appear together).</div></details>
     </main>
 
     <footer class="pagefoot" id="pagefoot">
@@ -315,6 +331,58 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
     applyFontScaling(storedFontSize);
   })();
 </script>
+<script>
+  (function trackProgress() {
+    const totalTopics = 34;
+    const currentId = "m2_02_naive_bayes";
+    const courseCode = "PCCST503";
+    
+    // Only track if we are on a valid topic page
+    if (totalTopics === 0 || !currentId) return;
+
+    const storageKey = `tarangam_visited_${courseCode}`;
+    let visited = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    
+    if (!visited.includes(currentId) && !currentId.includes("practice")) {
+      visited.push(currentId);
+      localStorage.setItem(storageKey, JSON.stringify(visited));
+    }
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    
+    // Filter out practice files from the total count for accurate theory progress
+    const theoryTopics = totalTopics; // we can adjust this if we want practice files excluded
+    
+    if (progressFill && progressLabel) {
+      const pct = Math.min(100, Math.round((visited.length / theoryTopics) * 100));
+      progressFill.style.width = pct + '%';
+      progressLabel.innerText = `${visited.length} of ${theoryTopics} topics visited`;
+    }
+    
+    document.querySelectorAll('.topic-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href) {
+        const topicId = href.replace('.html', '').split('/').pop();
+        if (visited.includes(topicId)) {
+           link.style.opacity = '0.7';
+           if (!link.innerHTML.includes('✓')) {
+               link.innerHTML += ' <span style="margin-left:auto; color:#10b981; font-size:12px;">✓</span>';
+           }
+        }
+      }
+    });
+
+    const resetBtn = document.getElementById('resetProgress');
+    if (resetBtn) {
+        resetBtn.onclick = () => {
+            localStorage.removeItem(storageKey);
+            location.reload();
+        };
+    }
+  })();
+</script>
 </body>
 </html>
+
 

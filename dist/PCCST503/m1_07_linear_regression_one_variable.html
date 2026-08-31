@@ -366,6 +366,58 @@ Why don't we just take the absolute value of the errors? 1. Squaring heavily pun
     applyFontScaling(storedFontSize);
   })();
 </script>
+<script>
+  (function trackProgress() {
+    const totalTopics = 34;
+    const currentId = "m1_07_linear_regression_one_variable";
+    const courseCode = "PCCST503";
+    
+    // Only track if we are on a valid topic page
+    if (totalTopics === 0 || !currentId) return;
+
+    const storageKey = `tarangam_visited_${courseCode}`;
+    let visited = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    
+    if (!visited.includes(currentId) && !currentId.includes("practice")) {
+      visited.push(currentId);
+      localStorage.setItem(storageKey, JSON.stringify(visited));
+    }
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    
+    // Filter out practice files from the total count for accurate theory progress
+    const theoryTopics = totalTopics; // we can adjust this if we want practice files excluded
+    
+    if (progressFill && progressLabel) {
+      const pct = Math.min(100, Math.round((visited.length / theoryTopics) * 100));
+      progressFill.style.width = pct + '%';
+      progressLabel.innerText = `${visited.length} of ${theoryTopics} topics visited`;
+    }
+    
+    document.querySelectorAll('.topic-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href) {
+        const topicId = href.replace('.html', '').split('/').pop();
+        if (visited.includes(topicId)) {
+           link.style.opacity = '0.7';
+           if (!link.innerHTML.includes('✓')) {
+               link.innerHTML += ' <span style="margin-left:auto; color:#10b981; font-size:12px;">✓</span>';
+           }
+        }
+      }
+    });
+
+    const resetBtn = document.getElementById('resetProgress');
+    if (resetBtn) {
+        resetBtn.onclick = () => {
+            localStorage.removeItem(storageKey);
+            location.reload();
+        };
+    }
+  })();
+</script>
 </body>
 </html>
+
 

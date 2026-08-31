@@ -251,8 +251,28 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
 
     <main class="content" id="content">
       <h1 id="k-nearest-neighbors-knn">K-Nearest Neighbors (KNN)</h1>
-<p><strong>Overview of K-Nearest Neighbors (KNN)</strong></p>
-<p>Content for K-Nearest Neighbors (KNN) goes here.</p>
+<p><strong>A non-parametric, lazy learning algorithm used for both classification and regression.</strong></p>
+<p>K-Nearest Neighbors (KNN) is one of the simplest machine learning algorithms. It makes predictions without any underlying model assumptions. Instead, it relies on distance metrics to find the most similar data points in the training set.</p>
+<h2 id="distance-metrics">Distance Metrics</h2>
+<p>To find the "nearest" neighbors, we must calculate the distance between points. The most common metric is <strong>Euclidean Distance</strong>:</p>
+<p>$$ d(p, q) = \sqrt{\sum_{i=1}^{n} (q_i - p_i)^2} $$</p>
+<p>Other popular metrics include Manhattan distance (L1 norm) and Minkowski distance.</p>
+<h2 id="how-it-works-classification">How it Works (Classification)</h2>
+<ol>
+<li>Choose the number of neighbors, $K$.</li>
+<li>Calculate the distance between the query instance and all training samples.</li>
+<li>Sort the distances and determine the nearest $K$ neighbors.</li>
+<li>Gather the categories of the nearest neighbors.</li>
+<li>Use a simple majority vote to assign the class label to the query instance.</li>
+</ol>
+<h2 id="the-role-of-k">The Role of K</h2>
+<p>Choosing $K$ is critical:
+- A very <strong>small K</strong> (e.g., K=1) leads to low bias but high variance (highly sensitive to noise/outliers, leading to overfitting).
+- A very <strong>large K</strong> leads to high bias but low variance (decision boundaries become too smooth, leading to underfitting).</p>
+<h2 id="self-check">Self Check</h2>
+<details class="interactive-toggle"><summary>Q1: Is KNN a parametric or non-parametric algorithm?</summary><div class="toggle-content">**Answer:** Non-parametric.
+
+*Explanation:* KNN does not make any assumptions about the underlying data distribution and does not learn a parameterized function during training. It simply memorizes the training dataset (lazy learning).</div></details>
     </main>
 
     <footer class="pagefoot" id="pagefoot">
@@ -315,6 +335,58 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
     applyFontScaling(storedFontSize);
   })();
 </script>
+<script>
+  (function trackProgress() {
+    const totalTopics = 34;
+    const currentId = "m2_03_knn";
+    const courseCode = "PCCST503";
+    
+    // Only track if we are on a valid topic page
+    if (totalTopics === 0 || !currentId) return;
+
+    const storageKey = `tarangam_visited_${courseCode}`;
+    let visited = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    
+    if (!visited.includes(currentId) && !currentId.includes("practice")) {
+      visited.push(currentId);
+      localStorage.setItem(storageKey, JSON.stringify(visited));
+    }
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    
+    // Filter out practice files from the total count for accurate theory progress
+    const theoryTopics = totalTopics; // we can adjust this if we want practice files excluded
+    
+    if (progressFill && progressLabel) {
+      const pct = Math.min(100, Math.round((visited.length / theoryTopics) * 100));
+      progressFill.style.width = pct + '%';
+      progressLabel.innerText = `${visited.length} of ${theoryTopics} topics visited`;
+    }
+    
+    document.querySelectorAll('.topic-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href) {
+        const topicId = href.replace('.html', '').split('/').pop();
+        if (visited.includes(topicId)) {
+           link.style.opacity = '0.7';
+           if (!link.innerHTML.includes('✓')) {
+               link.innerHTML += ' <span style="margin-left:auto; color:#10b981; font-size:12px;">✓</span>';
+           }
+        }
+      }
+    });
+
+    const resetBtn = document.getElementById('resetProgress');
+    if (resetBtn) {
+        resetBtn.onclick = () => {
+            localStorage.removeItem(storageKey);
+            location.reload();
+        };
+    }
+  })();
+</script>
 </body>
 </html>
+
 

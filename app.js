@@ -7,9 +7,13 @@
   function loadState(){
     try{
       var raw = localStorage.getItem(STORE_KEY);
-      if(raw) return JSON.parse(raw);
+      if(raw) {
+        var parsed = JSON.parse(raw);
+        if(!parsed.mode) parsed.mode = "theory";
+        return parsed;
+      }
     }catch(e){}
-    return { theme:"dark", size:"md", autoplay:false, reduceMotion:false, visited:{}, quizScores:{} };
+    return { theme:"dark", size:"md", autoplay:false, reduceMotion:false, visited:{}, quizScores:{}, mode:"theory" };
   }
   function saveState(){
     try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
@@ -155,8 +159,6 @@
 
   function renderVideo(v){
     if(!v) return "";
-    // src is optional: if assets/videos/<name>.mp4 exists (see README) it plays;
-    // otherwise clicking just explains how to render it, without breaking layout.
     var name = v.script.split("/").pop().replace(".py", ".mp4");
     var src = "assets/videos/" + name;
     return '<div class="video-slot">' +
@@ -197,21 +199,44 @@
 
     var html = '';
     html += '<div class="topic-eyebrow">MODULE ' + mod.num + ' &middot; ' + mod.title + '</div>';
-    html += '<h1 class="topic-title">' + t.title + '</h1>';
-    if(t.dek) html += '<p class="topic-dek">' + t.dek + '</p>';
-    html += '<div class="theory">' + t.theory + '</div>';
-    if(t.formula) html += '<div class="formula-box">$$' + t.formula + '$$</div>';
-    if(t.worked) html += renderWorked(t.worked);
-    if(t.callout) html += '<div class="callout"><span class="callout-label">' + t.callout.label + '</span>' + t.callout.text + '</div>';
-    if(t.video) html += renderVideo(t.video);
-    if(t.extra) html += renderAccordion(t.extra);
-    html += renderQuiz(id, t.quiz);
+
+    // --- UNIFIED BLUEPRINT: DUAL MODE SWITCH ---
+    if (state.mode === "practice") {
+      html += '<h1 class="topic-title">Practice Problems</h1>';
+      html += '<p class="topic-dek">Master these exact numerical types for the university exam.</p>';
+
+      if (!mod.problems || mod.problems.length === 0) {
+        html += '<div class="callout"><span class="callout-label">Coming Soon</span>Practice problems for this module have not been added yet. Stay tuned!</div>';
+      } else {
+        mod.problems.forEach(function(prob) {
+          html += '<div class="practice-card">';
+          html += '<div class="practice-card-header">';
+          html += '<h2 class="prob-title">' + prob.title + '</h2>';
+          html += '<span class="prob-type">' + prob.type + '</span>';
+          html += '</div>';
+          html += '<div class="prob-scenario">' + prob.scenario + '</div>';
+          html += renderAccordion(prob.steps);
+          html += '</div>';
+        });
+      }
+    } else {
+      // Standard Theory Rendering
+      html += '<h1 class="topic-title">' + t.title + '</h1>';
+      if(t.dek) html += '<p class="topic-dek">' + t.dek + '</p>';
+      html += '<div class="theory">' + t.theory + '</div>';
+      if(t.formula) html += '<div class="formula-box">$$' + t.formula + '$$</div>';
+      if(t.worked) html += renderWorked(t.worked);
+      if(t.callout) html += '<div class="callout"><span class="callout-label">' + t.callout.label + '</span>' + t.callout.text + '</div>';
+      if(t.video) html += renderVideo(t.video);
+      if(t.extra) html += renderAccordion(t.extra);
+      html += renderQuiz(id, t.quiz);
+    }
 
     els.content.innerHTML = html;
-    els.crumb.textContent = SUBJECT.name + " / M" + mod.num + " / " + t.title;
+    els.crumb.textContent = SUBJECT.name + " / M" + mod.num + (state.mode === "practice" ? " / Practice" : " / " + t.title);
     markActive(id);
     updateProgress();
-    renderSidebar(); // refresh visited dot state
+    renderSidebar();
     markActive(id);
     wireContentEvents(id, t);
     renderFooterNav(idx);
@@ -240,15 +265,12 @@
   }
 
   function wireContentEvents(topicId, t){
-    // accordion
     els.content.querySelectorAll(".acc-item").forEach(function(item){
       item.querySelector(".acc-trigger").addEventListener("click", function(){
         item.classList.toggle("open");
       });
     });
 
-    // video click-to-play: if the rendered mp4 exists at data-src, play it;
-    // otherwise show a one-line note instead of a broken player.
     els.content.querySelectorAll(".video-frame").forEach(function(frame){
       frame.addEventListener("click", function(){
         if(frame.dataset.checked) return;
@@ -322,6 +344,25 @@
   /* ---------------- Init ---------------- */
   applyTheme();
   renderSidebar();
+  
+  function applyMode() {
+    document.querySelectorAll(".mode-btn").forEach(function(btn){
+        btn.classList.toggle("active", btn.dataset.mode === state.mode);
+    });
+  }
+  
+  // Wire Mode Toggle Buttons
+  document.querySelectorAll(".mode-btn").forEach(function(btn){
+    btn.addEventListener("click", function(e){
+      state.mode = e.target.dataset.mode;
+      saveState();
+      applyMode();
+      var currentId = (location.hash || "").replace("#","") || allTopics[0].topic.id;
+      renderTopic(currentId);
+    });
+  });
+  applyMode();
+
   var startId = (location.hash || "").replace("#","") || allTopics[0].topic.id;
   renderTopic(startId);
 

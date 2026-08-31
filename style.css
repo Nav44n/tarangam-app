@@ -276,3 +276,18 @@ button{ font-family:var(--font-display); }
   .pagefoot{ flex-direction:column; padding:0 18px 50px; }
   .nav-card{ max-width:100%; }
 }
+
+/* Unified Blueprint: Practice Mode Styles */
+.mode-toggle { display: flex; background: var(--bg-alt, #1e1e1e); border-radius: 6px; padding: 4px; gap: 4px; margin-right: 16px; border: 1px solid var(--border-color, #333); }
+.mode-btn { background: transparent; border: none; color: var(--text-muted, #888); padding: 6px 16px; border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit;}
+.mode-btn.active { background: var(--bg-card, #2d2d2d); color: var(--text-main, #fff); box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+
+[data-theme="light"] .mode-toggle { background: #f0f0f0; border-color: #ddd; }
+[data-theme="light"] .mode-btn { color: #666; }
+[data-theme="light"] .mode-btn.active { background: #fff; color: #000; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+
+.practice-card { background: var(--bg-card, #1a1a1a); border: 1px solid var(--border-color, #333); border-radius: 8px; padding: 24px; margin-bottom: 24px; }
+.practice-card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; border-bottom: 1px solid var(--border-color, #333); padding-bottom: 12px; }
+.prob-type { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #fbbf24; background: rgba(251, 191, 36, 0.1); padding: 4px 8px; border-radius: 4px; font-weight: 600; }
+.prob-title { font-size: 18px; font-weight: 600; margin: 0; color: var(--text-main, #fff); }
+.prob-scenario { font-size: 15px; color: var(--text-muted, #aaa); margin-bottom: 20px; line-height: 1.6; }

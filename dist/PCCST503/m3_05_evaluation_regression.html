@@ -3,28 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tarangam - M3 05 Evaluation Regression</title>
+<title>Tarangam — M3 05 Evaluation Regression</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../style.css">
-<style>
-/* Add the visual theme CSS variables explicitly to be safe, though style.css has most of it */
-:root {
-  --bg-color: #1e1e1e; /* default to dark if not set in style.css */
-}
-[data-theme="light"] { --bg-color: #f8fafc; --card-bg: #ffffff; --text-color: #0f172a; --accent-color: #2563eb; --border-color: #e2e8f0; --hover-bg: #f1f5f9; }
-[data-theme="dark"] { --bg-color: #090d16; --card-bg: #111827; --text-color: #f3f4f6; --accent-color: #3b82f6; --border-color: #1f2937; --hover-bg: #1e293b; }
-[data-theme="reading"] { --bg-color: #f4ecd8; --card-bg: #fbf0d9; --text-color: #423219; --accent-color: #8f4e1d; --border-color: #e4d5b7; --hover-bg: #eee0c5; }
-[data-theme="aesthetic"] { --bg-color: #2e3440; --card-bg: #3b4252; --text-color: #eceff4; --accent-color: #88c0d0; --border-color: #4c566a; --hover-bg: #434c5e; }
-
-body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff); transition: background-color 0.3s ease, color 0.3s ease; }
-.interactive-toggle { background-color: var(--card-bg, #2d2d2d); border: 1px solid var(--border-color, #333); border-radius: 8px; margin: 1rem 0; overflow: hidden; }
-.interactive-toggle summary { padding: 0.85rem 1.25rem; font-weight: 600; cursor: pointer; color: var(--accent-color, #fbbf24); user-select: none; }
-.interactive-toggle[open] summary { border-bottom: 1px solid var(--border-color, #333); background-color: var(--hover-bg, #333); }
-.toggle-content { padding: 1.25rem; }
-.video-container { margin: 1.5rem 0; }
-.video-container video { max-width: 100%; border-radius: 8px; border: 1px solid var(--border-color, #333); }
-</style>
 <script>
   window.MathJax = {
     tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
@@ -35,22 +17,26 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
 </head>
 <body data-theme="dark" data-size="md">
 
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
 <div class="app-shell">
+  <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
-    <a href="../../index.html" class="brand" style="text-decoration:none; color:inherit;">
+    <a href="../../index.html" class="brand">
       <span class="brand-mark">त</span>
       <div class="brand-text">
         <span class="brand-name">Tarangam</span>
-        <span class="brand-sub">KTU 2024 Scheme &middot; S5 CSE</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
       </div>
-    </a><div class="year-switch">
-      <button class="year-pill active" data-year="3">3rd Year</button>
-      <button class="year-pill" data-locked="1" title="Coming later">1st &amp; 2nd</button>
-      <button class="year-pill" data-locked="1" title="Coming later">4th</button>
-    </div>
+    </a>
+
     <div class="subject-switch" id="subjectSwitch">
-      <div class="subject-card"><span>Machine Learning</span><span class="tag">PCCST503</span></div>
+      <div class="subject-card">
+        <span>Machine Learning</span>
+        <span class="tag">PCCST503</span>
+      </div>
     </div>
+
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
       <div class="module-block " data-mod="1">
@@ -61,40 +47,49 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
         </button>
         <div class="topic-list">
           
-          <a href="m1_01_ml_vs_traditional.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M1 01 Ml Vs Traditional</span>
+          <a href="m1_01_ml_vs_traditional.html" class="topic-link " id="topic-m1_01_ml_vs_traditional">
+            <span class="topic-dot"></span>
+            <span>M1 01 Ml Vs Traditional</span>
           </a>
           
-          <a href="m1_02_ml_paradigms.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M1 02 Ml Paradigms</span>
+          <a href="m1_02_ml_paradigms.html" class="topic-link " id="topic-m1_02_ml_paradigms">
+            <span class="topic-dot"></span>
+            <span>M1 02 Ml Paradigms</span>
           </a>
           
-          <a href="m1_03_parameter_estimation_mle.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M1 03 Parameter Estimation Mle</span>
+          <a href="m1_03_parameter_estimation_mle.html" class="topic-link " id="topic-m1_03_parameter_estimation_mle">
+            <span class="topic-dot"></span>
+            <span>M1 03 Parameter Estimation Mle</span>
           </a>
           
-          <a href="m1_04_parameter_estimation_map.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M1 04 Parameter Estimation Map</span>
+          <a href="m1_04_parameter_estimation_map.html" class="topic-link " id="topic-m1_04_parameter_estimation_map">
+            <span class="topic-dot"></span>
+            <span>M1 04 Parameter Estimation Map</span>
           </a>
           
-          <a href="m1_05_supervised_learning_formulation.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M1 05 Supervised Learning Formulation</span>
+          <a href="m1_05_supervised_learning_formulation.html" class="topic-link " id="topic-m1_05_supervised_learning_formulation">
+            <span class="topic-dot"></span>
+            <span>M1 05 Supervised Learning Formulation</span>
           </a>
           
-          <a href="m1_06_loss_functions_optimization.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M1 06 Loss Functions Optimization</span>
+          <a href="m1_06_loss_functions_optimization.html" class="topic-link " id="topic-m1_06_loss_functions_optimization">
+            <span class="topic-dot"></span>
+            <span>M1 06 Loss Functions Optimization</span>
           </a>
           
-          <a href="m1_07_linear_regression_one_variable.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M1 07 Linear Regression One Variable</span>
+          <a href="m1_07_linear_regression_one_variable.html" class="topic-link " id="topic-m1_07_linear_regression_one_variable">
+            <span class="topic-dot"></span>
+            <span>M1 07 Linear Regression One Variable</span>
           </a>
           
-          <a href="m1_08_linear_regression_multiple_variables.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M1 08 Linear Regression Multiple Variables</span>
+          <a href="m1_08_linear_regression_multiple_variables.html" class="topic-link " id="topic-m1_08_linear_regression_multiple_variables">
+            <span class="topic-dot"></span>
+            <span>M1 08 Linear Regression Multiple Variables</span>
           </a>
           
-          <a href="m1_99_practice.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M1 99 Practice</span>
+          <a href="m1_99_practice.html" class="topic-link " id="topic-m1_99_practice">
+            <span class="topic-dot"></span>
+            <span>M1 99 Practice</span>
           </a>
           
         </div>
@@ -108,24 +103,29 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
         </button>
         <div class="topic-list">
           
-          <a href="m2_01_logistic_regression.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M2 01 Logistic Regression</span>
+          <a href="m2_01_logistic_regression.html" class="topic-link " id="topic-m2_01_logistic_regression">
+            <span class="topic-dot"></span>
+            <span>M2 01 Logistic Regression</span>
           </a>
           
-          <a href="m2_02_naive_bayes.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M2 02 Naive Bayes</span>
+          <a href="m2_02_naive_bayes.html" class="topic-link " id="topic-m2_02_naive_bayes">
+            <span class="topic-dot"></span>
+            <span>M2 02 Naive Bayes</span>
           </a>
           
-          <a href="m2_03_knn.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M2 03 Knn</span>
+          <a href="m2_03_knn.html" class="topic-link " id="topic-m2_03_knn">
+            <span class="topic-dot"></span>
+            <span>M2 03 Knn</span>
           </a>
           
-          <a href="m2_04_decision_trees.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M2 04 Decision Trees</span>
+          <a href="m2_04_decision_trees.html" class="topic-link " id="topic-m2_04_decision_trees">
+            <span class="topic-dot"></span>
+            <span>M2 04 Decision Trees</span>
           </a>
           
-          <a href="m2_99_practice.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M2 99 Practice</span>
+          <a href="m2_99_practice.html" class="topic-link " id="topic-m2_99_practice">
+            <span class="topic-dot"></span>
+            <span>M2 99 Practice</span>
           </a>
           
         </div>
@@ -139,48 +139,59 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
         </button>
         <div class="topic-list">
           
-          <a href="m3_01_generalisation_overfitting.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 01 Generalisation Overfitting</span>
+          <a href="m3_01_generalisation_overfitting.html" class="topic-link " id="topic-m3_01_generalisation_overfitting">
+            <span class="topic-dot"></span>
+            <span>M3 01 Generalisation Overfitting</span>
           </a>
           
-          <a href="m3_02_regularization_lasso_ridge.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 02 Regularization Lasso Ridge</span>
+          <a href="m3_02_regularization_lasso_ridge.html" class="topic-link " id="topic-m3_02_regularization_lasso_ridge">
+            <span class="topic-dot"></span>
+            <span>M3 02 Regularization Lasso Ridge</span>
           </a>
           
-          <a href="m3_03_training_testing_validation.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 03 Training Testing Validation</span>
+          <a href="m3_03_training_testing_validation.html" class="topic-link " id="topic-m3_03_training_testing_validation">
+            <span class="topic-dot"></span>
+            <span>M3 03 Training Testing Validation</span>
           </a>
           
-          <a href="m3_04_evaluation_classification.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 04 Evaluation Classification</span>
+          <a href="m3_04_evaluation_classification.html" class="topic-link " id="topic-m3_04_evaluation_classification">
+            <span class="topic-dot"></span>
+            <span>M3 04 Evaluation Classification</span>
           </a>
           
-          <a href="m3_05_evaluation_regression.html" class="topic-link active" style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 05 Evaluation Regression</span>
+          <a href="m3_05_evaluation_regression.html" class="topic-link active" id="topic-m3_05_evaluation_regression">
+            <span class="topic-dot"></span>
+            <span>M3 05 Evaluation Regression</span>
           </a>
           
-          <a href="m3_06_svm_linear.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 06 Svm Linear</span>
+          <a href="m3_06_svm_linear.html" class="topic-link " id="topic-m3_06_svm_linear">
+            <span class="topic-dot"></span>
+            <span>M3 06 Svm Linear</span>
           </a>
           
-          <a href="m3_07_svm_nonlinear.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 07 Svm Nonlinear</span>
+          <a href="m3_07_svm_nonlinear.html" class="topic-link " id="topic-m3_07_svm_nonlinear">
+            <span class="topic-dot"></span>
+            <span>M3 07 Svm Nonlinear</span>
           </a>
           
-          <a href="m3_08_neural_networks_perceptron.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 08 Neural Networks Perceptron</span>
+          <a href="m3_08_neural_networks_perceptron.html" class="topic-link " id="topic-m3_08_neural_networks_perceptron">
+            <span class="topic-dot"></span>
+            <span>M3 08 Neural Networks Perceptron</span>
           </a>
           
-          <a href="m3_09_neural_networks_activation.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 09 Neural Networks Activation</span>
+          <a href="m3_09_neural_networks_activation.html" class="topic-link " id="topic-m3_09_neural_networks_activation">
+            <span class="topic-dot"></span>
+            <span>M3 09 Neural Networks Activation</span>
           </a>
           
-          <a href="m3_10_neural_networks_backprop.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 10 Neural Networks Backprop</span>
+          <a href="m3_10_neural_networks_backprop.html" class="topic-link " id="topic-m3_10_neural_networks_backprop">
+            <span class="topic-dot"></span>
+            <span>M3 10 Neural Networks Backprop</span>
           </a>
           
-          <a href="m3_99_practice.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 99 Practice</span>
+          <a href="m3_99_practice.html" class="topic-link " id="topic-m3_99_practice">
+            <span class="topic-dot"></span>
+            <span>M3 99 Practice</span>
           </a>
           
         </div>
@@ -194,134 +205,208 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
         </button>
         <div class="topic-list">
           
-          <a href="m4_01_clustering_similarity.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M4 01 Clustering Similarity</span>
+          <a href="m4_01_clustering_similarity.html" class="topic-link " id="topic-m4_01_clustering_similarity">
+            <span class="topic-dot"></span>
+            <span>M4 01 Clustering Similarity</span>
           </a>
           
-          <a href="m4_02_clustering_hierarchical.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M4 02 Clustering Hierarchical</span>
+          <a href="m4_02_clustering_hierarchical.html" class="topic-link " id="topic-m4_02_clustering_hierarchical">
+            <span class="topic-dot"></span>
+            <span>M4 02 Clustering Hierarchical</span>
           </a>
           
-          <a href="m4_03_clustering_kmeans.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M4 03 Clustering Kmeans</span>
+          <a href="m4_03_clustering_kmeans.html" class="topic-link " id="topic-m4_03_clustering_kmeans">
+            <span class="topic-dot"></span>
+            <span>M4 03 Clustering Kmeans</span>
           </a>
           
-          <a href="m4_04_dimensionality_reduction_pca.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M4 04 Dimensionality Reduction Pca</span>
+          <a href="m4_04_dimensionality_reduction_pca.html" class="topic-link " id="topic-m4_04_dimensionality_reduction_pca">
+            <span class="topic-dot"></span>
+            <span>M4 04 Dimensionality Reduction Pca</span>
           </a>
           
-          <a href="m4_05_multidimensional_scaling.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M4 05 Multidimensional Scaling</span>
+          <a href="m4_05_multidimensional_scaling.html" class="topic-link " id="topic-m4_05_multidimensional_scaling">
+            <span class="topic-dot"></span>
+            <span>M4 05 Multidimensional Scaling</span>
           </a>
           
-          <a href="m4_06_ensemble_bagging_boosting.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M4 06 Ensemble Bagging Boosting</span>
+          <a href="m4_06_ensemble_bagging_boosting.html" class="topic-link " id="topic-m4_06_ensemble_bagging_boosting">
+            <span class="topic-dot"></span>
+            <span>M4 06 Ensemble Bagging Boosting</span>
           </a>
           
-          <a href="m4_07_resampling_methods.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M4 07 Resampling Methods</span>
+          <a href="m4_07_resampling_methods.html" class="topic-link " id="topic-m4_07_resampling_methods">
+            <span class="topic-dot"></span>
+            <span>M4 07 Resampling Methods</span>
           </a>
           
-          <a href="m4_08_bias_variance_tradeoff.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M4 08 Bias Variance Tradeoff</span>
+          <a href="m4_08_bias_variance_tradeoff.html" class="topic-link " id="topic-m4_08_bias_variance_tradeoff">
+            <span class="topic-dot"></span>
+            <span>M4 08 Bias Variance Tradeoff</span>
           </a>
           
-          <a href="m4_99_practice.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M4 99 Practice</span>
+          <a href="m4_99_practice.html" class="topic-link " id="topic-m4_99_practice">
+            <span class="topic-dot"></span>
+            <span>M4 99 Practice</span>
           </a>
           
         </div>
       </div>
       
     </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel">0 of 34 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+      </div>
+    </div>
   </aside>
 
+  <!-- Main Content Column -->
   <div class="main-col">
     <header class="topbar">
       <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" onclick="document.getElementById('sidebar').classList.toggle('mobile-open')">
-        <svg width="20" height="20" viewBox="0 0 20 20"><path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       </button>
-      <div class="crumb" id="crumb">Machine Learning / M3 / M3 05 Evaluation Regression</div>
+      
+      <div class="crumb" id="crumb">
+        <span>PCCST503</span>
+        <span class="crumb-sep">/</span>
+        <span>Module 3</span>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">M3 05 Evaluation Regression</span>
+      </div>
+
       <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
         <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
-          <svg width="19" height="19" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.5"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </button>
       </div>
     </header>
 
     <main class="content" id="content">
-      <h1 id="evaluation-measures-regression">Evaluation Measures - Regression</h1>
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 3</span>
+    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#the-math" class="jump-pill">📐 The Math</a>
+    <a href="#worked-example" class="jump-pill">✍️ Worked Example</a>
+    <a href="#simulation" class="jump-pill">🎬 Simulation</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1 id="evaluation-measures-regression">Evaluation Measures - Regression</h1>
 <p><strong>Overview of Evaluation Measures - Regression</strong></p>
 <p>Content for Evaluation Measures - Regression goes here.</p>
     </main>
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="m3_04_evaluation_classification.html" class="nav-card prev" style="text-decoration:none;">
-        <span class="dir">&larr; PREVIOUS</span><div class="ttl">M3 04 Evaluation Classification</div>
+      <a href="m3_04_evaluation_classification.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [ [ ]</span>
+        <div class="ttl">M3 04 Evaluation Classification</div>
       </a>
       
       
       
-      <a href="m3_06_svm_linear.html" class="nav-card next" style="text-decoration:none;">
-        <span class="dir">NEXT &rarr;</span><div class="ttl">M3 06 Svm Linear</div>
+      <a href="m3_06_svm_linear.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC [ ] ] &rarr;</span>
+        <div class="ttl">M3 06 Svm Linear</div>
       </a>
       
     </footer>
   </div>
 </div>
 
+<!-- Settings Modal -->
 <div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
   <div class="modal" role="dialog" aria-label="Settings">
     <div class="modal-head">
-      <h2>Settings</h2>
+      <h2>Reading Preferences</h2>
       <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
-        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       </button>
     </div>
     <div class="modal-section">
-      <span class="modal-label">Appearance</span>
+      <span class="modal-label">Color Theme</span>
       <div class="theme-row" id="themeRow">
-        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
         <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
-        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Reading</button>
-        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-reading"></span> Nordic</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
       </div>
     </div>
     <div class="modal-section">
-      <span class="modal-label">Text size</span>
+      <span class="modal-label">Font Scale</span>
       <div class="size-row">
-        <button class="size-btn" data-size="sm" onclick="applyFontScaling(14)">A<span>-</span></button>
-        <button class="size-btn active" data-size="md" onclick="applyFontScaling(16)">A</button>
-        <button class="size-btn" data-size="lg" onclick="applyFontScaling(20)">A<span>+</span></button>
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Interactive Client-Side Logic Engine -->
 <script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
   function applyThemePreference(themeName) {
     document.body.setAttribute('data-theme', themeName);
     localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
   }
-  function applyFontScaling(pixelSize) {
-    document.body.style.fontSize = pixelSize + 'px';
-    localStorage.setItem('user_preferred_font_size', pixelSize);
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
   }
-  (function restoreUserPreferences() {
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
     const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
-    const storedFontSize = localStorage.getItem('user_preferred_font_size') || '16';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
     applyThemePreference(storedTheme);
     applyFontScaling(storedFontSize);
   })();
-</script>
-<script>
-  (function trackProgress() {
+
+  // 2. Reading Progress Bar
+  window.addEventListener('scroll', () => {
+    const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    const bar = document.getElementById('readingProgressBar');
+    if (bar) bar.style.width = scrolled + '%';
+  });
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking
+  (function trackTopicProgress() {
     const totalTopics = 34;
     const currentId = "m3_05_evaluation_regression";
     const courseCode = "PCCST503";
-    
-    // Only track if we are on a valid topic page
     if (totalTopics === 0 || !currentId) return;
 
     const storageKey = `tarangam_visited_${courseCode}`;
@@ -335,13 +420,10 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
     const progressFill = document.getElementById('progressFill');
     const progressLabel = document.getElementById('progressLabel');
     
-    // Filter out practice files from the total count for accurate theory progress
-    const theoryTopics = totalTopics; // we can adjust this if we want practice files excluded
-    
     if (progressFill && progressLabel) {
-      const pct = Math.min(100, Math.round((visited.length / theoryTopics) * 100));
+      const pct = Math.min(100, Math.round((visited.length / totalTopics) * 100));
       progressFill.style.width = pct + '%';
-      progressLabel.innerText = `${visited.length} of ${theoryTopics} topics visited`;
+      progressLabel.innerText = `${visited.length} of ${totalTopics} completed`;
     }
     
     document.querySelectorAll('.topic-link').forEach(link => {
@@ -349,24 +431,95 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
       if (href) {
         const topicId = href.replace('.html', '').split('/').pop();
         if (visited.includes(topicId)) {
-           link.style.opacity = '0.7';
-           if (!link.innerHTML.includes('✓')) {
-               link.innerHTML += ' <span style="margin-left:auto; color:#10b981; font-size:12px;">✓</span>';
-           }
+          link.classList.add('visited');
+          if (!link.querySelector('.check-mark')) {
+            const check = document.createElement('span');
+            check.className = 'check-mark';
+            check.style.marginLeft = 'auto';
+            check.style.color = 'var(--correct)';
+            check.style.fontSize = '12px';
+            check.innerText = '✓';
+            link.appendChild(check);
+          }
         }
       }
     });
 
     const resetBtn = document.getElementById('resetProgress');
     if (resetBtn) {
-        resetBtn.onclick = () => {
-            localStorage.removeItem(storageKey);
-            location.reload();
-        };
+      resetBtn.onclick = () => {
+        localStorage.removeItem(storageKey);
+        location.reload();
+      };
     }
   })();
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const explanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (explanation) {
+            explanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {
+      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 5. Keyboard Navigation Shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    
+    if (e.key === '[' || e.key === 'ArrowLeft') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']' || e.key === 'ArrowRight') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
 </script>
 </body>
 </html>
-
-

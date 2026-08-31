@@ -1,100 +1,113 @@
 # Parameter Estimation: Maximum Likelihood Estimation (MLE)
 
-**A scary name for a simple question: 'What underlying rule makes the data I just saw the most probable?'**
+**A rigorous way of answering: 'What underlying model parameter makes the data we observed the most probable?'**
 
+<a id="the-intuition"></a>
+## 1. The Intuition: The Biased Coin Detective
 
-Imagine you find a strange coin on the street. You flip it 10 times, and it lands on Heads 7 times. You ask yourself: *"Is this a fair 50/50 coin? Or is it rigged?"*
+Imagine you find a mysterious coin on the street. You flip it **10 times**, and it lands on **Heads 7 times** and **Tails 3 times**.
 
-
-
-**Maximum Likelihood Estimation (MLE)** is how a computer plays detective. It asks: "Out of all the possible biases this coin could have (maybe it favors heads 10% of the time, or 90% of the time), which bias makes getting exactly 7 heads the *most mathematically likely* (least surprising) outcome?"
-
-
-
-Common sense tells you the coin probably favors heads 70% of the time. MLE is the rigorous math proving your common sense is right.
-
-
-
-**Step 1: The Likelihood Function ($L$)**
-
-We write a formula for the probability of getting our exact data. If the probability of Heads is $p$, getting 7 Heads and 3 Tails means we multiply $p$ seven times, and $(1-p)$ three times.
-
-
-
-**Step 2: The Log Trick (Log-Likelihood)**
-
-Multiplying many tiny probabilities (like $0.5 \times 0.5 \times 0.5 \dots$) gives us microscopic numbers that computers struggle to calculate (this is called "underflow"). But here is a math cheat code: The peak of a graph is at the exact same location as the peak of the *logarithm* of that graph. Log turns messy multiplication into simple addition, which is much easier to do math on!
-
-
-
-**Step 3: Finding the peak (Calculus)**
-
-If you look at the Likelihood curve, it looks like a hill. To find the highest peak of a hill in calculus, we take the derivative (which measures the slope), set it to zero (a flat slope means we are exactly at the top), and solve for $p$.
-
-
-  
-
-$$\text{Likelihood: } L(p) = p^k (1-p)^{n-k} \\ \text{Log-Likelihood: } \ell(p) = k \log(p) + (n-k) \log(1-p)$$
-
-> **Key Takeaway**
-> MLE doesn't give you the absolute, universal truth. It just gives you the parameter that makes the data you *actually collected* the most statistically probable. If you flipped the coin only 3 times and got 3 heads, MLE would tell you $p=1.0$ (100% heads), which is why MLE requires lots of data to be reliable.
-
-## Worked Example: Step-by-Step Proof: The Rigged Coin
-
-1. **The Problem:** You flip a coin $n = 10$ times, and get $k = 7$ heads. Find the Maximum Likelihood Estimate for the probability of heads, $p$.
-2. **Step 1: Write the Log-Likelihood equation.**
- $\ell(p) = 7 \log(p) + 3 \log(1-p)$
-3. **Step 2: Take the derivative with respect to $p$.**
- The derivative of $\log(x)$ is $1/x$. So, taking the derivative gives us: 
- $\frac{d}{dp}\ell(p) = \frac{7}{p} - \frac{3}{1-p}$. 
-*(Note: The minus sign comes from applying the chain rule to the $1-p$ term).*
-4. **Step 3: Set to zero to find the peak of the hill.**
- $\frac{7}{p} - \frac{3}{1-p} = 0$
-5. **Step 4: Solve for p with basic algebra.**
- Move the negative term over: $\frac{7}{p} = \frac{3}{1-p}$ 
- Cross multiply: $7(1-p) = 3p$ 
- Expand: $7 - 7p = 3p$ 
- Move $p$s to one side: $7 = 10p$ 
- **Answer:** $p = \frac{7}{10} = 0.7$.
-
-## Visualizing the Concept
-
-::: manim assets/videos/m1_mle.mp4 :::
-
-*Visualizing the Likelihood 'Hill'. Watch how the peak perfectly aligns with the ratio of Heads to Total Tosses.*
-
-::: toggle Variation Problem: What if we flip it 100 times?
-If we flip a coin $n=100$ times and get $k=32$ heads, the math remains exactly the same. The derivative becomes $\frac{32}{p} - \frac{68}{1-p} = 0$. Solving this gives $32(1-p) = 68p$, which simplifies to $32 = 100p$, so $p = 0.32$. The beauty of MLE is that for a Bernoulli (coin toss) distribution, $\hat{p}_{MLE}$ will ALWAYS simplify to $\frac{k}{n}$.
+::: callout-intuition The Core Question
+You ask: *"What is the true probability $p$ that this coin lands on Heads?"*
+- Could $p = 0.1$? (If it only gave heads 10% of the time, getting 7 heads would be miraculous).
+- Could $p = 0.9$? (Possible, but getting 3 tails is somewhat unlikely).
+- **Maximum Likelihood Estimation (MLE)** asks: *"Which specific value of $p \in [0, 1]$ maximizes the mathematical probability of observing exactly 7 Heads and 3 Tails?"*
 :::
 
-::: toggle Deep Dive: MLE for a Gaussian (Normal) Distribution
-We just did MLE for a simple coin toss (Bernoulli). But what if you are measuring the heights of 1,000 students and want to find the MLE for the average height ($\mu$)? 
+Common sense tells you $p = 0.7$. MLE is the exact calculus engine that proves your intuition is mathematically optimal!
 
-The math is longer because you use the bell curve formula instead of the coin toss formula, but the steps are IDENTICAL: 
-1. Multiply the bell curve formulas together. 
-2. Take the Logarithm. 
-3. Take the derivative with respect to $\mu$ and set to zero. 
+---
 
-If you do this, the answer magically simplifies to $\hat{\mu}_{MLE} = \frac{1}{n}\sum x_i$ ... which is literally just the standard formula for an average!
+<a id="the-math"></a>
+## 2. Mathematical Derivation Step-by-Step
+
+Let $X = \{x_1, x_2, \dots, x_n\}$ be independent and identically distributed (i.i.d.) observations from a Bernoulli distribution with parameter $p$:
+
+$$ P(X=1) = p, \quad P(X=0) = 1-p $$
+
+### Step 1: The Likelihood Function $L(p)$
+Because the coin tosses are independent, the joint probability (Likelihood) of observing $k$ heads in $n$ tosses is the product of individual probabilities:
+
+$$ L(p) = \prod_{i=1}^n P(x_i | p) = p^k (1-p)^{n-k} $$
+
+### Step 2: The Log-Likelihood Trick ($\ell(p)$)
+Multiplying hundreds of small probabilities (like $0.5 \times 0.5 \times \dots$) causes severe **numerical underflow** in computers. 
+
+Since the natural logarithm $\ln(x)$ is a **strictly monotonic increasing function**, the parameter $p$ that maximizes $\ln(L(p))$ is identical to the parameter that maximizes $L(p)$:
+
+$$ \ell(p) = \ln L(p) = \ln\left( p^k (1-p)^{n-k} 
+ight) = k \ln(p) + (n-k) \ln(1-p) $$
+
+### Step 3: Finding the Maximum via Calculus
+To locate the peak of the log-likelihood curve, take the first derivative with respect to $p$ and set it to zero:
+
+$$ rac{d}{dp}\ell(p) = rac{k}{p} - rac{n-k}{1-p} = 0 $$
+
+$$ rac{k}{p} = rac{n-k}{1-p} \implies k(1-p) = p(n-k) \implies k - kp = np - kp $$
+
+$$ \hat{p}_{\text{MLE}} = rac{k}{n} $$
+
+::: callout-formula Parameter Decoder Table
+| Symbol | Meaning | Example Value |
+| :--- | :--- | :--- |
+| $n$ | Total number of trials / samples | $10$ tosses |
+| $k$ | Count of successful outcomes (Heads) | $7$ heads |
+| $L(p)$ | Likelihood Function (Probability of data given $p$) | $p^7 (1-p)^3$ |
+| $\ell(p)$ | Log-Likelihood (Converts product to sum) | $7\ln(p) + 3\ln(1-p)$ |
+| $\hat{p}_{\text{MLE}}$ | Maximum Likelihood Estimator | $7/10 = 0.70$ |
 :::
 
-## Self Check
+---
 
-::: toggle Q1: Why do we take the derivative and set it to zero in MLE?
-**Answer:** To find the highest point (maximum) of the likelihood curve
+<a id="worked-example"></a>
+## 3. Stepped Numerical Example
 
-*Explanation:* In calculus, the derivative represents the slope of a curve. At the very peak of a hill, the ground is completely flat (slope = 0). Setting the derivative to 0 is how we mathematically pinpoint that maximum peak.
+::: step [Step 1: Given Data] Problem Statement
+A quality assurance engineer inspects $n=50$ microchips and finds $k=4$ defective chips. Find the Maximum Likelihood Estimate of the defect rate $p$.
 :::
 
-::: toggle Q2: Why is the 'Log' (Log-Likelihood) step so important in computer science?
-**Answer:** It turns a massive product of tiny probabilities into a sum, preventing computer underflow errors.
-
-*Explanation:* Multiplying $0.5 \times 0.5$ hundreds of times creates a number too small for a computer to store (underflow). Taking the log turns that multiplication into addition ($log(0.5) + log(0.5)$), while keeping the peak in the exact same spot.
+::: step [Step 2: Log-Likelihood Formulation] Setup Equation
+$$ \ell(p) = 4 \ln(p) + (50 - 4) \ln(1-p) = 4 \ln(p) + 46 \ln(1-p) $$
 :::
 
-::: toggle Q3: You roll a strange, rigged 6-sided die. Out of 100 rolls, it lands on the number 'Four' exactly 15 times. What is the MLE for the probability of rolling a 'Four'?
-**Answer:** 0.15
-
-*Explanation:* For this type of trial, the Maximum Likelihood Estimate is simply the observed frequency: $k/n$. Therefore, $15/100 = 0.15$.
+::: step [Step 3: First-Order Condition] Derivative
+$$ rac{d}{dp}\ell(p) = rac{4}{p} - rac{46}{1-p} = 0 \implies 4(1-p) = 46p $$
 :::
 
+::: step [Step 4: Analytical Solution] Final Result
+$$ 4 = 50p \implies \hat{p}_{\text{MLE}} = rac{4}{50} = 0.08 \text{ (8% Defect Rate)} $$
+:::
+
+---
+
+<a id="simulation"></a>
+## 4. Visualizing the Likelihood Hill
+
+::: manim assets/videos/m1_paradigms.mp4 Likelihood Optimization Surface
+Watch how the slope of the log-likelihood curve hits zero exactly at the maximum likelihood estimate.
+:::
+
+---
+
+<a id="self-check"></a>
+## 5. Active Recall Checkpoint
+
+::: quiz Q1: Theoretical Motivation
+Why do machine learning algorithms optimize the **Log-Likelihood** $\ln L(\theta)$ instead of the raw Likelihood $L(\theta)$?
+(A) Logarithms change the location of the optimal parameter $\theta^*$
+(*B) It converts numerically unstable products into stable sums and simplifies differentiation
+(C) Logarithms guarantee the function is non-convex
+(D) It eliminates the need for computing derivatives
+::: explanation
+Because probabilities are $\le 1$, multiplying thousands of them causes numerical underflow ($0.00000...$). Taking the logarithm transforms products into sums ($\ln(ab) = \ln a + \ln b$), while preserving the exact same argmax peak due to monotonicity.
+:::
+
+::: quiz Q2: Parameter Estimation
+If you flip a coin 3 times and get 3 Heads ($n=3, k=3$), what is the Maximum Likelihood Estimate for $p$?
+(A) 0.50
+(B) 0.75
+(*C) 1.00
+(D) Undefined
+::: explanation
+$\hat{p}_{\text{MLE}} = rac{k}{n} = rac{3}{3} = 1.0$. This highlights a critical limitation of pure MLE: with small sample sizes, it completely overfits to the observed data, ignoring prior common sense that coins are usually fair. (This motivates MAP estimation!).
+:::

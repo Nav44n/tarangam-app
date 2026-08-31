@@ -3,28 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tarangam - M1 07 Linear Regression One Variable</title>
+<title>Tarangam — M1 07 Linear Regression One Variable</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../style.css">
-<style>
-/* Add the visual theme CSS variables explicitly to be safe, though style.css has most of it */
-:root {
-  --bg-color: #1e1e1e; /* default to dark if not set in style.css */
-}
-[data-theme="light"] { --bg-color: #f8fafc; --card-bg: #ffffff; --text-color: #0f172a; --accent-color: #2563eb; --border-color: #e2e8f0; --hover-bg: #f1f5f9; }
-[data-theme="dark"] { --bg-color: #090d16; --card-bg: #111827; --text-color: #f3f4f6; --accent-color: #3b82f6; --border-color: #1f2937; --hover-bg: #1e293b; }
-[data-theme="reading"] { --bg-color: #f4ecd8; --card-bg: #fbf0d9; --text-color: #423219; --accent-color: #8f4e1d; --border-color: #e4d5b7; --hover-bg: #eee0c5; }
-[data-theme="aesthetic"] { --bg-color: #2e3440; --card-bg: #3b4252; --text-color: #eceff4; --accent-color: #88c0d0; --border-color: #4c566a; --hover-bg: #434c5e; }
-
-body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff); transition: background-color 0.3s ease, color 0.3s ease; }
-.interactive-toggle { background-color: var(--card-bg, #2d2d2d); border: 1px solid var(--border-color, #333); border-radius: 8px; margin: 1rem 0; overflow: hidden; }
-.interactive-toggle summary { padding: 0.85rem 1.25rem; font-weight: 600; cursor: pointer; color: var(--accent-color, #fbbf24); user-select: none; }
-.interactive-toggle[open] summary { border-bottom: 1px solid var(--border-color, #333); background-color: var(--hover-bg, #333); }
-.toggle-content { padding: 1.25rem; }
-.video-container { margin: 1.5rem 0; }
-.video-container video { max-width: 100%; border-radius: 8px; border: 1px solid var(--border-color, #333); }
-</style>
 <script>
   window.MathJax = {
     tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
@@ -35,22 +17,26 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
 </head>
 <body data-theme="dark" data-size="md">
 
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
 <div class="app-shell">
+  <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
-    <a href="../../index.html" class="brand" style="text-decoration:none; color:inherit;">
+    <a href="../../index.html" class="brand">
       <span class="brand-mark">त</span>
       <div class="brand-text">
         <span class="brand-name">Tarangam</span>
-        <span class="brand-sub">KTU 2024 Scheme &middot; S5 CSE</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
       </div>
-    </a><div class="year-switch">
-      <button class="year-pill active" data-year="3">3rd Year</button>
-      <button class="year-pill" data-locked="1" title="Coming later">1st &amp; 2nd</button>
-      <button class="year-pill" data-locked="1" title="Coming later">4th</button>
-    </div>
+    </a>
+
     <div class="subject-switch" id="subjectSwitch">
-      <div class="subject-card"><span>Machine Learning</span><span class="tag">PCCST503</span></div>
+      <div class="subject-card">
+        <span>Machine Learning</span>
+        <span class="tag">PCCST503</span>
+      </div>
     </div>
+
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
       <div class="module-block open" data-mod="1">
@@ -61,40 +47,49 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
         </button>
         <div class="topic-list">
           
-          <a href="m1_01_ml_vs_traditional.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M1 01 Ml Vs Traditional</span>
+          <a href="m1_01_ml_vs_traditional.html" class="topic-link " id="topic-m1_01_ml_vs_traditional">
+            <span class="topic-dot"></span>
+            <span>M1 01 Ml Vs Traditional</span>
           </a>
           
-          <a href="m1_02_ml_paradigms.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M1 02 Ml Paradigms</span>
+          <a href="m1_02_ml_paradigms.html" class="topic-link " id="topic-m1_02_ml_paradigms">
+            <span class="topic-dot"></span>
+            <span>M1 02 Ml Paradigms</span>
           </a>
           
-          <a href="m1_03_parameter_estimation_mle.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M1 03 Parameter Estimation Mle</span>
+          <a href="m1_03_parameter_estimation_mle.html" class="topic-link " id="topic-m1_03_parameter_estimation_mle">
+            <span class="topic-dot"></span>
+            <span>M1 03 Parameter Estimation Mle</span>
           </a>
           
-          <a href="m1_04_parameter_estimation_map.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M1 04 Parameter Estimation Map</span>
+          <a href="m1_04_parameter_estimation_map.html" class="topic-link " id="topic-m1_04_parameter_estimation_map">
+            <span class="topic-dot"></span>
+            <span>M1 04 Parameter Estimation Map</span>
           </a>
           
-          <a href="m1_05_supervised_learning_formulation.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M1 05 Supervised Learning Formulation</span>
+          <a href="m1_05_supervised_learning_formulation.html" class="topic-link " id="topic-m1_05_supervised_learning_formulation">
+            <span class="topic-dot"></span>
+            <span>M1 05 Supervised Learning Formulation</span>
           </a>
           
-          <a href="m1_06_loss_functions_optimization.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M1 06 Loss Functions Optimization</span>
+          <a href="m1_06_loss_functions_optimization.html" class="topic-link " id="topic-m1_06_loss_functions_optimization">
+            <span class="topic-dot"></span>
+            <span>M1 06 Loss Functions Optimization</span>
           </a>
           
-          <a href="m1_07_linear_regression_one_variable.html" class="topic-link active" style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M1 07 Linear Regression One Variable</span>
+          <a href="m1_07_linear_regression_one_variable.html" class="topic-link active" id="topic-m1_07_linear_regression_one_variable">
+            <span class="topic-dot"></span>
+            <span>M1 07 Linear Regression One Variable</span>
           </a>
           
-          <a href="m1_08_linear_regression_multiple_variables.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M1 08 Linear Regression Multiple Variables</span>
+          <a href="m1_08_linear_regression_multiple_variables.html" class="topic-link " id="topic-m1_08_linear_regression_multiple_variables">
+            <span class="topic-dot"></span>
+            <span>M1 08 Linear Regression Multiple Variables</span>
           </a>
           
-          <a href="m1_99_practice.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M1 99 Practice</span>
+          <a href="m1_99_practice.html" class="topic-link " id="topic-m1_99_practice">
+            <span class="topic-dot"></span>
+            <span>M1 99 Practice</span>
           </a>
           
         </div>
@@ -108,24 +103,29 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
         </button>
         <div class="topic-list">
           
-          <a href="m2_01_logistic_regression.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M2 01 Logistic Regression</span>
+          <a href="m2_01_logistic_regression.html" class="topic-link " id="topic-m2_01_logistic_regression">
+            <span class="topic-dot"></span>
+            <span>M2 01 Logistic Regression</span>
           </a>
           
-          <a href="m2_02_naive_bayes.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M2 02 Naive Bayes</span>
+          <a href="m2_02_naive_bayes.html" class="topic-link " id="topic-m2_02_naive_bayes">
+            <span class="topic-dot"></span>
+            <span>M2 02 Naive Bayes</span>
           </a>
           
-          <a href="m2_03_knn.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M2 03 Knn</span>
+          <a href="m2_03_knn.html" class="topic-link " id="topic-m2_03_knn">
+            <span class="topic-dot"></span>
+            <span>M2 03 Knn</span>
           </a>
           
-          <a href="m2_04_decision_trees.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M2 04 Decision Trees</span>
+          <a href="m2_04_decision_trees.html" class="topic-link " id="topic-m2_04_decision_trees">
+            <span class="topic-dot"></span>
+            <span>M2 04 Decision Trees</span>
           </a>
           
-          <a href="m2_99_practice.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M2 99 Practice</span>
+          <a href="m2_99_practice.html" class="topic-link " id="topic-m2_99_practice">
+            <span class="topic-dot"></span>
+            <span>M2 99 Practice</span>
           </a>
           
         </div>
@@ -139,48 +139,59 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
         </button>
         <div class="topic-list">
           
-          <a href="m3_01_generalisation_overfitting.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 01 Generalisation Overfitting</span>
+          <a href="m3_01_generalisation_overfitting.html" class="topic-link " id="topic-m3_01_generalisation_overfitting">
+            <span class="topic-dot"></span>
+            <span>M3 01 Generalisation Overfitting</span>
           </a>
           
-          <a href="m3_02_regularization_lasso_ridge.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 02 Regularization Lasso Ridge</span>
+          <a href="m3_02_regularization_lasso_ridge.html" class="topic-link " id="topic-m3_02_regularization_lasso_ridge">
+            <span class="topic-dot"></span>
+            <span>M3 02 Regularization Lasso Ridge</span>
           </a>
           
-          <a href="m3_03_training_testing_validation.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 03 Training Testing Validation</span>
+          <a href="m3_03_training_testing_validation.html" class="topic-link " id="topic-m3_03_training_testing_validation">
+            <span class="topic-dot"></span>
+            <span>M3 03 Training Testing Validation</span>
           </a>
           
-          <a href="m3_04_evaluation_classification.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 04 Evaluation Classification</span>
+          <a href="m3_04_evaluation_classification.html" class="topic-link " id="topic-m3_04_evaluation_classification">
+            <span class="topic-dot"></span>
+            <span>M3 04 Evaluation Classification</span>
           </a>
           
-          <a href="m3_05_evaluation_regression.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 05 Evaluation Regression</span>
+          <a href="m3_05_evaluation_regression.html" class="topic-link " id="topic-m3_05_evaluation_regression">
+            <span class="topic-dot"></span>
+            <span>M3 05 Evaluation Regression</span>
           </a>
           
-          <a href="m3_06_svm_linear.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 06 Svm Linear</span>
+          <a href="m3_06_svm_linear.html" class="topic-link " id="topic-m3_06_svm_linear">
+            <span class="topic-dot"></span>
+            <span>M3 06 Svm Linear</span>
           </a>
           
-          <a href="m3_07_svm_nonlinear.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 07 Svm Nonlinear</span>
+          <a href="m3_07_svm_nonlinear.html" class="topic-link " id="topic-m3_07_svm_nonlinear">
+            <span class="topic-dot"></span>
+            <span>M3 07 Svm Nonlinear</span>
           </a>
           
-          <a href="m3_08_neural_networks_perceptron.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 08 Neural Networks Perceptron</span>
+          <a href="m3_08_neural_networks_perceptron.html" class="topic-link " id="topic-m3_08_neural_networks_perceptron">
+            <span class="topic-dot"></span>
+            <span>M3 08 Neural Networks Perceptron</span>
           </a>
           
-          <a href="m3_09_neural_networks_activation.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 09 Neural Networks Activation</span>
+          <a href="m3_09_neural_networks_activation.html" class="topic-link " id="topic-m3_09_neural_networks_activation">
+            <span class="topic-dot"></span>
+            <span>M3 09 Neural Networks Activation</span>
           </a>
           
-          <a href="m3_10_neural_networks_backprop.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 10 Neural Networks Backprop</span>
+          <a href="m3_10_neural_networks_backprop.html" class="topic-link " id="topic-m3_10_neural_networks_backprop">
+            <span class="topic-dot"></span>
+            <span>M3 10 Neural Networks Backprop</span>
           </a>
           
-          <a href="m3_99_practice.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M3 99 Practice</span>
+          <a href="m3_99_practice.html" class="topic-link " id="topic-m3_99_practice">
+            <span class="topic-dot"></span>
+            <span>M3 99 Practice</span>
           </a>
           
         </div>
@@ -194,196 +205,276 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
         </button>
         <div class="topic-list">
           
-          <a href="m4_01_clustering_similarity.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M4 01 Clustering Similarity</span>
+          <a href="m4_01_clustering_similarity.html" class="topic-link " id="topic-m4_01_clustering_similarity">
+            <span class="topic-dot"></span>
+            <span>M4 01 Clustering Similarity</span>
           </a>
           
-          <a href="m4_02_clustering_hierarchical.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M4 02 Clustering Hierarchical</span>
+          <a href="m4_02_clustering_hierarchical.html" class="topic-link " id="topic-m4_02_clustering_hierarchical">
+            <span class="topic-dot"></span>
+            <span>M4 02 Clustering Hierarchical</span>
           </a>
           
-          <a href="m4_03_clustering_kmeans.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M4 03 Clustering Kmeans</span>
+          <a href="m4_03_clustering_kmeans.html" class="topic-link " id="topic-m4_03_clustering_kmeans">
+            <span class="topic-dot"></span>
+            <span>M4 03 Clustering Kmeans</span>
           </a>
           
-          <a href="m4_04_dimensionality_reduction_pca.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M4 04 Dimensionality Reduction Pca</span>
+          <a href="m4_04_dimensionality_reduction_pca.html" class="topic-link " id="topic-m4_04_dimensionality_reduction_pca">
+            <span class="topic-dot"></span>
+            <span>M4 04 Dimensionality Reduction Pca</span>
           </a>
           
-          <a href="m4_05_multidimensional_scaling.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M4 05 Multidimensional Scaling</span>
+          <a href="m4_05_multidimensional_scaling.html" class="topic-link " id="topic-m4_05_multidimensional_scaling">
+            <span class="topic-dot"></span>
+            <span>M4 05 Multidimensional Scaling</span>
           </a>
           
-          <a href="m4_06_ensemble_bagging_boosting.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M4 06 Ensemble Bagging Boosting</span>
+          <a href="m4_06_ensemble_bagging_boosting.html" class="topic-link " id="topic-m4_06_ensemble_bagging_boosting">
+            <span class="topic-dot"></span>
+            <span>M4 06 Ensemble Bagging Boosting</span>
           </a>
           
-          <a href="m4_07_resampling_methods.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M4 07 Resampling Methods</span>
+          <a href="m4_07_resampling_methods.html" class="topic-link " id="topic-m4_07_resampling_methods">
+            <span class="topic-dot"></span>
+            <span>M4 07 Resampling Methods</span>
           </a>
           
-          <a href="m4_08_bias_variance_tradeoff.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M4 08 Bias Variance Tradeoff</span>
+          <a href="m4_08_bias_variance_tradeoff.html" class="topic-link " id="topic-m4_08_bias_variance_tradeoff">
+            <span class="topic-dot"></span>
+            <span>M4 08 Bias Variance Tradeoff</span>
           </a>
           
-          <a href="m4_99_practice.html" class="topic-link " style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>M4 99 Practice</span>
+          <a href="m4_99_practice.html" class="topic-link " id="topic-m4_99_practice">
+            <span class="topic-dot"></span>
+            <span>M4 99 Practice</span>
           </a>
           
         </div>
       </div>
       
     </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel">0 of 34 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+      </div>
+    </div>
   </aside>
 
+  <!-- Main Content Column -->
   <div class="main-col">
     <header class="topbar">
       <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" onclick="document.getElementById('sidebar').classList.toggle('mobile-open')">
-        <svg width="20" height="20" viewBox="0 0 20 20"><path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       </button>
-      <div class="crumb" id="crumb">Machine Learning / M1 / M1 07 Linear Regression One Variable</div>
+      
+      <div class="crumb" id="crumb">
+        <span>PCCST503</span>
+        <span class="crumb-sep">/</span>
+        <span>Module 1</span>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">M1 07 Linear Regression One Variable</span>
+      </div>
+
       <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
         <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
-          <svg width="19" height="19" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.5"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </button>
       </div>
     </header>
 
     <main class="content" id="content">
-      <h1 id="linear-regression-with-one-variable">Linear Regression with One Variable</h1>
-<p><strong>Drawing the perfect straight line through a scatter of points to predict the future.</strong></p>
-<p>Imagine you have a blank piece of paper. On the horizontal axis (X), you put <strong>House Size</strong>. On the vertical axis (Y), you put <strong>House Price</strong>. You plot 5 houses you recently saw for sale. The dots roughly go from the bottom-left to the top-right.</p>
-<p>If your friend asks, <em>"How much would a 2000 sqft house cost?"</em>, what do you do? Your brain naturally draws an imaginary straight line right through the middle of those dots, finds 2000 on the X-axis, and looks at where it hits your imaginary line on the Y-axis. <strong>That is Linear Regression!</strong></p>
-<p><strong>1. The Math of a Line</strong></p>
-<p>In high school, you learned the equation of a straight line is $y = mx + c$ (where $m$ is the slope and $c$ is where the line hits the Y-axis). In Machine Learning, we just change the letters to make it sound fancier:</p>
-<p>$\hat{y} = w_0 + w_1x$</p>
-<ul>
-<li>$\hat{y}$ (y-hat): The <em>predicted</em> price of the house.</li>
-<li>$x$: The input feature (Size of the house).</li>
-<li>$w_1$ (Weight): The slope. (e.g., How much the price goes up for every 1 extra sqft).</li>
-<li>$w_0$ (Bias): The Y-intercept. (e.g., The base price of a plot of land before any house is built on it).</li>
-</ul>
-<p><strong>2. Ordinary Least Squares (OLS)</strong></p>
-<p>You can draw a million different lines through your dots. How does the computer know which one is the "Best Fit"? </p>
-<p>For any line you draw, measure the vertical distance from each real dot to your line. This gap is the <strong>Error (or Residual)</strong>. The computer squares every single error (to get rid of negative numbers and heavily punish giant mistakes), and adds them all up. The line that produces the absolute lowest total sum is the winner. This is called the <strong>Least Squares</strong> method.</p>
-<p>$$\text{Model: } \hat{y} = w_0 + w_1x \ \text{Cost Function (MSE): } J(w_0,w_1) = \frac{1}{2n}\sum_{i=1}^n (\hat{y}_i - y_i)^2 \ \text{To find the best line instantly: } w_1 = \frac{\sum (x_i-\bar{x})(y_i-\bar{y})}{\sum (x_i - \bar{x})^2}, \quad w_0 = \bar{y} - w_1\bar{x}$$</p>
-<blockquote>
-<p><strong>Why Square the Errors?</strong>
-Why don't we just take the absolute value of the errors? 1. Squaring heavily punishes the model if it is <em>way</em> off on a single point, forcing the line to stay closer to the middle. 2. A squared curve forms a smooth 'bowl' shape (a parabola). In calculus, a smooth bowl has a single, easily calculable bottom point (global minimum). Absolute values have a sharp 'V' shape which makes the calculus harder!</p>
-</blockquote>
-<h2 id="worked-example-step-by-step-scenario-finding-the-best-fit-line-manually">Worked Example: Step-by-Step Scenario: Finding the Best Fit Line Manually</h2>
-<ol>
-<li><strong>The Problem:</strong> You have a tiny dataset of 3 houses. Size $x = [1, 2, 3]$. Price $y = [2, 4, 5]$. Find the perfect straight line ($w_1$ and $w_0$) using the Least Squares formula.</li>
-<li><strong>Step 1: Find the Averages (Means).</strong>
- Average of $x$ ($\bar{x}$) $= (1+2+3)/3 = 2$.
- Average of $y$ ($\bar{y}$) $= (2+4+5)/3 = 3.67$.</li>
-<li><strong>Step 2: Calculate the Deviations for the Numerator.</strong>
- Subtract the mean from each $x$ and $y$, then multiply them together: $(x_i - \bar{x}) \times (y_i - \bar{y})$.
- House 1: $(1 - 2) \times (2 - 3.67) = (-1) \times (-1.67) = 1.67$
- House 2: $(2 - 2) \times (4 - 3.67) = (0) \times (0.33) = 0$
- House 3: $(3 - 2) \times (5 - 3.67) = (1) \times (1.33) = 1.33$
- <em>Sum of Numerator:</em> $1.67 + 0 + 1.33 = 3.0$.</li>
-<li><strong>Step 3: Calculate the Denominator.</strong>
- Square the $x$ deviations: $(x_i - \bar{x})^2$.
- House 1: $(-1)^2 = 1$
- House 2: $(0)^2 = 0$
- House 3: $(1)^2 = 1$
- <em>Sum of Denominator:</em> $1 + 0 + 1 = 2.0$.</li>
-<li><strong>Step 4: Find the Slope ($w_1$).</strong>
- $w_1 = \text{Numerator} / \text{Denominator} = 3.0 / 2.0 = 1.5$.</li>
-<li><strong>Step 5: Find the Intercept ($w_0$).</strong>
- $w_0 = \bar{y} - w_1\bar{x} = 3.67 - (1.5 \times 2) = 3.67 - 3.0 = 0.67$.</li>
-<li><strong>Result:</strong> Your perfectly fitted Machine Learning model is: <strong>$\hat{y} = 0.67 + 1.5x$</strong>. You can now plug any new house size ($x$) into this formula to predict its price!</li>
-</ol>
-<h2 id="visualizing-the-concept">Visualizing the Concept</h2>
-<div class="video-container"><video controls preload="metadata"><source src="../../assets/videos/m1_07_linear_regression.mp4" type="video/mp4">Your browser does not support embedded HTML5 video.</video></div>
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge">⏱️ 3 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#the-math" class="jump-pill">📐 The Math</a>
+    <a href="#worked-example" class="jump-pill">✍️ Worked Example</a>
+    <a href="#simulation" class="jump-pill">🎬 Simulation</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1 id="simple-linear-regression-one-variable">Simple Linear Regression (One Variable)</h1>
+<p><strong>Fitting the optimal line of best fit to uncover linear relationships between two continuous variables.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2 id="1-the-intuition-the-study-hours-vs-exam-score-line">1. The Intuition: The Study Hours vs Exam Score Line</h2>
+<p>Suppose you collect data on student study hours ($x$) and their resulting exam scores ($y$).</p>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Line of Best Fit</div><div class="callout-body"><p>You want to draw a straight line through the scatter plot such that the total vertical distance (residuals) from every data point to your line is as small as possible.</p></div></div>
 
-<p><em>Watch how the computer tests different lines, measures the vertical 'errors' (red lines), and adjusts until those errors are minimized.</em></p>
-<details class="interactive-toggle"><summary>Deep Dive: Interpolation vs Extrapolation</summary><div class="toggle-content">Linear Regression is great at **Interpolation** (predicting values inside the range of your training data). If you train a model on houses between 1,000 and 3,000 sqft, it will accurately predict a 2,000 sqft house.
+<hr />
+<p><a id="the-math"></a></p>
+<h2 id="2-mathematical-formulation">2. Mathematical Formulation</h2>
+<h3 id="the-hypothesis-equation">The Hypothesis Equation:</h3>
+<p>$$ h_\theta(x) = \theta_0 + \theta_1 x $$
+Where:
+- $\theta_0$ is the $y$-intercept (the predicted score when study hours $x = 0$).
+- $\theta_1$ is the slope (the expected increase in exam score for every 1 additional hour studied).</p>
+<h3 id="the-objective-function-ordinary-least-squares">The Objective Function (Ordinary Least Squares):</h3>
+<p>$$ J(\theta_0, \theta_1) = \frac{1}{2m} \sum_{i=1}^m \left( (\theta_0 + \theta_1 x^{(i)}) - y^{(i)} \right)^2 $$</p>
+<h3 id="analytical-closed-form-solution">Analytical Closed-Form Solution:</h3>
+<p>Instead of running iterative Gradient Descent, Simple Linear Regression can be solved directly via calculus in $O(m)$ time:</p>
+<p>$$ \theta_1 = \frac{\sum_{i=1}^m (x^{(i)} - \bar{x})(y^{(i)} - \bar{y})}{\sum_{i=1}^m (x^{(i)} - \bar{x})^2} = \frac{\text{Cov}(x, y)}{\text{Var}(x)} $$</p>
+<p>$$ \theta_0 = \bar{y} - \theta_1 \bar{x} $$</p>
+<p>Where $\bar{x} = \frac{1}{m}\sum x^{(i)}$ and $\bar{y} = \frac{1}{m}\sum y^{(i)}$ are the sample means.</p>
+<hr />
+<p><a id="worked-example"></a></p>
+<h2 id="3-stepped-numerical-example">3. Stepped Numerical Example</h2>
+<p>Let's calculate the line of best fit for a 3-point dataset: $(1, 2), (2, 3), (3, 5)$.</p>
+<div class="step-card"><div class="step-badge">Step 1: Compute Means</div><div class="step-title">Average Values</div><div class="step-content"><ul>
+<li>$\bar{x} = \frac{1 + 2 + 3}{3} = 2.0$</li>
+<li>$\bar{y} = \frac{2 + 3 + 5}{3} = 3.333$</li>
+</ul></div></div>
 
-However, it is terrible at **Extrapolation** (predicting values way outside the training data). If you use that same model to predict the price of a 10 sqft dog house, or a 1,000,000 sqft mega-mansion, the straight line will give you completely absurd, mathematically incorrect real-world prices. Always be careful using a model outside its comfort zone!</div></details>
+<div class="step-card"><div class="step-badge">Step 2: Compute Covariance Numerator</div><div class="step-title">$\sum (x-\bar{x})(y-\bar{y})$</div><div class="step-content"><ul>
+<li>$(1-2)(2-3.333) = (-1)(-1.333) = 1.333$</li>
+<li>$(2-2)(3-3.333) = (0)(-0.333) = 0.000$</li>
+<li>$(3-2)(5-3.333) = (1)(1.667) = 1.667$</li>
+<li><strong>Numerator Sum:</strong> $1.333 + 0.000 + 1.667 = 3.0$</li>
+</ul></div></div>
 
-<h2 id="self-check">Self Check</h2>
-<details class="interactive-toggle"><summary>Q1: In the Linear Regression equation $\hat{y} = w_0 + w_1x$, what does $w_0$ represent physically on a graph?</summary><div class="toggle-content">**Answer:** The Y-intercept (where the line crosses the vertical axis)
+<div class="step-card"><div class="step-badge">Step 3: Compute Variance Denominator</div><div class="step-title">$\sum (x-\bar{x})^2$</div><div class="step-content"><ul>
+<li>$(1-2)^2 = 1$</li>
+<li>$(2-2)^2 = 0$</li>
+<li>$(3-2)^2 = 1$</li>
+<li><strong>Denominator Sum:</strong> $1 + 0 + 1 = 2.0$</li>
+</ul></div></div>
 
-*Explanation:* $w_0$ is the bias or Y-intercept. It is the predicted value of $\hat{y}$ when the input $x$ is exactly 0.</div></details>
+<div class="step-card"><div class="step-badge">Step 4: Solve Parameters</div><div class="step-title">Final Equation</div><div class="step-content"><ul>
+<li>$\theta_1 = \frac{3.0}{2.0} = 1.5$</li>
+<li>$\theta_0 = \bar{y} - \theta_1 \bar{x} = 3.333 - (1.5 \times 2.0) = 0.333$</li>
+<li><strong>Optimal Model:</strong> $\hat{y} = 0.333 + 1.5x$</li>
+</ul></div></div>
 
-<details class="interactive-toggle"><summary>Q2: When finding the 'Best Fit' line, what exactly is the Ordinary Least Squares method trying to minimize?</summary><div class="toggle-content">**Answer:** The sum of the squared vertical distances between the real data points and the predicted line
+<hr />
+<p><a id="self-check"></a></p>
+<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q1: Slope Interpretation</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">In the fitted model $\hat{y} = 25 + 4.5x$, where $x$ is years of experience and $y$ is salary in thousands of dollars, what does the value $4.5$ represent?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>The base salary for someone with zero years experience</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The expected salary increase of \$4,500 for every additional year of experience</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The maximum possible salary attainable</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The variance of the residuals</span></button>
 
-*Explanation:* Least Squares calculates the vertical gap (error) between each real dot and the line, squares it, adds them all up, and finds the line that makes that total sum the smallest possible.</div></details>
-
-<details class="interactive-toggle"><summary>Q3: Why do we prefer squaring the errors instead of simply taking the absolute value?</summary><div class="toggle-content">**Answer:** Because squares create a smooth, convex 'bowl' shape that is easy to optimize using calculus
-
-*Explanation:* Squared errors ($x^2$) form a smooth, continuous, differentiable parabola. This makes finding the mathematical minimum (the bottom of the bowl) much easier than the sharp corner created by absolute values ($|x|$).</div></details>
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> The slope coefficient $\theta_1 = 4.5$ represents the marginal rate of change: for every 1-unit increase in $x$, the predicted target $\hat{y}$ increases by $4.5$ units (\$4,500).
+  </div>
+</div>
     </main>
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="m1_06_loss_functions_optimization.html" class="nav-card prev" style="text-decoration:none;">
-        <span class="dir">&larr; PREVIOUS</span><div class="ttl">M1 06 Loss Functions Optimization</div>
+      <a href="m1_06_loss_functions_optimization.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [ [ ]</span>
+        <div class="ttl">M1 06 Loss Functions Optimization</div>
       </a>
       
       
       
-      <a href="m1_08_linear_regression_multiple_variables.html" class="nav-card next" style="text-decoration:none;">
-        <span class="dir">NEXT &rarr;</span><div class="ttl">M1 08 Linear Regression Multiple Variables</div>
+      <a href="m1_08_linear_regression_multiple_variables.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC [ ] ] &rarr;</span>
+        <div class="ttl">M1 08 Linear Regression Multiple Variables</div>
       </a>
       
     </footer>
   </div>
 </div>
 
+<!-- Settings Modal -->
 <div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
   <div class="modal" role="dialog" aria-label="Settings">
     <div class="modal-head">
-      <h2>Settings</h2>
+      <h2>Reading Preferences</h2>
       <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
-        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       </button>
     </div>
     <div class="modal-section">
-      <span class="modal-label">Appearance</span>
+      <span class="modal-label">Color Theme</span>
       <div class="theme-row" id="themeRow">
-        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
         <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
-        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Reading</button>
-        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-reading"></span> Nordic</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
       </div>
     </div>
     <div class="modal-section">
-      <span class="modal-label">Text size</span>
+      <span class="modal-label">Font Scale</span>
       <div class="size-row">
-        <button class="size-btn" data-size="sm" onclick="applyFontScaling(14)">A<span>-</span></button>
-        <button class="size-btn active" data-size="md" onclick="applyFontScaling(16)">A</button>
-        <button class="size-btn" data-size="lg" onclick="applyFontScaling(20)">A<span>+</span></button>
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Interactive Client-Side Logic Engine -->
 <script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
   function applyThemePreference(themeName) {
     document.body.setAttribute('data-theme', themeName);
     localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
   }
-  function applyFontScaling(pixelSize) {
-    document.body.style.fontSize = pixelSize + 'px';
-    localStorage.setItem('user_preferred_font_size', pixelSize);
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
   }
-  (function restoreUserPreferences() {
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
     const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
-    const storedFontSize = localStorage.getItem('user_preferred_font_size') || '16';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
     applyThemePreference(storedTheme);
     applyFontScaling(storedFontSize);
   })();
-</script>
-<script>
-  (function trackProgress() {
+
+  // 2. Reading Progress Bar
+  window.addEventListener('scroll', () => {
+    const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    const bar = document.getElementById('readingProgressBar');
+    if (bar) bar.style.width = scrolled + '%';
+  });
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking
+  (function trackTopicProgress() {
     const totalTopics = 34;
     const currentId = "m1_07_linear_regression_one_variable";
     const courseCode = "PCCST503";
-    
-    // Only track if we are on a valid topic page
     if (totalTopics === 0 || !currentId) return;
 
     const storageKey = `tarangam_visited_${courseCode}`;
@@ -397,13 +488,10 @@ However, it is terrible at **Extrapolation** (predicting values way outside the 
     const progressFill = document.getElementById('progressFill');
     const progressLabel = document.getElementById('progressLabel');
     
-    // Filter out practice files from the total count for accurate theory progress
-    const theoryTopics = totalTopics; // we can adjust this if we want practice files excluded
-    
     if (progressFill && progressLabel) {
-      const pct = Math.min(100, Math.round((visited.length / theoryTopics) * 100));
+      const pct = Math.min(100, Math.round((visited.length / totalTopics) * 100));
       progressFill.style.width = pct + '%';
-      progressLabel.innerText = `${visited.length} of ${theoryTopics} topics visited`;
+      progressLabel.innerText = `${visited.length} of ${totalTopics} completed`;
     }
     
     document.querySelectorAll('.topic-link').forEach(link => {
@@ -411,24 +499,95 @@ However, it is terrible at **Extrapolation** (predicting values way outside the 
       if (href) {
         const topicId = href.replace('.html', '').split('/').pop();
         if (visited.includes(topicId)) {
-           link.style.opacity = '0.7';
-           if (!link.innerHTML.includes('✓')) {
-               link.innerHTML += ' <span style="margin-left:auto; color:#10b981; font-size:12px;">✓</span>';
-           }
+          link.classList.add('visited');
+          if (!link.querySelector('.check-mark')) {
+            const check = document.createElement('span');
+            check.className = 'check-mark';
+            check.style.marginLeft = 'auto';
+            check.style.color = 'var(--correct)';
+            check.style.fontSize = '12px';
+            check.innerText = '✓';
+            link.appendChild(check);
+          }
         }
       }
     });
 
     const resetBtn = document.getElementById('resetProgress');
     if (resetBtn) {
-        resetBtn.onclick = () => {
-            localStorage.removeItem(storageKey);
-            location.reload();
-        };
+      resetBtn.onclick = () => {
+        localStorage.removeItem(storageKey);
+        location.reload();
+      };
     }
   })();
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const explanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (explanation) {
+            explanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {
+      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 5. Keyboard Navigation Shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    
+    if (e.key === '[' || e.key === 'ArrowLeft') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']' || e.key === 'ArrowRight') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
 </script>
 </body>
 </html>
-
-

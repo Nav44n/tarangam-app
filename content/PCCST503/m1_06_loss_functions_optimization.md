@@ -1,94 +1,83 @@
-# Loss Functions and Optimization
+# Loss Functions & Optimization: Gradient Descent
 
-**How a machine measures its own mistakes, and how it mathematically learns to fix them.**
+**How machine learning models measure their own mistakes and iteratively correct them.**
 
+<a id="the-intuition"></a>
+## 1. The Intuition: Walking Down a Foggy Mountain
 
-We know that Machine Learning creates a rule (a Hypothesis function) to map inputs to outputs. But when a model is first born, it is completely stupid. It just guesses randomly. How does it get smarter?
+Imagine you are blindfolded on a foggy mountain and need to reach the lowest point in the valley.
 
-
-
-**1. The Loss Function (Measuring the Mistake)**
-
-Imagine an archer shooting an arrow at a target. The bullseye is the actual true answer ($y$). The spot where the arrow actually hits is the model's prediction ($\hat{y}$). The distance between the arrow and the bullseye is the **Loss**.
-
-
-A Loss Function is a mathematical formula that calculates exactly how "wrong" a single prediction is.
-
-  - **For Regression (Predicting Numbers):** We usually use *Squared Error*. If the house costs $100k, and the model guesses $80k, the error is 20k. We square it to heavily penalize really big mistakes.
-  - **For Classification (Predicting Categories):** We use *Cross-Entropy (Log Loss)*. It heavily penalizes the model if it is extremely confident about the wrong answer (e.g., saying "I am 99% sure this is a dog" when it's actually a cat).
-
-
-
-
-**2. Cost Function / Empirical Risk (The Total Mistake)**
-
-"Loss" is for one single example. The **Cost Function** (also called Empirical Risk, $J$) is simply the *average* of all the losses across the entire training dataset. The ultimate goal of Machine Learning is to find the parameters (weights) that make this Cost Function as close to zero as possible.
-
-
-
-**3. Optimization (Fixing the Mistake)**
-
-How do we get the Cost to zero? Imagine a blindfolded hiker dropped on the side of a mountain. Their goal is to get to the very bottom of the valley (zero error). 
-
-  - They feel the ground with their feet to see which way is downhill. This slope is called the **Gradient** (the derivative of the cost function).
-  - They take a step in the steepest downhill direction.
-  - This step-by-step process of walking down the error mountain is called **Gradient Descent**—the most famous optimization algorithm in all of AI!
-
-
-
-  
-
-$$\text{Loss (Single): } L(y_i, \hat{y}_i) = (y_i - \hat{y}_i)^2 \\ \text{Cost / Risk (Total): } J(\theta) = \frac{1}{n} \sum_{i=1}^{n} L(y_i, \hat{y}_i) \\ \text{Optimization Step: } \theta_{new} = \theta_{old} - \eta \nabla J(\theta)$$
-
-> **What is η (Eta)?**
-> In the Optimization formula, $\eta$ is the **Learning Rate**. It controls the *size* of the step the blindfolded hiker takes. If $\eta$ is too small, the AI takes days to learn. If $\eta$ is too big, the AI takes giant leaps and might accidentally jump entirely over the valley, completely failing to learn!
-
-## Worked Example: Step-by-Step Scenario: Calculating the Cost (MSE)
-
-1. **The Problem:** You have a tiny dataset of 3 students. You try to predict their test scores out of 100. Calculate the Mean Squared Error (MSE) Cost for your model.
-2. **True Scores ($y$):** [80, 90, 70]
-3. **Model's Predictions ($\hat{y}$):** [75, 90, 78]
-4. **Step 1: Calculate the individual errors ($y - \hat{y}$).**
-Student 1: $80 - 75 = 5$
-Student 2: $90 - 90 = 0$
-Student 3: $70 - 78 = -8$
-5. **Step 2: Square the errors.** (This gets rid of negative signs and punishes the big mistake of Student 3).
-Student 1: $5^2 = 25$
-Student 2: $0^2 = 0$
-Student 3: $(-8)^2 = 64$
-6. **Step 3: Find the Average (Mean) to get the final Cost $J$.**
-$J = \frac{25 + 0 + 64}{3} = \frac{89}{3} \approx 29.67$.
-7. **Result:** Your model's total Cost is 29.67. To 'learn', the optimization algorithm will now adjust its internal weights to try and make this number smaller!
-
-## Visualizing the Concept
-
-::: manim assets/videos/m1_06_optimization.mp4 :::
-
-*Watch the 'Blindfolded Hiker' concept in action. A model (the dot) calculates its gradient (the slope) and takes steps down the Cost Bowl toward the minimum error.*
-
-::: toggle Deep Dive: Convex vs. Non-Convex Mountains
-Not all Cost Functions look like a perfect, smooth salad bowl (a **Convex** shape). Simple algorithms like Linear Regression have convex cost functions, meaning there is only one true bottom (Global Minimum).
-
-Deep Neural Networks have **Non-Convex** cost functions. The landscape looks like a bumpy mountain range with hundreds of fake valleys (Local Minima). The blindfolded hiker might walk into a shallow crater, think they've reached the absolute bottom, and stop learning, even though a much deeper valley is just over the next hill! This is why training complex AI models is so difficult.
+::: callout-intuition The Gradient Descent Strategy
+1. You feel the slope of the ground beneath your feet with your foot (**Compute the Gradient $\nabla J(\theta)$**).
+2. If the ground slopes downward to your right, you take a step to the right (**Move in the negative gradient direction**).
+3. If you take tiny baby steps ($\alpha = 0.0001$), you will take 10 years to reach the bottom.
+4. If you take giant blind leaps ($\alpha = 10.0$), you might leap clear across the valley and crash into the opposite peak.
+5. The ideal step size is the **Learning Rate ($\alpha$)**.
 :::
 
-## Self Check
+---
 
-::: toggle Q1: What is the primary difference between a 'Loss Function' and a 'Cost Function'?
-**Answer:** Loss measures the error of ONE single prediction. Cost measures the average error across the ENTIRE dataset.
+<a id="the-math"></a>
+## 2. Loss Functions: Measuring Mistakes
 
-*Explanation:* Loss is calculated per-example. Cost (or Empirical Risk) aggregates all the individual losses to evaluate the model's overall performance on the dataset.
+A **Loss Function** $\mathcal{L}(\hat{y}, y)$ quantifies the error for a single training example, while the **Cost Function** $J(\theta)$ computes the average loss across the entire dataset.
+
+### 1. Mean Squared Error (MSE) — for Regression:
+$$ J(\theta) = \frac{1}{2m} \sum_{i=1}^m \left( h_\theta(x^{(i)}) - y^{(i)} \right)^2 $$
+*(Note: The factor of $\frac{1}{2}$ is a mathematical convenience that cleanly cancels when taking derivatives).*
+
+### 2. Binary Cross-Entropy (Log Loss) — for Classification:
+$$ J(\theta) = -\frac{1}{m} \sum_{i=1}^m \left[ y^{(i)} \ln(h_\theta(x^{(i)})) + (1-y^{(i)}) \ln(1-h_\theta(x^{(i)})) \right] $$
+
+---
+
+<a id="worked-example"></a>
+## 3. The Gradient Descent Update Rule
+
+To minimize $J(\theta)$, we iteratively update every parameter $\theta_j$ simultaneously:
+
+$$ \theta_j := \theta_j - \alpha \frac{\partial}{\partial \theta_j} J(\theta) $$
+
+For Linear Regression with MSE cost, the partial derivative simplifies to:
+
+$$ \frac{\partial}{\partial \theta_j} J(\theta) = \frac{1}{m} \sum_{i=1}^m \left( h_\theta(x^{(i)}) - y^{(i)} \right) x_j^{(i)} $$
+
+::: step [Step 1: Compute Prediction] Forward Pass
+Calculate $\hat{y}^{(i)} = h_\theta(x^{(i)})$ for all samples.
 :::
 
-::: toggle Q2: If you are trying to predict the exact price of a used car, which Loss function should you use?
-**Answer:** Squared Error (MSE)
-
-*Explanation:* Predicting a continuous number like a price is a Regression problem. Squared Error is the standard loss function for regression. The others are for Classification.
+::: step [Step 2: Calculate Residual Error] Error Calculation
+Compute error $e^{(i)} = (\hat{y}^{(i)} - y^{(i)})$.
 :::
 
-::: toggle Q3: In Gradient Descent, what determines how large a 'step' the algorithm takes down the error mountain?
-**Answer:** The Learning Rate (Eta)
-
-*Explanation:* The Learning Rate ($\eta$) is a hyperparameter that scales the gradient to determine exactly how big the update step will be.
+::: step [Step 3: Compute Gradient Vector] Differentiation
+Multiply error by feature values $x_j^{(i)}$ and average across the batch.
 :::
 
+::: step [Step 4: Update Parameters] Step Down
+Adjust parameters: $\theta_j \leftarrow \theta_j - \alpha \cdot \text{Gradient}$.
+:::
+
+---
+
+<a id="simulation"></a>
+## 4. Visualizing Gradient Optimization
+
+::: manim assets/videos/m2_gradient_descent.mp4 Convex Optimization Convergence
+Watch the red optimization ball take steps down the parabolic cost curve toward the global minimum.
+:::
+
+---
+
+<a id="self-check"></a>
+## 5. Active Recall Checkpoint
+
+::: quiz Q1: Hyperparameter Dynamics
+What occurs if the learning rate $\alpha$ is set too large in Gradient Descent?
+(A) The model converges prematurely to a saddle point
+(*B) The cost function can oscillate wildly and diverge away from the minimum
+(C) The gradient becomes zero on the first iteration
+(D) The weights automatically shrink to zero
+::: explanation
+When $\alpha$ is excessively large, each parameter update overshoots the minimum point, landing higher up on the opposite wall of the cost surface. This causes the cost $J(\theta)$ to increase with every iteration (divergence).
+:::

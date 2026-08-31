@@ -1,94 +1,76 @@
-# Linear Regression with Multiple Variables
+# Multiple Linear Regression & Normal Equations
 
-**What happens when house prices depend on size, bedrooms, AND age? We add more dimensions!**
+**Extending regression to multidimensional feature spaces using compact matrix algebra.**
 
+<a id="the-intuition"></a>
+## 1. The Intuition: Multi-Factor Predictions
 
-In the previous topic, we predicted a house's price using just one variable: its size. But in the real world, price depends on many things: size ($x_1$), number of bedrooms ($x_2$), and age of the house ($x_3$).
+Real-world phenomena rarely depend on a single variable. A house's value depends on **square footage ($x_1$)**, **number of bedrooms ($x_2$)**, **distance to metro ($x_3$)**, and **crime rate ($x_4$)**.
 
-
-
-To handle this, we just make our equation longer. Instead of one slope ($w_1$), we give every feature its own weight (multiplier).
-
-$\hat{y} = w_0 + w_1x_1 + w_2x_2 + w_3x_3$
-
-If $w_2$ (the bedroom weight) is high, it means bedrooms have a massive impact on the price.
-
-
-
-**How do we find all these weights at once? Two Methods:**
-
-
-
-**1. The Normal Equation (The Instant Math Formula)**
-
-Calculus gives us a magical matrix formula that calculates the perfect weights instantly in one step. It's like finding the bottom of the error valley by just teleporting there. 
-
-*The Catch:* Matrix math is extremely heavy. If you have 100,000 features, calculating the Normal Equation will literally crash your computer's memory. It only works for small datasets.
-
-
-
-**2. Gradient Descent (The Blindfolded Hiker)**
-
-Instead of teleporting, Gradient Descent takes small steps down the error valley. It slowly adjusts all the weights simultaneously until the error hits zero. It takes longer for small datasets, but it is the *only* method that works for massive, modern Machine Learning datasets with millions of features.
-
-
-
-**The Danger of Unscaled Data (Feature Scaling)**
-
-Imagine $x_1$ is House Size (range: 1000 to 4000 sqft) and $x_2$ is Bedrooms (range: 1 to 5). The computer looks at these raw numbers and thinks "Size is 1,000 times larger, so it must be 1,000 times more important!" 
-
-This creates an elongated, stretched-out error valley. Gradient Descent will zig-zag wildly back and forth across the valley, taking forever to reach the bottom. 
-
-**The Fix:** We mathematically squish all features so they share the exact same scale (e.g., all numbers fall between -1 and 1). This makes the error valley a perfect circle, allowing Gradient Descent to step straight to the center instantly!
-
-
-  
-
-$$\text{Model: } \hat{y} = \mathbf{w}^\top \mathbf{x} \\ \text{Normal Equation: } \mathbf{w} = (X^\top X)^{-1}X^\top \mathbf{y} \\ \text{Gradient Descent Update: } w_j = w_j - \eta \frac{1}{n} \sum_{i=1}^n (\hat{y}_i - y_i) x_{ij}$$
-
-> **Vectors and Matrices**
-> You will often see the formula written as $\hat{y} = \mathbf{w}^\top \mathbf{x}$. Don't let the linear algebra scare you! $\mathbf{w}$ is just a vertical list of all your weights, and $\mathbf{x}$ is a vertical list of your features. Multiplying them together with that 'T' (Transpose) symbol is just a shorthand programmer's trick to multiply them all out and add them up without writing a giant, ugly math equation.
-
-## Worked Example: Scenario: Feature Scaling (Standardization)
-
-1. **The Problem:** You have a feature vector for a house: Size = 2000 sqft, Bedrooms = 3. Let's scale the 'Size' feature so it doesn't overwhelm the math.
-2. **Step 1: Find the Mean (Average).**
- You check your whole dataset and find the average house size is 1500 sqft ($\mu = 1500$).
-3. **Step 2: Find the Standard Deviation.**
- The standard deviation (how spread out sizes are) is 500 sqft ($\sigma = 500$).
-4. **Step 3: Apply the Z-Score Standardization formula.**
- $x_{scaled} = \frac{x - \mu}{\sigma}$
-5. **Step 4: Calculate.**
- $x_{scaled} = \frac{2000 - 1500}{500} = \frac{500}{500} = 1.0$.
-6. **Result:** The massive number '2000' is now represented simply as '1.0' (meaning it is exactly 1 standard deviation above average). The algorithm can now compare it safely against small bedroom numbers!
-
-## Visualizing the Concept
-
-::: manim assets/videos/m1_08_multiple_regression.mp4 :::
-
-*Watch how unscaled features cause Gradient Descent to zig-zag terribly, while scaled features allow it to step straight to the optimal solution.*
-
-::: toggle Deep Dive: The Learning Rate (Alpha/Eta)
-In the Gradient Descent formula, $\eta$ (often also written as $\alpha$) is the Learning Rate. It controls the size of the steps the algorithm takes. If it's too small, training takes weeks. If it's too large, it takes a giant step, completely jumps over the minimum error at the bottom of the valley, and shoots up the other side! This is called 'divergence', and it causes your computer to spit out 'NaN' (Not a Number) errors.
+::: callout-intuition The Multiple Linear Model
+$$ h_\theta(x) = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + \dots + \theta_d x_d $$
+Instead of a 2D line of best fit, we are fitting a $d$-dimensional **hyperplane** through high-dimensional feature space!
 :::
 
-## Self Check
+---
 
-::: toggle Q1: Why don't we just always use the Normal Equation to find the exact weights instantly?
-**Answer:** Because matrix inversion $(X^\top X)^{-1}$ requires massive computational power and memory, crashing on large datasets
+<a id="the-math"></a>
+## 2. Matrix Vectorization & The Normal Equation
 
-*Explanation:* The computational complexity of inverting a matrix grows cubically. If you have 100,000 features, your computer has to do quadrillions of calculations, which is practically impossible for standard machines.
+We bundle all $m$ training examples into a single Design Matrix $X \in \mathbb{R}^{m \times (d+1)}$ (including an initial column of $1$s for the intercept bias $\theta_0$):
+
+$$ X = \begin{bmatrix} 1 & x_1^{(1)} & x_2^{(1)} & \dots & x_d^{(1)} \\ 1 & x_1^{(2)} & x_2^{(2)} & \dots & x_d^{(2)} \\ \vdots & \vdots & \vdots & \ddots & \vdots \\ 1 & x_1^{(m)} & x_2^{(m)} & \dots & x_d^{(m)} \end{bmatrix}, \quad Y = \begin{bmatrix} y^{(1)} \\ y^{(2)} \\ \vdots \\ y^{(m)} \end{bmatrix}, \quad \theta = \begin{bmatrix} \theta_0 \\ \theta_1 \\ \vdots \\ \theta_d \end{bmatrix} $$
+
+### The Vectorized Cost Function:
+$$ J(\theta) = \frac{1}{2m} (X\theta - Y)^T (X\theta - Y) $$
+
+### The Normal Equation (Analytical Global Minimum):
+Setting the matrix gradient $\nabla_\theta J(\theta) = 0$ yields the celebrated **Normal Equation**:
+
+$$ X^T X \theta = X^T Y \implies \theta^* = (X^T X)^{-1} X^T Y $$
+
+::: callout-formula Normal Equation vs Gradient Descent
+| Dimension | Normal Equation | Gradient Descent |
+| :--- | :--- | :--- |
+| **Learning Rate $\alpha$** | Not needed! | Must be chosen carefully |
+| **Iterations** | Zero (Solves in 1 analytical step) | Many iterative epochs required |
+| **Feature Scaling** | Not required | Mandatory for fast convergence |
+| **Time Complexity** | $O(d^3)$ due to $(X^TX)^{-1}$ matrix inversion | $O(k \cdot m \cdot d)$ |
+| **When to use** | Small to moderate features ($d < 10,000$) | Huge feature spaces ($d > 100,000$) |
 :::
 
-::: toggle Q2: What visual effect does Feature Scaling have on the Gradient Descent 'Error Valley'?
-**Answer:** It turns it from an elongated, skewed oval into a symmetric, round bowl, allowing faster convergence
+---
 
-*Explanation:* When features have vastly different scales, the cost surface stretches into an oval. Scaling them squishes the surface into a perfect circle, letting the algorithm walk straight to the center.
+<a id="worked-example"></a>
+## 3. Non-Invertibility & Multicollinearity Pitfall
+
+::: callout-pitfall When is $(X^TX)$ Singular (Non-Invertible)?
+The matrix $X^TX$ cannot be inverted if:
+1. **Redundant Features (Multicollinearity):** E.g., $x_1$ is size in $\text{feet}^2$ and $x_2$ is size in $\text{meters}^2$ ($x_1 = 10.76 x_2$). They are linearly dependent.
+2. **Too Few Examples ($m < d$):** More features than training samples.
+*Fix:* Remove redundant features or use Regularization (Ridge regression ensures $(X^TX + \lambda I)$ is strictly invertible!).
 :::
 
-::: toggle Q3: In the multiple regression formula, we usually add a 'dummy' feature $x_0 = 1$. Why?
-**Answer:** To represent the base price (the Y-intercept / bias term $w_0$)
+---
 
-*Explanation:* By setting $x_0 = 1$, the term $w_0 \times x_0$ simply becomes $w_0$. This is a mathematical trick to absorb the y-intercept (the bias) into the matrix multiplication, making the code much cleaner.
+<a id="simulation"></a>
+## 4. Visualizing Multi-Variable Regression
+
+::: manim assets/videos/m1_08_multiple_regression.mp4 3D Regression Plane Optimization
+Watch how the 3D plane adjusts its tilt and pitch to minimize the sum of squared distances to 3D point clusters.
 :::
 
+---
+
+<a id="self-check"></a>
+## 5. Active Recall Checkpoint
+
+::: quiz Q1: Computational Complexity
+If a dataset contains $d = 200,000$ features and $m = 1,000,000$ training records, which method should you choose to train linear regression?
+(A) The Normal Equation $(X^TX)^{-1}X^TY$
+(*B) Mini-batch Gradient Descent
+(C) Inverting the Design Matrix $X^{-1}$ directly
+(D) Exhaustive grid search
+::: explanation
+Inverting a $200,000 \times 200,000$ matrix $(X^TX)$ takes $O(d^3) \approx 8 \times 10^{15}$ operations, which will crash your computer's memory. Gradient descent scales linearly with $d$ and is the only viable method for large-scale ML.
+:::

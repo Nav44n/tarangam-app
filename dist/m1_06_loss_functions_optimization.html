@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tarangam - M1 06 Loss Functions Optimization</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<style>
+/* Add the visual theme CSS variables explicitly to be safe, though style.css has most of it */
+:root {
+  --bg-color: #1e1e1e; /* default to dark if not set in style.css */
+}
+[data-theme="light"] { --bg-color: #f8fafc; --card-bg: #ffffff; --text-color: #0f172a; --accent-color: #2563eb; --border-color: #e2e8f0; --hover-bg: #f1f5f9; }
+[data-theme="dark"] { --bg-color: #090d16; --card-bg: #111827; --text-color: #f3f4f6; --accent-color: #3b82f6; --border-color: #1f2937; --hover-bg: #1e293b; }
+[data-theme="reading"] { --bg-color: #f4ecd8; --card-bg: #fbf0d9; --text-color: #423219; --accent-color: #8f4e1d; --border-color: #e4d5b7; --hover-bg: #eee0c5; }
+[data-theme="aesthetic"] { --bg-color: #2e3440; --card-bg: #3b4252; --text-color: #eceff4; --accent-color: #88c0d0; --border-color: #4c566a; --hover-bg: #434c5e; }
+
+body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff); transition: background-color 0.3s ease, color 0.3s ease; }
+.interactive-toggle { background-color: var(--card-bg, #2d2d2d); border: 1px solid var(--border-color, #333); border-radius: 8px; margin: 1rem 0; overflow: hidden; }
+.interactive-toggle summary { padding: 0.85rem 1.25rem; font-weight: 600; cursor: pointer; color: var(--accent-color, #fbbf24); user-select: none; }
+.interactive-toggle[open] summary { border-bottom: 1px solid var(--border-color, #333); background-color: var(--hover-bg, #333); }
+.toggle-content { padding: 1.25rem; }
+.video-container { margin: 1.5rem 0; }
+.video-container video { max-width: 100%; border-radius: 8px; border: 1px solid var(--border-color, #333); }
+</style>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 Scheme &middot; S5 CSE</span>
+      </div>
+    </div>
+    <div class="year-switch">
+      <button class="year-pill active" data-year="3">3rd Year</button>
+      <button class="year-pill" data-locked="1" title="Coming later">1st &amp; 2nd</button>
+      <button class="year-pill" data-locked="1" title="Coming later">4th</button>
+    </div>
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card"><span>Machine Learning</span><span class="tag">PCCST503</span></div>
+    </div>
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block open" data-mod="1">
+        <button class="module-head" onclick="this.parentElement.classList.toggle('open')">
+          <span class="module-num">M1</span>
+          <span>Module 1</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          
+          <a href="m1_01_ml_vs_traditional.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M1 01 Ml Vs Traditional</span>
+          </a>
+          
+          <a href="m1_02_ml_paradigms.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M1 02 Ml Paradigms</span>
+          </a>
+          
+          <a href="m1_03_parameter_estimation_mle.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M1 03 Parameter Estimation Mle</span>
+          </a>
+          
+          <a href="m1_04_parameter_estimation_map.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M1 04 Parameter Estimation Map</span>
+          </a>
+          
+          <a href="m1_05_supervised_learning_formulation.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M1 05 Supervised Learning Formulation</span>
+          </a>
+          
+          <a href="m1_06_loss_functions_optimization.html" class="topic-link active" style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M1 06 Loss Functions Optimization</span>
+          </a>
+          
+          <a href="m1_07_linear_regression_one_variable.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M1 07 Linear Regression One Variable</span>
+          </a>
+          
+          <a href="m1_08_linear_regression_multiple_variables.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M1 08 Linear Regression Multiple Variables</span>
+          </a>
+          
+          <a href="m1_99_practice.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M1 99 Practice</span>
+          </a>
+          
+        </div>
+      </div>
+      
+      <div class="module-block " data-mod="2">
+        <button class="module-head" onclick="this.parentElement.classList.toggle('open')">
+          <span class="module-num">M2</span>
+          <span>Module 2</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          
+          <a href="m2_01_logistic_regression.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M2 01 Logistic Regression</span>
+          </a>
+          
+          <a href="m2_02_naive_bayes.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M2 02 Naive Bayes</span>
+          </a>
+          
+          <a href="m2_03_knn.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M2 03 Knn</span>
+          </a>
+          
+          <a href="m2_04_decision_trees.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M2 04 Decision Trees</span>
+          </a>
+          
+          <a href="m2_99_practice.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M2 99 Practice</span>
+          </a>
+          
+        </div>
+      </div>
+      
+      <div class="module-block " data-mod="3">
+        <button class="module-head" onclick="this.parentElement.classList.toggle('open')">
+          <span class="module-num">M3</span>
+          <span>Module 3</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          
+          <a href="m3_01_generalisation_overfitting.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M3 01 Generalisation Overfitting</span>
+          </a>
+          
+          <a href="m3_02_regularization_lasso_ridge.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M3 02 Regularization Lasso Ridge</span>
+          </a>
+          
+          <a href="m3_03_training_testing_validation.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M3 03 Training Testing Validation</span>
+          </a>
+          
+          <a href="m3_04_evaluation_classification.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M3 04 Evaluation Classification</span>
+          </a>
+          
+          <a href="m3_05_evaluation_regression.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M3 05 Evaluation Regression</span>
+          </a>
+          
+          <a href="m3_06_svm_linear.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M3 06 Svm Linear</span>
+          </a>
+          
+          <a href="m3_07_svm_nonlinear.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M3 07 Svm Nonlinear</span>
+          </a>
+          
+          <a href="m3_08_neural_networks_perceptron.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M3 08 Neural Networks Perceptron</span>
+          </a>
+          
+          <a href="m3_09_neural_networks_activation.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M3 09 Neural Networks Activation</span>
+          </a>
+          
+          <a href="m3_10_neural_networks_backprop.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M3 10 Neural Networks Backprop</span>
+          </a>
+          
+          <a href="m3_99_practice.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M3 99 Practice</span>
+          </a>
+          
+        </div>
+      </div>
+      
+      <div class="module-block " data-mod="4">
+        <button class="module-head" onclick="this.parentElement.classList.toggle('open')">
+          <span class="module-num">M4</span>
+          <span>Module 4</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          
+          <a href="m4_01_clustering_similarity.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M4 01 Clustering Similarity</span>
+          </a>
+          
+          <a href="m4_02_clustering_hierarchical.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M4 02 Clustering Hierarchical</span>
+          </a>
+          
+          <a href="m4_03_clustering_kmeans.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M4 03 Clustering Kmeans</span>
+          </a>
+          
+          <a href="m4_04_dimensionality_reduction_pca.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M4 04 Dimensionality Reduction Pca</span>
+          </a>
+          
+          <a href="m4_05_multidimensional_scaling.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M4 05 Multidimensional Scaling</span>
+          </a>
+          
+          <a href="m4_06_ensemble_bagging_boosting.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M4 06 Ensemble Bagging Boosting</span>
+          </a>
+          
+          <a href="m4_07_resampling_methods.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M4 07 Resampling Methods</span>
+          </a>
+          
+          <a href="m4_08_bias_variance_tradeoff.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M4 08 Bias Variance Tradeoff</span>
+          </a>
+          
+          <a href="m4_99_practice.html" class="topic-link " style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M4 99 Practice</span>
+          </a>
+          
+        </div>
+      </div>
+      
+    </nav>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" onclick="document.getElementById('sidebar').classList.toggle('mobile-open')">
+        <svg width="20" height="20" viewBox="0 0 20 20"><path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+      <div class="crumb" id="crumb">Machine Learning / M1 / M1 06 Loss Functions Optimization</div>
+      <div class="topbar-actions">
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="19" height="19" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.5"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <h1 id="loss-functions-and-optimization">Loss Functions and Optimization</h1>
+<p><strong>How a machine measures its own mistakes, and how it mathematically learns to fix them.</strong></p>
+<pre><code>&lt;p&gt;We know that Machine Learning creates a rule (a Hypothesis function) to map inputs to outputs. But when a model is first born, it is completely stupid. It just guesses randomly. How does it get smarter?&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;1. The Loss Function (Measuring the Mistake)&lt;/strong&gt;&lt;br&gt;
+Imagine an archer shooting an arrow at a target. The bullseye is the actual true answer ($y$). The spot where the arrow actually hits is the model's prediction ($\hat{y}$). The distance between the arrow and the bullseye is the &lt;strong&gt;Loss&lt;/strong&gt;.&lt;br&gt;&lt;br&gt;
+A Loss Function is a mathematical formula that calculates exactly how "wrong" a single prediction is.
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;For Regression (Predicting Numbers):&lt;/strong&gt; We usually use &lt;em&gt;Squared Error&lt;/em&gt;. If the house costs $100k, and the model guesses $80k, the error is 20k. We square it to heavily penalize really big mistakes.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;For Classification (Predicting Categories):&lt;/strong&gt; We use &lt;em&gt;Cross-Entropy (Log Loss)&lt;/em&gt;. It heavily penalizes the model if it is extremely confident about the wrong answer (e.g., saying "I am 99% sure this is a dog" when it's actually a cat).&lt;/li&gt;
+&lt;/ul&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;2. Cost Function / Empirical Risk (The Total Mistake)&lt;/strong&gt;&lt;br&gt;
+"Loss" is for one single example. The &lt;strong&gt;Cost Function&lt;/strong&gt; (also called Empirical Risk, $J$) is simply the &lt;em&gt;average&lt;/em&gt; of all the losses across the entire training dataset. The ultimate goal of Machine Learning is to find the parameters (weights) that make this Cost Function as close to zero as possible.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;3. Optimization (Fixing the Mistake)&lt;/strong&gt;&lt;br&gt;
+How do we get the Cost to zero? Imagine a blindfolded hiker dropped on the side of a mountain. Their goal is to get to the very bottom of the valley (zero error). 
+&lt;ul&gt;
+  &lt;li&gt;They feel the ground with their feet to see which way is downhill. This slope is called the &lt;strong&gt;Gradient&lt;/strong&gt; (the derivative of the cost function).&lt;/li&gt;
+  &lt;li&gt;They take a step in the steepest downhill direction.&lt;/li&gt;
+  &lt;li&gt;This step-by-step process of walking down the error mountain is called &lt;strong&gt;Gradient Descent&lt;/strong&gt;—the most famous optimization algorithm in all of AI!&lt;/li&gt;
+&lt;/ul&gt;&lt;/p&gt;
+</code></pre>
+<p>$$\text{Loss (Single): } L(y_i, \hat{y}<em i="1">i) = (y_i - \hat{y}_i)^2 \ \text{Cost / Risk (Total): } J(\theta) = \frac{1}{n} \sum</em>}^{n} L(y_i, \hat{y<em new="new">i) \ \text{Optimization Step: } \theta</em> - \eta \nabla J(\theta)$$} = \theta_{old</p>
+<blockquote>
+<p><strong>What is η (Eta)?</strong>
+In the Optimization formula, $\eta$ is the <strong>Learning Rate</strong>. It controls the <em>size</em> of the step the blindfolded hiker takes. If $\eta$ is too small, the AI takes days to learn. If $\eta$ is too big, the AI takes giant leaps and might accidentally jump entirely over the valley, completely failing to learn!</p>
+</blockquote>
+<h2 id="worked-example-step-by-step-scenario-calculating-the-cost-mse">Worked Example: Step-by-Step Scenario: Calculating the Cost (MSE)</h2>
+<ol>
+<li><strong>The Problem:</strong> You have a tiny dataset of 3 students. You try to predict their test scores out of 100. Calculate the Mean Squared Error (MSE) Cost for your model.</li>
+<li><strong>True Scores ($y$):</strong> [80, 90, 70]</li>
+<li><strong>Model's Predictions ($\hat{y}$):</strong> [75, 90, 78]</li>
+<li><strong>Step 1: Calculate the individual errors ($y - \hat{y}$).</strong><br>Student 1: $80 - 75 = 5$<br>Student 2: $90 - 90 = 0$<br>Student 3: $70 - 78 = -8$</li>
+<li><strong>Step 2: Square the errors.</strong> (This gets rid of negative signs and punishes the big mistake of Student 3).<br>Student 1: $5^2 = 25$<br>Student 2: $0^2 = 0$<br>Student 3: $(-8)^2 = 64$</li>
+<li><strong>Step 3: Find the Average (Mean) to get the final Cost $J$.</strong><br>$J = \frac{25 + 0 + 64}{3} = \frac{89}{3} \approx 29.67$.</li>
+<li><strong>Result:</strong> Your model's total Cost is 29.67. To 'learn', the optimization algorithm will now adjust its internal weights to try and make this number smaller!</li>
+</ol>
+<h2 id="visualizing-the-concept">Visualizing the Concept</h2>
+<div class="video-container"><video controls preload="metadata"><source src="../assets/videos/m1_06_optimization.mp4" type="video/mp4">Your browser does not support embedded HTML5 video.</video></div>
+
+<p><em>Watch the 'Blindfolded Hiker' concept in action. A model (the dot) calculates its gradient (the slope) and takes steps down the Cost Bowl toward the minimum error.</em></p>
+<details class="interactive-toggle"><summary>Deep Dive: Convex vs. Non-Convex Mountains</summary><div class="toggle-content">Not all Cost Functions look like a perfect, smooth salad bowl (a <strong>Convex</strong> shape). Simple algorithms like Linear Regression have convex cost functions, meaning there is only one true bottom (Global Minimum).<br><br>Deep Neural Networks have <strong>Non-Convex</strong> cost functions. The landscape looks like a bumpy mountain range with hundreds of fake valleys (Local Minima). The blindfolded hiker might walk into a shallow crater, think they've reached the absolute bottom, and stop learning, even though a much deeper valley is just over the next hill! This is why training complex AI models is so difficult.</div></details>
+
+<h2 id="self-check">Self Check</h2>
+<details class="interactive-toggle"><summary>Q1: What is the primary difference between a 'Loss Function' and a 'Cost Function'?</summary><div class="toggle-content">**Answer:** Loss measures the error of ONE single prediction. Cost measures the average error across the ENTIRE dataset.
+
+*Explanation:* Loss is calculated per-example. Cost (or Empirical Risk) aggregates all the individual losses to evaluate the model's overall performance on the dataset.</div></details>
+
+<details class="interactive-toggle"><summary>Q2: If you are trying to predict the exact price of a used car, which Loss function should you use?</summary><div class="toggle-content">**Answer:** Squared Error (MSE)
+
+*Explanation:* Predicting a continuous number like a price is a Regression problem. Squared Error is the standard loss function for regression. The others are for Classification.</div></details>
+
+<details class="interactive-toggle"><summary>Q3: In Gradient Descent, what determines how large a 'step' the algorithm takes down the error mountain?</summary><div class="toggle-content">**Answer:** The Learning Rate (Eta)
+
+*Explanation:* The Learning Rate ($\eta$) is a hyperparameter that scales the gradient to determine exactly how big the update step will be.</div></details>
+    </main>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="m1_05_supervised_learning_formulation.html" class="nav-card prev" style="text-decoration:none;">
+        <span class="dir">&larr; PREVIOUS</span><div class="ttl">M1 05 Supervised Learning Formulation</div>
+      </a>
+      
+      
+      
+      <a href="m1_07_linear_regression_one_variable.html" class="nav-card next" style="text-decoration:none;">
+        <span class="dir">NEXT &rarr;</span><div class="ttl">M1 07 Linear Regression One Variable</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-label="Settings">
+    <div class="modal-head">
+      <h2>Settings</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Appearance</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Reading</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-reading"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Text size</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling(14)">A<span>-</span></button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling(16)">A</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling(20)">A<span>+</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+  }
+  function applyFontScaling(pixelSize) {
+    document.body.style.fontSize = pixelSize + 'px';
+    localStorage.setItem('user_preferred_font_size', pixelSize);
+  }
+  (function restoreUserPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || '16';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+</script>
+</body>
+</html>

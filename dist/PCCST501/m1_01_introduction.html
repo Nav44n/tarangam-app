@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tarangam - {{ title }}</title>
+<title>Tarangam - M1 01 Introduction</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../style.css">
@@ -49,25 +49,25 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
       <button class="year-pill" data-locked="1" title="Coming later">4th</button>
     </div>
     <div class="subject-switch" id="subjectSwitch">
-      <div class="subject-card"><span>{{ course_name }}</span><span class="tag">{{ course_code }}</span></div>
+      <div class="subject-card"><span>Computer Networks</span><span class="tag">PCCST501</span></div>
     </div>
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
-      {% for mod_num, mod in modules.items() %}
-      <div class="module-block {% if mod_num == current_mod %}open{% endif %}" data-mod="{{ mod_num }}">
+      
+      <div class="module-block open" data-mod="1">
         <button class="module-head" onclick="this.parentElement.classList.toggle('open')">
-          <span class="module-num">M{{ mod_num }}</span>
-          <span>{{ mod.title }}</span>
+          <span class="module-num">M1</span>
+          <span>Module 1</span>
           <span class="chev">&#9656;</span>
         </button>
         <div class="topic-list">
-          {% for topic in mod.topics %}
-          <a href="{{ topic.filename }}" class="topic-link {% if topic.id == current_id %}active{% endif %}" style="text-decoration:none; display:flex;">
-            <span class="topic-dot"></span><span>{{ topic.title }}</span>
+          
+          <a href="m1_01_introduction.html" class="topic-link active" style="text-decoration:none; display:flex;">
+            <span class="topic-dot"></span><span>M1 01 Introduction</span>
           </a>
-          {% endfor %}
+          
         </div>
       </div>
-      {% endfor %}
+      
     </nav>
   </aside>
 
@@ -76,7 +76,7 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
       <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" onclick="document.getElementById('sidebar').classList.toggle('mobile-open')">
         <svg width="20" height="20" viewBox="0 0 20 20"><path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
       </button>
-      <div class="crumb" id="crumb">{{ course_name }} / M{{ current_mod }} / {{ title }}</div>
+      <div class="crumb" id="crumb">Computer Networks / M1 / M1 01 Introduction</div>
       <div class="topbar-actions">
         <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
           <svg width="19" height="19" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.5"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
@@ -85,25 +85,18 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
     </header>
 
     <main class="content" id="content">
-      {{ content | safe }}
+      <h1 id="introduction-to-computer-networks">Introduction to Computer Networks</h1>
+<p>Welcome to PCCST501. Content coming soon.</p>
     </main>
 
     <footer class="pagefoot" id="pagefoot">
-      {% if prev_page %}
-      <a href="{{ prev_page.filename }}" class="nav-card prev" style="text-decoration:none;">
-        <span class="dir">&larr; PREVIOUS</span><div class="ttl">{{ prev_page.title }}</div>
-      </a>
-      {% else %}
-      <div></div>
-      {% endif %}
       
-      {% if next_page %}
-      <a href="{{ next_page.filename }}" class="nav-card next" style="text-decoration:none;">
-        <span class="dir">NEXT &rarr;</span><div class="ttl">{{ next_page.title }}</div>
-      </a>
-      {% else %}
       <div></div>
-      {% endif %}
+      
+      
+      
+      <div></div>
+      
     </footer>
   </div>
 </div>
@@ -154,5 +147,4 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
 </script>
 </body>
 </html>
-
 

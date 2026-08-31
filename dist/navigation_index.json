@@ -1,230 +1,269 @@
 {
-  "1": {
-    "num": 1,
-    "title": "Module 1",
-    "topics": [
-      {
-        "id": "m1_01_ml_vs_traditional",
-        "title": "M1 01 Ml Vs Traditional",
-        "filename": "m1_01_ml_vs_traditional.html",
-        "source_path": "content\\m1_01_ml_vs_traditional.md"
-      },
-      {
-        "id": "m1_02_ml_paradigms",
-        "title": "M1 02 Ml Paradigms",
-        "filename": "m1_02_ml_paradigms.html",
-        "source_path": "content\\m1_02_ml_paradigms.md"
-      },
-      {
-        "id": "m1_03_parameter_estimation_mle",
-        "title": "M1 03 Parameter Estimation Mle",
-        "filename": "m1_03_parameter_estimation_mle.html",
-        "source_path": "content\\m1_03_parameter_estimation_mle.md"
-      },
-      {
-        "id": "m1_04_parameter_estimation_map",
-        "title": "M1 04 Parameter Estimation Map",
-        "filename": "m1_04_parameter_estimation_map.html",
-        "source_path": "content\\m1_04_parameter_estimation_map.md"
-      },
-      {
-        "id": "m1_05_supervised_learning_formulation",
-        "title": "M1 05 Supervised Learning Formulation",
-        "filename": "m1_05_supervised_learning_formulation.html",
-        "source_path": "content\\m1_05_supervised_learning_formulation.md"
-      },
-      {
-        "id": "m1_06_loss_functions_optimization",
-        "title": "M1 06 Loss Functions Optimization",
-        "filename": "m1_06_loss_functions_optimization.html",
-        "source_path": "content\\m1_06_loss_functions_optimization.md"
-      },
-      {
-        "id": "m1_07_linear_regression_one_variable",
-        "title": "M1 07 Linear Regression One Variable",
-        "filename": "m1_07_linear_regression_one_variable.html",
-        "source_path": "content\\m1_07_linear_regression_one_variable.md"
-      },
-      {
-        "id": "m1_08_linear_regression_multiple_variables",
-        "title": "M1 08 Linear Regression Multiple Variables",
-        "filename": "m1_08_linear_regression_multiple_variables.html",
-        "source_path": "content\\m1_08_linear_regression_multiple_variables.md"
-      },
-      {
-        "id": "m1_99_practice",
-        "title": "M1 99 Practice",
-        "filename": "m1_99_practice.html",
-        "source_path": "content\\m1_99_practice.md"
+  "PCCST501": {
+    "name": "Computer Networks",
+    "modules": {
+      "1": {
+        "num": 1,
+        "title": "Module 1",
+        "topics": [
+          {
+            "id": "m1_01_introduction",
+            "title": "M1 01 Introduction",
+            "filename": "m1_01_introduction.html",
+            "source_path": "content\\PCCST501\\m1_01_introduction.md"
+          }
+        ]
       }
-    ]
+    }
   },
-  "2": {
-    "num": 2,
-    "title": "Module 2",
-    "topics": [
-      {
-        "id": "m2_01_logistic_regression",
-        "title": "M2 01 Logistic Regression",
-        "filename": "m2_01_logistic_regression.html",
-        "source_path": "content\\m2_01_logistic_regression.md"
-      },
-      {
-        "id": "m2_02_naive_bayes",
-        "title": "M2 02 Naive Bayes",
-        "filename": "m2_02_naive_bayes.html",
-        "source_path": "content\\m2_02_naive_bayes.md"
-      },
-      {
-        "id": "m2_03_knn",
-        "title": "M2 03 Knn",
-        "filename": "m2_03_knn.html",
-        "source_path": "content\\m2_03_knn.md"
-      },
-      {
-        "id": "m2_04_decision_trees",
-        "title": "M2 04 Decision Trees",
-        "filename": "m2_04_decision_trees.html",
-        "source_path": "content\\m2_04_decision_trees.md"
-      },
-      {
-        "id": "m2_99_practice",
-        "title": "M2 99 Practice",
-        "filename": "m2_99_practice.html",
-        "source_path": "content\\m2_99_practice.md"
+  "PCCST502": {
+    "name": "Algorithm Design",
+    "modules": {
+      "1": {
+        "num": 1,
+        "title": "Module 1",
+        "topics": [
+          {
+            "id": "m1_01_algorithm_analysis",
+            "title": "M1 01 Algorithm Analysis",
+            "filename": "m1_01_algorithm_analysis.html",
+            "source_path": "content\\PCCST502\\m1_01_algorithm_analysis.md"
+          }
+        ]
       }
-    ]
+    }
   },
-  "3": {
-    "num": 3,
-    "title": "Module 3",
-    "topics": [
-      {
-        "id": "m3_01_generalisation_overfitting",
-        "title": "M3 01 Generalisation Overfitting",
-        "filename": "m3_01_generalisation_overfitting.html",
-        "source_path": "content\\m3_01_generalisation_overfitting.md"
+  "PCCST503": {
+    "name": "Machine Learning",
+    "modules": {
+      "1": {
+        "num": 1,
+        "title": "Module 1",
+        "topics": [
+          {
+            "id": "m1_01_ml_vs_traditional",
+            "title": "M1 01 Ml Vs Traditional",
+            "filename": "m1_01_ml_vs_traditional.html",
+            "source_path": "content\\PCCST503\\m1_01_ml_vs_traditional.md"
+          },
+          {
+            "id": "m1_02_ml_paradigms",
+            "title": "M1 02 Ml Paradigms",
+            "filename": "m1_02_ml_paradigms.html",
+            "source_path": "content\\PCCST503\\m1_02_ml_paradigms.md"
+          },
+          {
+            "id": "m1_03_parameter_estimation_mle",
+            "title": "M1 03 Parameter Estimation Mle",
+            "filename": "m1_03_parameter_estimation_mle.html",
+            "source_path": "content\\PCCST503\\m1_03_parameter_estimation_mle.md"
+          },
+          {
+            "id": "m1_04_parameter_estimation_map",
+            "title": "M1 04 Parameter Estimation Map",
+            "filename": "m1_04_parameter_estimation_map.html",
+            "source_path": "content\\PCCST503\\m1_04_parameter_estimation_map.md"
+          },
+          {
+            "id": "m1_05_supervised_learning_formulation",
+            "title": "M1 05 Supervised Learning Formulation",
+            "filename": "m1_05_supervised_learning_formulation.html",
+            "source_path": "content\\PCCST503\\m1_05_supervised_learning_formulation.md"
+          },
+          {
+            "id": "m1_06_loss_functions_optimization",
+            "title": "M1 06 Loss Functions Optimization",
+            "filename": "m1_06_loss_functions_optimization.html",
+            "source_path": "content\\PCCST503\\m1_06_loss_functions_optimization.md"
+          },
+          {
+            "id": "m1_07_linear_regression_one_variable",
+            "title": "M1 07 Linear Regression One Variable",
+            "filename": "m1_07_linear_regression_one_variable.html",
+            "source_path": "content\\PCCST503\\m1_07_linear_regression_one_variable.md"
+          },
+          {
+            "id": "m1_08_linear_regression_multiple_variables",
+            "title": "M1 08 Linear Regression Multiple Variables",
+            "filename": "m1_08_linear_regression_multiple_variables.html",
+            "source_path": "content\\PCCST503\\m1_08_linear_regression_multiple_variables.md"
+          },
+          {
+            "id": "m1_99_practice",
+            "title": "M1 99 Practice",
+            "filename": "m1_99_practice.html",
+            "source_path": "content\\PCCST503\\m1_99_practice.md"
+          }
+        ]
       },
-      {
-        "id": "m3_02_regularization_lasso_ridge",
-        "title": "M3 02 Regularization Lasso Ridge",
-        "filename": "m3_02_regularization_lasso_ridge.html",
-        "source_path": "content\\m3_02_regularization_lasso_ridge.md"
+      "2": {
+        "num": 2,
+        "title": "Module 2",
+        "topics": [
+          {
+            "id": "m2_01_logistic_regression",
+            "title": "M2 01 Logistic Regression",
+            "filename": "m2_01_logistic_regression.html",
+            "source_path": "content\\PCCST503\\m2_01_logistic_regression.md"
+          },
+          {
+            "id": "m2_02_naive_bayes",
+            "title": "M2 02 Naive Bayes",
+            "filename": "m2_02_naive_bayes.html",
+            "source_path": "content\\PCCST503\\m2_02_naive_bayes.md"
+          },
+          {
+            "id": "m2_03_knn",
+            "title": "M2 03 Knn",
+            "filename": "m2_03_knn.html",
+            "source_path": "content\\PCCST503\\m2_03_knn.md"
+          },
+          {
+            "id": "m2_04_decision_trees",
+            "title": "M2 04 Decision Trees",
+            "filename": "m2_04_decision_trees.html",
+            "source_path": "content\\PCCST503\\m2_04_decision_trees.md"
+          },
+          {
+            "id": "m2_99_practice",
+            "title": "M2 99 Practice",
+            "filename": "m2_99_practice.html",
+            "source_path": "content\\PCCST503\\m2_99_practice.md"
+          }
+        ]
       },
-      {
-        "id": "m3_03_training_testing_validation",
-        "title": "M3 03 Training Testing Validation",
-        "filename": "m3_03_training_testing_validation.html",
-        "source_path": "content\\m3_03_training_testing_validation.md"
+      "3": {
+        "num": 3,
+        "title": "Module 3",
+        "topics": [
+          {
+            "id": "m3_01_generalisation_overfitting",
+            "title": "M3 01 Generalisation Overfitting",
+            "filename": "m3_01_generalisation_overfitting.html",
+            "source_path": "content\\PCCST503\\m3_01_generalisation_overfitting.md"
+          },
+          {
+            "id": "m3_02_regularization_lasso_ridge",
+            "title": "M3 02 Regularization Lasso Ridge",
+            "filename": "m3_02_regularization_lasso_ridge.html",
+            "source_path": "content\\PCCST503\\m3_02_regularization_lasso_ridge.md"
+          },
+          {
+            "id": "m3_03_training_testing_validation",
+            "title": "M3 03 Training Testing Validation",
+            "filename": "m3_03_training_testing_validation.html",
+            "source_path": "content\\PCCST503\\m3_03_training_testing_validation.md"
+          },
+          {
+            "id": "m3_04_evaluation_classification",
+            "title": "M3 04 Evaluation Classification",
+            "filename": "m3_04_evaluation_classification.html",
+            "source_path": "content\\PCCST503\\m3_04_evaluation_classification.md"
+          },
+          {
+            "id": "m3_05_evaluation_regression",
+            "title": "M3 05 Evaluation Regression",
+            "filename": "m3_05_evaluation_regression.html",
+            "source_path": "content\\PCCST503\\m3_05_evaluation_regression.md"
+          },
+          {
+            "id": "m3_06_svm_linear",
+            "title": "M3 06 Svm Linear",
+            "filename": "m3_06_svm_linear.html",
+            "source_path": "content\\PCCST503\\m3_06_svm_linear.md"
+          },
+          {
+            "id": "m3_07_svm_nonlinear",
+            "title": "M3 07 Svm Nonlinear",
+            "filename": "m3_07_svm_nonlinear.html",
+            "source_path": "content\\PCCST503\\m3_07_svm_nonlinear.md"
+          },
+          {
+            "id": "m3_08_neural_networks_perceptron",
+            "title": "M3 08 Neural Networks Perceptron",
+            "filename": "m3_08_neural_networks_perceptron.html",
+            "source_path": "content\\PCCST503\\m3_08_neural_networks_perceptron.md"
+          },
+          {
+            "id": "m3_09_neural_networks_activation",
+            "title": "M3 09 Neural Networks Activation",
+            "filename": "m3_09_neural_networks_activation.html",
+            "source_path": "content\\PCCST503\\m3_09_neural_networks_activation.md"
+          },
+          {
+            "id": "m3_10_neural_networks_backprop",
+            "title": "M3 10 Neural Networks Backprop",
+            "filename": "m3_10_neural_networks_backprop.html",
+            "source_path": "content\\PCCST503\\m3_10_neural_networks_backprop.md"
+          },
+          {
+            "id": "m3_99_practice",
+            "title": "M3 99 Practice",
+            "filename": "m3_99_practice.html",
+            "source_path": "content\\PCCST503\\m3_99_practice.md"
+          }
+        ]
       },
-      {
-        "id": "m3_04_evaluation_classification",
-        "title": "M3 04 Evaluation Classification",
-        "filename": "m3_04_evaluation_classification.html",
-        "source_path": "content\\m3_04_evaluation_classification.md"
-      },
-      {
-        "id": "m3_05_evaluation_regression",
-        "title": "M3 05 Evaluation Regression",
-        "filename": "m3_05_evaluation_regression.html",
-        "source_path": "content\\m3_05_evaluation_regression.md"
-      },
-      {
-        "id": "m3_06_svm_linear",
-        "title": "M3 06 Svm Linear",
-        "filename": "m3_06_svm_linear.html",
-        "source_path": "content\\m3_06_svm_linear.md"
-      },
-      {
-        "id": "m3_07_svm_nonlinear",
-        "title": "M3 07 Svm Nonlinear",
-        "filename": "m3_07_svm_nonlinear.html",
-        "source_path": "content\\m3_07_svm_nonlinear.md"
-      },
-      {
-        "id": "m3_08_neural_networks_perceptron",
-        "title": "M3 08 Neural Networks Perceptron",
-        "filename": "m3_08_neural_networks_perceptron.html",
-        "source_path": "content\\m3_08_neural_networks_perceptron.md"
-      },
-      {
-        "id": "m3_09_neural_networks_activation",
-        "title": "M3 09 Neural Networks Activation",
-        "filename": "m3_09_neural_networks_activation.html",
-        "source_path": "content\\m3_09_neural_networks_activation.md"
-      },
-      {
-        "id": "m3_10_neural_networks_backprop",
-        "title": "M3 10 Neural Networks Backprop",
-        "filename": "m3_10_neural_networks_backprop.html",
-        "source_path": "content\\m3_10_neural_networks_backprop.md"
-      },
-      {
-        "id": "m3_99_practice",
-        "title": "M3 99 Practice",
-        "filename": "m3_99_practice.html",
-        "source_path": "content\\m3_99_practice.md"
+      "4": {
+        "num": 4,
+        "title": "Module 4",
+        "topics": [
+          {
+            "id": "m4_01_clustering_similarity",
+            "title": "M4 01 Clustering Similarity",
+            "filename": "m4_01_clustering_similarity.html",
+            "source_path": "content\\PCCST503\\m4_01_clustering_similarity.md"
+          },
+          {
+            "id": "m4_02_clustering_hierarchical",
+            "title": "M4 02 Clustering Hierarchical",
+            "filename": "m4_02_clustering_hierarchical.html",
+            "source_path": "content\\PCCST503\\m4_02_clustering_hierarchical.md"
+          },
+          {
+            "id": "m4_03_clustering_kmeans",
+            "title": "M4 03 Clustering Kmeans",
+            "filename": "m4_03_clustering_kmeans.html",
+            "source_path": "content\\PCCST503\\m4_03_clustering_kmeans.md"
+          },
+          {
+            "id": "m4_04_dimensionality_reduction_pca",
+            "title": "M4 04 Dimensionality Reduction Pca",
+            "filename": "m4_04_dimensionality_reduction_pca.html",
+            "source_path": "content\\PCCST503\\m4_04_dimensionality_reduction_pca.md"
+          },
+          {
+            "id": "m4_05_multidimensional_scaling",
+            "title": "M4 05 Multidimensional Scaling",
+            "filename": "m4_05_multidimensional_scaling.html",
+            "source_path": "content\\PCCST503\\m4_05_multidimensional_scaling.md"
+          },
+          {
+            "id": "m4_06_ensemble_bagging_boosting",
+            "title": "M4 06 Ensemble Bagging Boosting",
+            "filename": "m4_06_ensemble_bagging_boosting.html",
+            "source_path": "content\\PCCST503\\m4_06_ensemble_bagging_boosting.md"
+          },
+          {
+            "id": "m4_07_resampling_methods",
+            "title": "M4 07 Resampling Methods",
+            "filename": "m4_07_resampling_methods.html",
+            "source_path": "content\\PCCST503\\m4_07_resampling_methods.md"
+          },
+          {
+            "id": "m4_08_bias_variance_tradeoff",
+            "title": "M4 08 Bias Variance Tradeoff",
+            "filename": "m4_08_bias_variance_tradeoff.html",
+            "source_path": "content\\PCCST503\\m4_08_bias_variance_tradeoff.md"
+          },
+          {
+            "id": "m4_99_practice",
+            "title": "M4 99 Practice",
+            "filename": "m4_99_practice.html",
+            "source_path": "content\\PCCST503\\m4_99_practice.md"
+          }
+        ]
       }
-    ]
-  },
-  "4": {
-    "num": 4,
-    "title": "Module 4",
-    "topics": [
-      {
-        "id": "m4_01_clustering_similarity",
-        "title": "M4 01 Clustering Similarity",
-        "filename": "m4_01_clustering_similarity.html",
-        "source_path": "content\\m4_01_clustering_similarity.md"
-      },
-      {
-        "id": "m4_02_clustering_hierarchical",
-        "title": "M4 02 Clustering Hierarchical",
-        "filename": "m4_02_clustering_hierarchical.html",
-        "source_path": "content\\m4_02_clustering_hierarchical.md"
-      },
-      {
-        "id": "m4_03_clustering_kmeans",
-        "title": "M4 03 Clustering Kmeans",
-        "filename": "m4_03_clustering_kmeans.html",
-        "source_path": "content\\m4_03_clustering_kmeans.md"
-      },
-      {
-        "id": "m4_04_dimensionality_reduction_pca",
-        "title": "M4 04 Dimensionality Reduction Pca",
-        "filename": "m4_04_dimensionality_reduction_pca.html",
-        "source_path": "content\\m4_04_dimensionality_reduction_pca.md"
-      },
-      {
-        "id": "m4_05_multidimensional_scaling",
-        "title": "M4 05 Multidimensional Scaling",
-        "filename": "m4_05_multidimensional_scaling.html",
-        "source_path": "content\\m4_05_multidimensional_scaling.md"
-      },
-      {
-        "id": "m4_06_ensemble_bagging_boosting",
-        "title": "M4 06 Ensemble Bagging Boosting",
-        "filename": "m4_06_ensemble_bagging_boosting.html",
-        "source_path": "content\\m4_06_ensemble_bagging_boosting.md"
-      },
-      {
-        "id": "m4_07_resampling_methods",
-        "title": "M4 07 Resampling Methods",
-        "filename": "m4_07_resampling_methods.html",
-        "source_path": "content\\m4_07_resampling_methods.md"
-      },
-      {
-        "id": "m4_08_bias_variance_tradeoff",
-        "title": "M4 08 Bias Variance Tradeoff",
-        "filename": "m4_08_bias_variance_tradeoff.html",
-        "source_path": "content\\m4_08_bias_variance_tradeoff.md"
-      },
-      {
-        "id": "m4_99_practice",
-        "title": "M4 99 Practice",
-        "filename": "m4_99_practice.html",
-        "source_path": "content\\m4_99_practice.md"
-      }
-    ]
+    }
   }
 }

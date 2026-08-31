@@ -497,7 +497,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -509,43 +509,195 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="single-layer-perceptron-model">Single-Layer Perceptron Model</h1>
-<p><strong>Linear threshold units, perceptron convergence theorem, and weight updates.</strong></p>
+<h1 id="single-layer-perceptron-architecture-weights-and-threshold-logic">Single-Layer Perceptron: Architecture, Weights, and Threshold Logic</h1>
+<p><strong>Frank Rosenblatt's 1958 artificial neuron that launched the connectionist revolution.</strong></p>
+<p>Welcome to Module 3 of Machine Learning. Before we can build deep, complex neural networks, we must understand their foundational building block: the Single-Layer Perceptron. This mathematical model is where biological inspiration meets computational power.</p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Single-Layer Perceptron Model</strong> will be detailed here.</p></div></div>
+<h2 id="1-the-intuition-the-biological-neuron-analogy">1. The Intuition: The Biological Neuron Analogy</h2>
+<p>To understand how a machine "learns," it helps to look at how humans think. The perceptron is highly inspired by the biological neurons in our brains.</p>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: ELI5 Analogy: The Brain Switch</div><div class="callout-body"><p>Imagine a biological neuron as a tiny decision-making switch in your brain:
+- <strong>Dendrites (Inputs, $x_i$):</strong> These are the "ears" of the neuron, listening to signals from other connected neurons.
+- <strong>Synapse Weights (Importance, $w_i$):</strong> Not all signals are equally important. Synapses amplify or dampen incoming signals based on how critical they are.
+- <strong>Cell Nucleus (The Summation):</strong> The body of the cell collects all these weighted signals and adds them together.
+- <strong>Axon (Firing Threshold):</strong> If the total combined signal crosses a certain threshold, the neuron "fires" an electrical pulse down its axon. If it doesn't reach the threshold, it stays completely silent. It is an "all-or-nothing" switch.</p></div></div>
 
+<p>In artificial intelligence, simple binary threshold units mimic these biological brain switches. The perceptron takes in multiple numerical inputs, weighs their importance, sums them up, and outputs a strict 1 (fire) or 0 (don't fire) based on a threshold.</p>
 <hr />
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<h2 id="2-mathematical-formalism">2. Mathematical Formalism</h2>
+<p>Let us translate this biological analogy into formal mathematics. The Perceptron operates in two distinct phases: forward propagation (making a prediction) and learning (updating weights based on mistakes).</p>
+<h3 id="forward-propagation-making-a-decision">Forward Propagation (Making a Decision)</h3>
+<p>First, we calculate the Net Input, which is the linear combination of inputs, weights, and a bias term:
+$$ z = \sum_{i=1}^d w_i x_i + b = w^T x + b $$</p>
+<p>Next, we apply the Activation Function. The perceptron uses a Hard Threshold (Heaviside step) function to make its final all-or-nothing decision:
+$$ \hat{y} = \begin{cases} 1 &amp; \text{if } z \ge 0 \ 0 &amp; \text{if } z &lt; 0 \end{cases} $$</p>
+<h3 id="the-perceptron-learning-rule-fixing-mistakes">The Perceptron Learning Rule (Fixing Mistakes)</h3>
+<p>If the perceptron makes a mistake, it must adjust its weights. The weight update equation is defined as:
+$$ w_i := w_i + \Delta w_i $$</p>
+<p>Where the change in weight ($\Delta w_i$) is calculated by:
+$$ \Delta w_i = \eta (y - \hat{y}) x_i $$
+<em>(Note: The bias $b$ is updated similarly, treating its input $x_0$ as always being $1$.)</em></p>
+<h3 id="perceptron-convergence-theorem">Perceptron Convergence Theorem</h3>
+<p>Rosenblatt mathematically proved that if a dataset is linearly separable (meaning a straight line or flat hyperplane can perfectly divide the classes), the perceptron algorithm is guaranteed to find that separating boundary in a finite number of steps.</p>
+<p><strong>Proof Intuition:</strong> Every time the perceptron misclassifies a point, the update rule algebraically nudges the weight vector a tiny fraction ($\eta$) in the direction of the misclassified point, eventually rotating the decision boundary until all points fall on the correct side.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Symbol</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">$x_i$</td>
+<td style="text-align: left;">Input Feature</td>
+<td style="text-align: left;">The $i$-th feature of the input data point.</td>
+</tr>
+<tr>
+<td style="text-align: left;">$w_i$</td>
+<td style="text-align: left;">Weight</td>
+<td style="text-align: left;">The learned importance of the $i$-th input.</td>
+</tr>
+<tr>
+<td style="text-align: left;">$b$</td>
+<td style="text-align: left;">Bias</td>
+<td style="text-align: left;">The threshold offset that shifts the activation function.</td>
+</tr>
+<tr>
+<td style="text-align: left;">$z$</td>
+<td style="text-align: left;">Net Input</td>
+<td style="text-align: left;">The weighted sum of inputs plus the bias.</td>
+</tr>
+<tr>
+<td style="text-align: left;">$y$</td>
+<td style="text-align: left;">Target Label</td>
+<td style="text-align: left;">The actual, true class of the data point ($0$ or $1$).</td>
+</tr>
+<tr>
+<td style="text-align: left;">$\hat{y}$</td>
+<td style="text-align: left;">Predicted Label</td>
+<td style="text-align: left;">The perceptron's guessed output ($0$ or $1$).</td>
+</tr>
+<tr>
+<td style="text-align: left;">$\eta$</td>
+<td style="text-align: left;">Learning Rate</td>
+<td style="text-align: left;">A small constant (e.g., $0.1$) dictating step size during updates.</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
-
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
-
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<h2 id="3-stepped-numerical-example-learning-the-logical-and-gate">3. Stepped Numerical Example: Learning the Logical AND Gate</h2>
+<p>Let's watch the perceptron learn a 2-input logical AND gate.</p>
+<p><strong>The AND Gate Truth Table:</strong>
+- $(0, 0) \rightarrow 0$
+- $(0, 1) \rightarrow 0$
+- $(1, 0) \rightarrow 0$
+- $(1, 1) \rightarrow 1$</p>
+<p><strong>Initial State Setup:</strong>
+- Weights: $w_1 = 0.3$, $w_2 = -0.1$
+- Bias: $b = -0.2$
+- Learning Rate: $\eta = 0.1$</p>
+<p>Here is the step-by-step breakdown of Epoch 1 (one full pass through all four training examples).</p>
+<p>::: step [Step 1: Input (0,0)]
+- <strong>Input:</strong> $x_1=0, x_2=0$ | <strong>Target:</strong> $y=0$
+- <strong>Calculate $z$:</strong> $z = (0.3)(0) + (-0.1)(0) - 0.2 = -0.2$
+- <strong>Predict $\hat{y}$:</strong> Since $-0.2 &lt; 0$, $\hat{y} = 0$
+- <strong>Error:</strong> $y - \hat{y} = 0 - 0 = 0$
+- <strong>Update:</strong> No error, weights remain unchanged. ($w_1 = 0.3, w_2 = -0.1, b = -0.2$)
+:::</p>
+<p>::: step [Step 2: Input (0,1)]
+- <strong>Input:</strong> $x_1=0, x_2=1$ | <strong>Target:</strong> $y=0$
+- <strong>Calculate $z$:</strong> $z = (0.3)(0) + (-0.1)(1) - 0.2 = -0.3$
+- <strong>Predict $\hat{y}$:</strong> Since $-0.3 &lt; 0$, $\hat{y} = 0$
+- <strong>Error:</strong> $y - \hat{y} = 0 - 0 = 0$
+- <strong>Update:</strong> No error, weights remain unchanged. ($w_1 = 0.3, w_2 = -0.1, b = -0.2$)
+:::</p>
+<p>::: step [Step 3: Input (1,0)]
+- <strong>Input:</strong> $x_1=1, x_2=0$ | <strong>Target:</strong> $y=0$
+- <strong>Calculate $z$:</strong> $z = (0.3)(1) + (-0.1)(0) - 0.2 = 0.1$
+- <strong>Predict $\hat{y}$:</strong> Since $0.1 \ge 0$, $\hat{y} = 1$  <em>(Mistake!)</em>
+- <strong>Error:</strong> $y - \hat{y} = 0 - 1 = -1$
+- <strong>Update:</strong> 
+  - $w_1 := 0.3 + 0.1(-1)(1) = 0.2$
+  - $w_2 := -0.1 + 0.1(-1)(0) = -0.1$
+  - $b := -0.2 + 0.1(-1)(1) = -0.3$
+:::</p>
+<p>::: step [Step 4: Input (1,1)]
+- <strong>Input:</strong> $x_1=1, x_2=1$ | <strong>Target:</strong> $y=1$
+- <strong>Calculate $z$:</strong> <em>(Using new weights!)</em> $z = (0.2)(1) + (-0.1)(1) - 0.3 = -0.2$
+- <strong>Predict $\hat{y}$:</strong> Since $-0.2 &lt; 0$, $\hat{y} = 0$ <em>(Mistake!)</em>
+- <strong>Error:</strong> $y - \hat{y} = 1 - 0 = 1$
+- <strong>Update:</strong>
+  - $w_1 := 0.2 + 0.1(1)(1) = 0.3$
+  - $w_2 := -0.1 + 0.1(1)(1) = 0.0$
+  - $b := -0.3 + 0.1(1)(1) = -0.2$
+:::</p>
+<p>After Epoch 1, our new weights are $w_1=0.3$, $w_2=0.0$, $b=-0.2$. The algorithm will continue looping through the table in subsequent epochs until it makes zero mistakes!</p>
+<hr />
+<p><a id="simulation"></a></p>
+<h2 id="4-visualizing-the-decision-boundary">4. Visualizing the Decision Boundary</h2>
+<div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">🎬 60FPS MANIM SIMULATION &middot; Perceptron Linear Separating Line</span>
+    <div class="video-speed-controls">
+      <button class="speed-btn" data-speed="0.75">0.75x</button>
+      <button class="speed-btn active" data-speed="1.0">1.0x</button>
+      <button class="speed-btn" data-speed="1.25">1.25x</button>
+      <button class="speed-btn" data-speed="1.5">1.5x</button>
+    </div>
+  </div>
+  <div class="video-frame-wrap">
+    <video controls preload="metadata">
+      <source src="../../assets/videos/m3_perceptron.mp4" type="video/mp4">
+      Your browser does not support embedded video.
+    </video>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Perceptron Linear Separating Line</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the 2D linear decision line rotate and translate after each weight update until all points are correctly classified.</div>
+  </div>
+</div>
 
 <hr />
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
+<h2 id="5-active-recall-checkpoints">5. Active Recall Checkpoints</h2>
+<p>Test your understanding of the concepts covered in this micro-lesson.</p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q1: Foundational Concept</span>
+    <span class="quiz-category">Q1: Convergence Conditions</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Single-Layer Perceptron Model?</div>
+  <div class="quiz-prompt">According to the Perceptron Convergence Theorem, under what condition is the single-layer perceptron mathematically guaranteed to find a solution?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>When the learning rate $\eta$ is exactly $1.0$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>When the dataset is linearly separable</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>When the dataset contains only continuous numerical values</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>When the Heaviside step function is replaced by a Sigmoid function</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Single-Layer Perceptron Model in Machine Learning.
+    <strong>Pedagogical Insight:</strong> The Perceptron Convergence Theorem specifically states that if a dataset can be perfectly divided by a straight line (or hyperplane), the algorithm will always converge. If the data is not linearly separable (like an XOR gate), a single-layer perceptron will loop forever without converging.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Weight Update Logic</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">During training, a perceptron receives an input $x_1 = 1$, and its prediction is $\hat{y} = 1$. However, the true target label is $y = 0$. Assuming the learning rate $\eta = 0.1$, what will happen to the weight $w_1$?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>It will increase by $0.1$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It will decrease by $0.1$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It will remain unchanged</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It will decrease by $1.0$</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Let's plug the values into the update rule: $\Delta w_1 = \eta (y - \hat{y}) x_1$.
+$\Delta w_1 = 0.1(0 - 1)(1) = 0.1(-1)(1) = -0.1$. Therefore, the weight $w_1$ will decrease by $0.1$.
   </div>
 </div>
     </main>

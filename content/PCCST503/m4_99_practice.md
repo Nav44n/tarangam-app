@@ -17,7 +17,9 @@ C_x = \frac{1 + 3 + 5}{3} = \frac{9}{3} = 3
 
 **Step 3: Calculate the mean of Y coordinates**
 
-C_y = \frac{2 + 4 + 0}{3} = \frac{6}{3} = 2<br><br><strong>Result:</strong> The updated centroid is located at $(3, 2)$.
+C_y = \frac{2 + 4 + 0}{3} = \frac{6}{3} = 2
+
+**Result:** The updated centroid is located at $(3, 2)$.
 
 :::
 
@@ -30,11 +32,20 @@ You are comparing two data points representing users: $A(2, 7)$ and $B(5, 3)$. C
 ::: toggle Show Step-by-Step Solution
 **Step 1: Calculate Euclidean Distance (L2)**
 
-Formula: $d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$<br><br>d = \sqrt{(5 - 2)^2 + (3 - 7)^2}<br>d = \sqrt{3^2 + (-4)^2}<br>d = \sqrt{9 + 16} = \sqrt{25} = 5
+Formula: $d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$
+
+d = \sqrt{(5 - 2)^2 + (3 - 7)^2}
+d = \sqrt{3^2 + (-4)^2}
+d = \sqrt{9 + 16} = \sqrt{25} = 5
 
 **Step 2: Calculate Manhattan Distance (L1)**
 
-Formula: $d = |x_2 - x_1| + |y_2 - y_1|$<br><br>d = |5 - 2| + |3 - 7|<br>d = |3| + |-4| = 3 + 4 = 7<br><br><strong>Result:</strong> Euclidean distance is 5, Manhattan distance is 7.
+Formula: $d = |x_2 - x_1| + |y_2 - y_1|$
+
+d = |5 - 2| + |3 - 7|
+d = |3| + |-4| = 3 + 4 = 7
+
+**Result:** Euclidean distance is 5, Manhattan distance is 7.
 
 :::
 

@@ -252,27 +252,23 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
     <main class="content" id="content">
       <h1 id="loss-functions-and-optimization">Loss Functions and Optimization</h1>
 <p><strong>How a machine measures its own mistakes, and how it mathematically learns to fix them.</strong></p>
-<pre><code>&lt;p&gt;We know that Machine Learning creates a rule (a Hypothesis function) to map inputs to outputs. But when a model is first born, it is completely stupid. It just guesses randomly. How does it get smarter?&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;1. The Loss Function (Measuring the Mistake)&lt;/strong&gt;&lt;br&gt;
-Imagine an archer shooting an arrow at a target. The bullseye is the actual true answer ($y$). The spot where the arrow actually hits is the model's prediction ($\hat{y}$). The distance between the arrow and the bullseye is the &lt;strong&gt;Loss&lt;/strong&gt;.&lt;br&gt;&lt;br&gt;
-A Loss Function is a mathematical formula that calculates exactly how "wrong" a single prediction is.
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;For Regression (Predicting Numbers):&lt;/strong&gt; We usually use &lt;em&gt;Squared Error&lt;/em&gt;. If the house costs $100k, and the model guesses $80k, the error is 20k. We square it to heavily penalize really big mistakes.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;For Classification (Predicting Categories):&lt;/strong&gt; We use &lt;em&gt;Cross-Entropy (Log Loss)&lt;/em&gt;. It heavily penalizes the model if it is extremely confident about the wrong answer (e.g., saying "I am 99% sure this is a dog" when it's actually a cat).&lt;/li&gt;
-&lt;/ul&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;2. Cost Function / Empirical Risk (The Total Mistake)&lt;/strong&gt;&lt;br&gt;
-"Loss" is for one single example. The &lt;strong&gt;Cost Function&lt;/strong&gt; (also called Empirical Risk, $J$) is simply the &lt;em&gt;average&lt;/em&gt; of all the losses across the entire training dataset. The ultimate goal of Machine Learning is to find the parameters (weights) that make this Cost Function as close to zero as possible.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;3. Optimization (Fixing the Mistake)&lt;/strong&gt;&lt;br&gt;
-How do we get the Cost to zero? Imagine a blindfolded hiker dropped on the side of a mountain. Their goal is to get to the very bottom of the valley (zero error). 
-&lt;ul&gt;
-  &lt;li&gt;They feel the ground with their feet to see which way is downhill. This slope is called the &lt;strong&gt;Gradient&lt;/strong&gt; (the derivative of the cost function).&lt;/li&gt;
-  &lt;li&gt;They take a step in the steepest downhill direction.&lt;/li&gt;
-  &lt;li&gt;This step-by-step process of walking down the error mountain is called &lt;strong&gt;Gradient Descent&lt;/strong&gt;—the most famous optimization algorithm in all of AI!&lt;/li&gt;
-&lt;/ul&gt;&lt;/p&gt;
-</code></pre>
+<p>We know that Machine Learning creates a rule (a Hypothesis function) to map inputs to outputs. But when a model is first born, it is completely stupid. It just guesses randomly. How does it get smarter?</p>
+<p><strong>1. The Loss Function (Measuring the Mistake)</strong></p>
+<p>Imagine an archer shooting an arrow at a target. The bullseye is the actual true answer ($y$). The spot where the arrow actually hits is the model's prediction ($\hat{y}$). The distance between the arrow and the bullseye is the <strong>Loss</strong>.</p>
+<p>A Loss Function is a mathematical formula that calculates exactly how "wrong" a single prediction is.</p>
+<ul>
+<li><strong>For Regression (Predicting Numbers):</strong> We usually use <em>Squared Error</em>. If the house costs $100k, and the model guesses $80k, the error is 20k. We square it to heavily penalize really big mistakes.</li>
+<li><strong>For Classification (Predicting Categories):</strong> We use <em>Cross-Entropy (Log Loss)</em>. It heavily penalizes the model if it is extremely confident about the wrong answer (e.g., saying "I am 99% sure this is a dog" when it's actually a cat).</li>
+</ul>
+<p><strong>2. Cost Function / Empirical Risk (The Total Mistake)</strong></p>
+<p>"Loss" is for one single example. The <strong>Cost Function</strong> (also called Empirical Risk, $J$) is simply the <em>average</em> of all the losses across the entire training dataset. The ultimate goal of Machine Learning is to find the parameters (weights) that make this Cost Function as close to zero as possible.</p>
+<p><strong>3. Optimization (Fixing the Mistake)</strong></p>
+<p>How do we get the Cost to zero? Imagine a blindfolded hiker dropped on the side of a mountain. Their goal is to get to the very bottom of the valley (zero error). </p>
+<ul>
+<li>They feel the ground with their feet to see which way is downhill. This slope is called the <strong>Gradient</strong> (the derivative of the cost function).</li>
+<li>They take a step in the steepest downhill direction.</li>
+<li>This step-by-step process of walking down the error mountain is called <strong>Gradient Descent</strong>—the most famous optimization algorithm in all of AI!</li>
+</ul>
 <p>$$\text{Loss (Single): } L(y_i, \hat{y}<em i="1">i) = (y_i - \hat{y}_i)^2 \ \text{Cost / Risk (Total): } J(\theta) = \frac{1}{n} \sum</em>}^{n} L(y_i, \hat{y<em new="new">i) \ \text{Optimization Step: } \theta</em> - \eta \nabla J(\theta)$$} = \theta_{old</p>
 <blockquote>
 <p><strong>What is η (Eta)?</strong>
@@ -283,16 +279,25 @@ In the Optimization formula, $\eta$ is the <strong>Learning Rate</strong>. It co
 <li><strong>The Problem:</strong> You have a tiny dataset of 3 students. You try to predict their test scores out of 100. Calculate the Mean Squared Error (MSE) Cost for your model.</li>
 <li><strong>True Scores ($y$):</strong> [80, 90, 70]</li>
 <li><strong>Model's Predictions ($\hat{y}$):</strong> [75, 90, 78]</li>
-<li><strong>Step 1: Calculate the individual errors ($y - \hat{y}$).</strong><br>Student 1: $80 - 75 = 5$<br>Student 2: $90 - 90 = 0$<br>Student 3: $70 - 78 = -8$</li>
-<li><strong>Step 2: Square the errors.</strong> (This gets rid of negative signs and punishes the big mistake of Student 3).<br>Student 1: $5^2 = 25$<br>Student 2: $0^2 = 0$<br>Student 3: $(-8)^2 = 64$</li>
-<li><strong>Step 3: Find the Average (Mean) to get the final Cost $J$.</strong><br>$J = \frac{25 + 0 + 64}{3} = \frac{89}{3} \approx 29.67$.</li>
+<li><strong>Step 1: Calculate the individual errors ($y - \hat{y}$).</strong>
+Student 1: $80 - 75 = 5$
+Student 2: $90 - 90 = 0$
+Student 3: $70 - 78 = -8$</li>
+<li><strong>Step 2: Square the errors.</strong> (This gets rid of negative signs and punishes the big mistake of Student 3).
+Student 1: $5^2 = 25$
+Student 2: $0^2 = 0$
+Student 3: $(-8)^2 = 64$</li>
+<li><strong>Step 3: Find the Average (Mean) to get the final Cost $J$.</strong>
+$J = \frac{25 + 0 + 64}{3} = \frac{89}{3} \approx 29.67$.</li>
 <li><strong>Result:</strong> Your model's total Cost is 29.67. To 'learn', the optimization algorithm will now adjust its internal weights to try and make this number smaller!</li>
 </ol>
 <h2 id="visualizing-the-concept">Visualizing the Concept</h2>
 <div class="video-container"><video controls preload="metadata"><source src="../../assets/videos/m1_06_optimization.mp4" type="video/mp4">Your browser does not support embedded HTML5 video.</video></div>
 
 <p><em>Watch the 'Blindfolded Hiker' concept in action. A model (the dot) calculates its gradient (the slope) and takes steps down the Cost Bowl toward the minimum error.</em></p>
-<details class="interactive-toggle"><summary>Deep Dive: Convex vs. Non-Convex Mountains</summary><div class="toggle-content">Not all Cost Functions look like a perfect, smooth salad bowl (a <strong>Convex</strong> shape). Simple algorithms like Linear Regression have convex cost functions, meaning there is only one true bottom (Global Minimum).<br><br>Deep Neural Networks have <strong>Non-Convex</strong> cost functions. The landscape looks like a bumpy mountain range with hundreds of fake valleys (Local Minima). The blindfolded hiker might walk into a shallow crater, think they've reached the absolute bottom, and stop learning, even though a much deeper valley is just over the next hill! This is why training complex AI models is so difficult.</div></details>
+<details class="interactive-toggle"><summary>Deep Dive: Convex vs. Non-Convex Mountains</summary><div class="toggle-content">Not all Cost Functions look like a perfect, smooth salad bowl (a **Convex** shape). Simple algorithms like Linear Regression have convex cost functions, meaning there is only one true bottom (Global Minimum).
+
+Deep Neural Networks have **Non-Convex** cost functions. The landscape looks like a bumpy mountain range with hundreds of fake valleys (Local Minima). The blindfolded hiker might walk into a shallow crater, think they've reached the absolute bottom, and stop learning, even though a much deeper valley is just over the next hill! This is why training complex AI models is so difficult.</div></details>
 
 <h2 id="self-check">Self Check</h2>
 <details class="interactive-toggle"><summary>Q1: What is the primary difference between a 'Loss Function' and a 'Cost Function'?</summary><div class="toggle-content">**Answer:** Loss measures the error of ONE single prediction. Cost measures the average error across the ENTIRE dataset.

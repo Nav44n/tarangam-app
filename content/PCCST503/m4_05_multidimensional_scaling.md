@@ -2,5 +2,7 @@
 
 **Overview of Multidimensional Scaling**
 
-<p>Content for Multidimensional Scaling goes here.</p>
+Content for Multidimensional Scaling goes here.
+
+
 

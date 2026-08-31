@@ -252,27 +252,23 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
     <main class="content" id="content">
       <h1 id="feature-representation-problem-formulation">Feature Representation &amp; Problem Formulation</h1>
 <p><strong>How to translate the messy real world into a language of numbers that math can understand.</strong></p>
-<pre><code>&lt;p&gt;Algorithms cannot "see" a house, "read" an email, or "look" at a patient. Algorithms only understand one thing: &lt;strong&gt;Numbers&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;p&gt;Before we can do any Machine Learning, we must translate the real-world object into a list of numbers. This list of numbers is called a &lt;strong&gt;Feature Vector&lt;/strong&gt; ($x$). Every individual trait we measure is called a &lt;strong&gt;Feature&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;1. Feature Representation (The Translation)&lt;/strong&gt;&lt;br&gt;
-Imagine you are describing a suspect to a police sketch artist. You don't just say "a guy." You break him down into features: Height (numeric), Eye Color (category), Age (numeric). In ML, we do the exact same thing:
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;Continuous Features:&lt;/strong&gt; Things you can measure (e.g., Age = 25, Salary = 50000.50, House Size = 1500 sqft).&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Categorical Features:&lt;/strong&gt; Things that fall into buckets (e.g., Color = Red, City = Kochi, Blood Type = O+).&lt;/li&gt;
-&lt;/ul&gt;
-Since computers can't do math on the word "Red", we have to convert categories into numbers. A bad way is assigning Red=1, Green=2, Blue=3 (because the computer will think Blue is 3 times "greater" than Red). The correct way is &lt;strong&gt;One-Hot Encoding&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;2. Problem Formulation (The Formal Setup)&lt;/strong&gt;&lt;br&gt;
-Once we have our features, we mathematically define the supervised learning problem using specific symbols. Don't let them scare you; they are just shorthand for simple concepts:
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;Input Space ($\mathcal{X}$):&lt;/strong&gt; The set of all possible feature vectors (e.g., all possible houses). Let's call a single house $x$.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Output Space ($\mathcal{Y}$):&lt;/strong&gt; What we are trying to predict. If $\mathcal{Y}$ is continuous (like Price = $50,000), it's a &lt;strong&gt;Regression&lt;/strong&gt; problem. If $\mathcal{Y}$ is a set of buckets (like {Spam, Not Spam}), it's a &lt;strong&gt;Classification&lt;/strong&gt; problem. Let's call a single answer $y$.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Dataset ($\mathcal{D}$):&lt;/strong&gt; Your historical data. A list of pairs: $\{(x_1, y_1), (x_2, y_2), \dots\}$. (e.g., House 1 and its Price, House 2 and its Price).&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Hypothesis ($f$ or $h$):&lt;/strong&gt; The function or "rule" the computer learns. Our goal is to find a function where $f(x) \approx y$ (the prediction matches the real answer).&lt;/li&gt;
-&lt;/ul&gt;&lt;/p&gt;
-</code></pre>
+<p>Algorithms cannot "see" a house, "read" an email, or "look" at a patient. Algorithms only understand one thing: <strong>Numbers</strong>.</p>
+<p>Before we can do any Machine Learning, we must translate the real-world object into a list of numbers. This list of numbers is called a <strong>Feature Vector</strong> ($x$). Every individual trait we measure is called a <strong>Feature</strong>.</p>
+<p><strong>1. Feature Representation (The Translation)</strong></p>
+<p>Imagine you are describing a suspect to a police sketch artist. You don't just say "a guy." You break him down into features: Height (numeric), Eye Color (category), Age (numeric). In ML, we do the exact same thing:</p>
+<ul>
+<li><strong>Continuous Features:</strong> Things you can measure (e.g., Age = 25, Salary = 50000.50, House Size = 1500 sqft).</li>
+<li><strong>Categorical Features:</strong> Things that fall into buckets (e.g., Color = Red, City = Kochi, Blood Type = O+).</li>
+</ul>
+<p>Since computers can't do math on the word "Red", we have to convert categories into numbers. A bad way is assigning Red=1, Green=2, Blue=3 (because the computer will think Blue is 3 times "greater" than Red). The correct way is <strong>One-Hot Encoding</strong>.</p>
+<p><strong>2. Problem Formulation (The Formal Setup)</strong></p>
+<p>Once we have our features, we mathematically define the supervised learning problem using specific symbols. Don't let them scare you; they are just shorthand for simple concepts:</p>
+<ul>
+<li><strong>Input Space ($\mathcal{X}$):</strong> The set of all possible feature vectors (e.g., all possible houses). Let's call a single house $x$.</li>
+<li><strong>Output Space ($\mathcal{Y}$):</strong> What we are trying to predict. If $\mathcal{Y}$ is continuous (like Price = $50,000), it's a <strong>Regression</strong> problem. If $\mathcal{Y}$ is a set of buckets (like {Spam, Not Spam}), it's a <strong>Classification</strong> problem. Let's call a single answer $y$.</li>
+<li><strong>Dataset ($\mathcal{D}$):</strong> Your historical data. A list of pairs: ${(x_1, y_1), (x_2, y_2), \dots}$. (e.g., House 1 and its Price, House 2 and its Price).</li>
+<li><strong>Hypothesis ($f$ or $h$):</strong> The function or "rule" the computer learns. Our goal is to find a function where $f(x) \approx y$ (the prediction matches the real answer).</li>
+</ul>
 <p>$$\text{Dataset: } \mathcal{D} = {(x_1, y_1), (x_2, y_2), \dots, (x_n, y_n)} \ \text{Goal: Find } f: \mathcal{X} \to \mathcal{Y} \text{ such that } f(x_i) \approx y_i$$</p>
 <blockquote>
 <p><strong>Why is it called a 'Hypothesis'?</strong>
@@ -281,19 +277,28 @@ In science, a hypothesis is an educated guess. In ML, until the model sees <em>a
 <h2 id="worked-example-step-by-step-scenario-one-hot-encoding-a-used-car">Worked Example: Step-by-Step Scenario: One-Hot Encoding a Used Car</h2>
 <ol>
 <li><strong>The Problem:</strong> You want an algorithm to predict the price of a used car. The car is a 2018 model, driven 50,000 km, and the Color is 'Red'. Create its Feature Vector $x$.</li>
-<li><strong>Step 1: Identify Continuous Features.</strong><br> Age = 2024 - 2018 = 6 years. Mileage = 50,000. These are already numbers. Great!</li>
-<li><strong>Step 2: Identify Categorical Features.</strong><br> Color = 'Red'. We know the possible colors in our dataset are {Red, Green, Blue}.</li>
-<li><strong>Step 3: Apply One-Hot Encoding.</strong><br> Instead of 1 column for color, we create 3 binary (0 or 1) columns: <em>Is_Red</em>, <em>Is_Green</em>, <em>Is_Blue</em>.</li>
-<li><strong>Step 4: Translate the car's color.</strong><br> Since the car is Red, <em>Is_Red</em> = 1, <em>Is_Green</em> = 0, <em>Is_Blue</em> = 0.</li>
-<li><strong>Step 5: Assemble the final Feature Vector $x$.</strong><br> $x = [6, 50000, 1, 0, 0]$. This list of 5 numbers is what the algorithm actually 'sees'!</li>
+<li><strong>Step 1: Identify Continuous Features.</strong>
+ Age = 2024 - 2018 = 6 years. Mileage = 50,000. These are already numbers. Great!</li>
+<li><strong>Step 2: Identify Categorical Features.</strong>
+ Color = 'Red'. We know the possible colors in our dataset are {Red, Green, Blue}.</li>
+<li><strong>Step 3: Apply One-Hot Encoding.</strong>
+ Instead of 1 column for color, we create 3 binary (0 or 1) columns: <em>Is_Red</em>, <em>Is_Green</em>, <em>Is_Blue</em>.</li>
+<li><strong>Step 4: Translate the car's color.</strong>
+ Since the car is Red, <em>Is_Red</em> = 1, <em>Is_Green</em> = 0, <em>Is_Blue</em> = 0.</li>
+<li><strong>Step 5: Assemble the final Feature Vector $x$.</strong>
+ $x = [6, 50000, 1, 0, 0]$. This list of 5 numbers is what the algorithm actually 'sees'!</li>
 </ol>
 <h2 id="visualizing-the-concept">Visualizing the Concept</h2>
 <div class="video-container"><video controls preload="metadata"><source src="../../assets/videos/m1_05_formulation.mp4" type="video/mp4">Your browser does not support embedded HTML5 video.</video></div>
 
 <p><em>Watch how a real-world house is translated into a vector, and passed through a Hypothesis function to output a price prediction.</em></p>
-<details class="interactive-toggle"><summary>Deep Dive: The Danger of Feature Scaling</summary><div class="toggle-content">Look at our car vector: $[6, 50000, 1, 0, 0]$. The mileage (50,000) is a massive number compared to the age (6). Many ML algorithms (like Gradient Descent or KNN) will look at this and mathematically assume that Mileage is 10,000 times more important than Age just because the number is bigger!<br><br>To fix this, we apply <strong>Feature Scaling (Normalization or Standardization)</strong>. We squish all features so they live on the same scale, like between 0 and 1, or giving them a mean of 0 and variance of 1. This levels the playing field so the algorithm judges features on their actual pattern, not their raw size.</div></details>
+<details class="interactive-toggle"><summary>Deep Dive: The Danger of Feature Scaling</summary><div class="toggle-content">Look at our car vector: $[6, 50000, 1, 0, 0]$. The mileage (50,000) is a massive number compared to the age (6). Many ML algorithms (like Gradient Descent or KNN) will look at this and mathematically assume that Mileage is 10,000 times more important than Age just because the number is bigger!
 
-<details class="interactive-toggle"><summary>Problem Variation: Identifying X and Y</summary><div class="toggle-content">Let's practice Formulation. <br><strong>Scenario:</strong> Given a student's hours studied and attendance percentage, predict if they will Pass or Fail.<br><ul><li><strong>Input $x$:</strong> $[\text{Hours}, \text{Attendance}]$</li><li><strong>Input Space $\mathcal{X}$:</strong> $\mathbb{R}^2$ (A 2-dimensional vector of real numbers)</li><li><strong>Output $y$:</strong> Pass or Fail</li><li><strong>Output Space $\mathcal{Y}$:</strong> $\{0, 1\}$ (Discrete categories)</li><li><strong>Problem Type:</strong> Binary Classification</li></ul></div></details>
+To fix this, we apply **Feature Scaling (Normalization or Standardization)**. We squish all features so they live on the same scale, like between 0 and 1, or giving them a mean of 0 and variance of 1. This levels the playing field so the algorithm judges features on their actual pattern, not their raw size.</div></details>
+
+<details class="interactive-toggle"><summary>Problem Variation: Identifying X and Y</summary><div class="toggle-content">Let's practice Formulation. 
+**Scenario:** Given a student's hours studied and attendance percentage, predict if they will Pass or Fail.
+- **Input $x$:** $[\text{Hours}, \text{Attendance}]$- **Input Space $\mathcal{X}$:** $\mathbb{R}^2$ (A 2-dimensional vector of real numbers)- **Output $y$:** Pass or Fail- **Output Space $\mathcal{Y}$:** $\{0, 1\}$ (Discrete categories)- **Problem Type:** Binary Classification</div></details>
 
 <h2 id="self-check">Self Check</h2>
 <details class="interactive-toggle"><summary>Q1: If you have a categorical feature 'City' with 4 possible values (Kochi, Trivandrum, Kozhikode, Calicut), how many new columns will One-Hot Encoding create?</summary><div class="toggle-content">**Answer:** 4 separate columns

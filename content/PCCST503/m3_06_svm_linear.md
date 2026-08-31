@@ -2,7 +2,9 @@
 
 **Overview of Linear SVM & Hyperplane**
 
-<p>Content for Linear SVM & Hyperplane goes here.</p>
+Content for Linear SVM & Hyperplane goes here.
+
+
 
 
 ## Visualizing the Concept

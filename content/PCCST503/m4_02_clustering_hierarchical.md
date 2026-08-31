@@ -2,5 +2,7 @@
 
 **Overview of Hierarchical Clustering**
 
-<p>Content for Hierarchical Clustering goes here.</p>
+Content for Hierarchical Clustering goes here.
+
+
 

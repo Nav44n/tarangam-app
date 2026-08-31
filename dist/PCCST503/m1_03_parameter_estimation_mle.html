@@ -252,21 +252,15 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
     <main class="content" id="content">
       <h1 id="parameter-estimation-maximum-likelihood-estimation-mle">Parameter Estimation: Maximum Likelihood Estimation (MLE)</h1>
 <p><strong>A scary name for a simple question: 'What underlying rule makes the data I just saw the most probable?'</strong></p>
-<pre><code>&lt;p&gt;Imagine you find a strange coin on the street. You flip it 10 times, and it lands on Heads 7 times. You ask yourself: &lt;em&gt;"Is this a fair 50/50 coin? Or is it rigged?"&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Maximum Likelihood Estimation (MLE)&lt;/strong&gt; is how a computer plays detective. It asks: "Out of all the possible biases this coin could have (maybe it favors heads 10% of the time, or 90% of the time), which bias makes getting exactly 7 heads the &lt;em&gt;most mathematically likely&lt;/em&gt; (least surprising) outcome?"&lt;/p&gt;
-
-&lt;p&gt;Common sense tells you the coin probably favors heads 70% of the time. MLE is the rigorous math proving your common sense is right.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Step 1: The Likelihood Function ($L$)&lt;/strong&gt;&lt;br&gt;
-We write a formula for the probability of getting our exact data. If the probability of Heads is $p$, getting 7 Heads and 3 Tails means we multiply $p$ seven times, and $(1-p)$ three times.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Step 2: The Log Trick (Log-Likelihood)&lt;/strong&gt;&lt;br&gt;
-Multiplying many tiny probabilities (like $0.5 \times 0.5 \times 0.5 \dots$) gives us microscopic numbers that computers struggle to calculate (this is called "underflow"). But here is a math cheat code: The peak of a graph is at the exact same location as the peak of the &lt;em&gt;logarithm&lt;/em&gt; of that graph. Log turns messy multiplication into simple addition, which is much easier to do math on!&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Step 3: Finding the peak (Calculus)&lt;/strong&gt;&lt;br&gt;
-If you look at the Likelihood curve, it looks like a hill. To find the highest peak of a hill in calculus, we take the derivative (which measures the slope), set it to zero (a flat slope means we are exactly at the top), and solve for $p$.&lt;/p&gt;
-</code></pre>
+<p>Imagine you find a strange coin on the street. You flip it 10 times, and it lands on Heads 7 times. You ask yourself: <em>"Is this a fair 50/50 coin? Or is it rigged?"</em></p>
+<p><strong>Maximum Likelihood Estimation (MLE)</strong> is how a computer plays detective. It asks: "Out of all the possible biases this coin could have (maybe it favors heads 10% of the time, or 90% of the time), which bias makes getting exactly 7 heads the <em>most mathematically likely</em> (least surprising) outcome?"</p>
+<p>Common sense tells you the coin probably favors heads 70% of the time. MLE is the rigorous math proving your common sense is right.</p>
+<p><strong>Step 1: The Likelihood Function ($L$)</strong></p>
+<p>We write a formula for the probability of getting our exact data. If the probability of Heads is $p$, getting 7 Heads and 3 Tails means we multiply $p$ seven times, and $(1-p)$ three times.</p>
+<p><strong>Step 2: The Log Trick (Log-Likelihood)</strong></p>
+<p>Multiplying many tiny probabilities (like $0.5 \times 0.5 \times 0.5 \dots$) gives us microscopic numbers that computers struggle to calculate (this is called "underflow"). But here is a math cheat code: The peak of a graph is at the exact same location as the peak of the <em>logarithm</em> of that graph. Log turns messy multiplication into simple addition, which is much easier to do math on!</p>
+<p><strong>Step 3: Finding the peak (Calculus)</strong></p>
+<p>If you look at the Likelihood curve, it looks like a hill. To find the highest peak of a hill in calculus, we take the derivative (which measures the slope), set it to zero (a flat slope means we are exactly at the top), and solve for $p$.</p>
 <p>$$\text{Likelihood: } L(p) = p^k (1-p)^{n-k} \ \text{Log-Likelihood: } \ell(p) = k \log(p) + (n-k) \log(1-p)$$</p>
 <blockquote>
 <p><strong>Key Takeaway</strong>
@@ -275,10 +269,20 @@ MLE doesn't give you the absolute, universal truth. It just gives you the parame
 <h2 id="worked-example-step-by-step-proof-the-rigged-coin">Worked Example: Step-by-Step Proof: The Rigged Coin</h2>
 <ol>
 <li><strong>The Problem:</strong> You flip a coin $n = 10$ times, and get $k = 7$ heads. Find the Maximum Likelihood Estimate for the probability of heads, $p$.</li>
-<li><strong>Step 1: Write the Log-Likelihood equation.</strong><br> $\ell(p) = 7 \log(p) + 3 \log(1-p)$</li>
-<li><strong>Step 2: Take the derivative with respect to $p$.</strong><br> The derivative of $\log(x)$ is $1/x$. So, taking the derivative gives us: <br> $\frac{d}{dp}\ell(p) = \frac{7}{p} - \frac{3}{1-p}$. <br><em>(Note: The minus sign comes from applying the chain rule to the $1-p$ term).</em></li>
-<li><strong>Step 3: Set to zero to find the peak of the hill.</strong><br> $\frac{7}{p} - \frac{3}{1-p} = 0$</li>
-<li><strong>Step 4: Solve for p with basic algebra.</strong><br> Move the negative term over: $\frac{7}{p} = \frac{3}{1-p}$ <br> Cross multiply: $7(1-p) = 3p$ <br> Expand: $7 - 7p = 3p$ <br> Move $p$s to one side: $7 = 10p$ <br> <strong>Answer:</strong> $p = \frac{7}{10} = 0.7$.</li>
+<li><strong>Step 1: Write the Log-Likelihood equation.</strong>
+ $\ell(p) = 7 \log(p) + 3 \log(1-p)$</li>
+<li><strong>Step 2: Take the derivative with respect to $p$.</strong>
+ The derivative of $\log(x)$ is $1/x$. So, taking the derivative gives us: 
+ $\frac{d}{dp}\ell(p) = \frac{7}{p} - \frac{3}{1-p}$. 
+<em>(Note: The minus sign comes from applying the chain rule to the $1-p$ term).</em></li>
+<li><strong>Step 3: Set to zero to find the peak of the hill.</strong>
+ $\frac{7}{p} - \frac{3}{1-p} = 0$</li>
+<li><strong>Step 4: Solve for p with basic algebra.</strong>
+ Move the negative term over: $\frac{7}{p} = \frac{3}{1-p}$ 
+ Cross multiply: $7(1-p) = 3p$ 
+ Expand: $7 - 7p = 3p$ 
+ Move $p$s to one side: $7 = 10p$ 
+ <strong>Answer:</strong> $p = \frac{7}{10} = 0.7$.</li>
 </ol>
 <h2 id="visualizing-the-concept">Visualizing the Concept</h2>
 <div class="video-container"><video controls preload="metadata"><source src="../../assets/videos/m1_mle.mp4" type="video/mp4">Your browser does not support embedded HTML5 video.</video></div>
@@ -286,7 +290,14 @@ MLE doesn't give you the absolute, universal truth. It just gives you the parame
 <p><em>Visualizing the Likelihood 'Hill'. Watch how the peak perfectly aligns with the ratio of Heads to Total Tosses.</em></p>
 <details class="interactive-toggle"><summary>Variation Problem: What if we flip it 100 times?</summary><div class="toggle-content">If we flip a coin $n=100$ times and get $k=32$ heads, the math remains exactly the same. The derivative becomes $\frac{32}{p} - \frac{68}{1-p} = 0$. Solving this gives $32(1-p) = 68p$, which simplifies to $32 = 100p$, so $p = 0.32$. The beauty of MLE is that for a Bernoulli (coin toss) distribution, $\hat{p}_{MLE}$ will ALWAYS simplify to $\frac{k}{n}$.</div></details>
 
-<details class="interactive-toggle"><summary>Deep Dive: MLE for a Gaussian (Normal) Distribution</summary><div class="toggle-content">We just did MLE for a simple coin toss (Bernoulli). But what if you are measuring the heights of 1,000 students and want to find the MLE for the average height ($\mu$)? <br><br>The math is longer because you use the bell curve formula instead of the coin toss formula, but the steps are IDENTICAL: <br>1. Multiply the bell curve formulas together. <br>2. Take the Logarithm. <br>3. Take the derivative with respect to $\mu$ and set to zero. <br><br>If you do this, the answer magically simplifies to $\hat{\mu}_{MLE} = \frac{1}{n}\sum x_i$ ... which is literally just the standard formula for an average!</div></details>
+<details class="interactive-toggle"><summary>Deep Dive: MLE for a Gaussian (Normal) Distribution</summary><div class="toggle-content">We just did MLE for a simple coin toss (Bernoulli). But what if you are measuring the heights of 1,000 students and want to find the MLE for the average height ($\mu$)? 
+
+The math is longer because you use the bell curve formula instead of the coin toss formula, but the steps are IDENTICAL: 
+1. Multiply the bell curve formulas together. 
+2. Take the Logarithm. 
+3. Take the derivative with respect to $\mu$ and set to zero. 
+
+If you do this, the answer magically simplifies to $\hat{\mu}_{MLE} = \frac{1}{n}\sum x_i$ ... which is literally just the standard formula for an average!</div></details>
 
 <h2 id="self-check">Self Check</h2>
 <details class="interactive-toggle"><summary>Q1: Why do we take the derivative and set it to zero in MLE?</summary><div class="toggle-content">**Answer:** To find the highest point (maximum) of the likelihood curve

@@ -2,7 +2,9 @@
 
 **Overview of Partitional & K-means Clustering**
 
-<p>Content for Partitional & K-means Clustering goes here.</p>
+Content for Partitional & K-means Clustering goes here.
+
+
 
 
 ## Visualizing the Concept

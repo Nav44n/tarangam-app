@@ -252,24 +252,21 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
     <main class="content" id="content">
       <h1 id="machine-learning-vs-traditional-programming">Machine Learning vs Traditional Programming</h1>
 <p><strong>Why we stopped writing rules by hand and started letting computers figure them out.</strong></p>
-<pre><code>&lt;p&gt;Welcome to Machine Learning! To understand what ML actually is, you first need to understand how we normally tell computers what to do.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;The Old Way: Traditional Programming&lt;/strong&gt;&lt;br&gt;
-Imagine you want a computer to bake a cake. In traditional programming, you have to provide two things:
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;Data:&lt;/strong&gt; The raw ingredients (flour, sugar, eggs).&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Rules:&lt;/strong&gt; The exact, step-by-step recipe ("crack 2 eggs, bake at 350°F for 30 mins").&lt;/li&gt;
-&lt;/ul&gt;
-The computer blindly follows your rules, processes the data, and gives you the &lt;strong&gt;Output&lt;/strong&gt; (the cake). If you want a chocolate cake instead, &lt;i&gt;you&lt;/i&gt; have to write a completely new recipe.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;The New Way: Machine Learning&lt;/strong&gt;&lt;br&gt;
-Now, imagine you want the computer to bake a cake, but you have &lt;i&gt;no idea&lt;/i&gt; how to write a recipe. Machine learning flips the process upside down. You provide two different things:
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;Data:&lt;/strong&gt; The raw ingredients.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Output:&lt;/strong&gt; 1,000 pictures of perfect, delicious cakes.&lt;/li&gt;
-&lt;/ul&gt;
-You feed the ingredients and the final cakes into the computer and say: &lt;em&gt;"Figure out the recipe yourself!"&lt;/em&gt; The computer analyzes the data and the outputs, looks for patterns, and automatically generates the &lt;strong&gt;Rules&lt;/strong&gt; (the recipe). This set of rules it generates is what we call a &lt;strong&gt;"Model"&lt;/strong&gt;.&lt;/p&gt;
-</code></pre>
+<p>Welcome to Machine Learning! To understand what ML actually is, you first need to understand how we normally tell computers what to do.</p>
+<p><strong>The Old Way: Traditional Programming</strong></p>
+<p>Imagine you want a computer to bake a cake. In traditional programming, you have to provide two things:</p>
+<ul>
+<li><strong>Data:</strong> The raw ingredients (flour, sugar, eggs).</li>
+<li><strong>Rules:</strong> The exact, step-by-step recipe ("crack 2 eggs, bake at 350°F for 30 mins").</li>
+</ul>
+<p>The computer blindly follows your rules, processes the data, and gives you the <strong>Output</strong> (the cake). If you want a chocolate cake instead, <em>you</em> have to write a completely new recipe.</p>
+<p><strong>The New Way: Machine Learning</strong></p>
+<p>Now, imagine you want the computer to bake a cake, but you have <em>no idea</em> how to write a recipe. Machine learning flips the process upside down. You provide two different things:</p>
+<ul>
+<li><strong>Data:</strong> The raw ingredients.</li>
+<li><strong>Output:</strong> 1,000 pictures of perfect, delicious cakes.</li>
+</ul>
+<p>You feed the ingredients and the final cakes into the computer and say: <em>"Figure out the recipe yourself!"</em> The computer analyzes the data and the outputs, looks for patterns, and automatically generates the <strong>Rules</strong> (the recipe). This set of rules it generates is what we call a <strong>"Model"</strong>.</p>
 <blockquote>
 <p><strong>The Golden Equation</strong>
 <strong>Traditional:</strong> Data + Rules = Output.
@@ -288,7 +285,11 @@ You feed the ingredients and the final cakes into the computer and say: &lt;em&g
 <div class="video-container"><video controls preload="metadata"><source src="../../assets/videos/m1_ml_vs_traditional.mp4" type="video/mp4">Your browser does not support embedded HTML5 video.</video></div>
 
 <p><em>Visualizing the paradigm shift: Notice how the 'Rules' and 'Output' boxes swap places between the two approaches.</em></p>
-<details class="interactive-toggle"><summary>Deep Dive: When should you NOT use Machine Learning?</summary><div class="toggle-content">Machine Learning is powerful, but it is not magic. It is essentially just advanced pattern guessing. <br><br>You should <strong>never</strong> use ML when the rules are simple, exact, and mathematically known. For example, building a calculator app or calculating an employee's income tax. The government provides exact, strict math rules for taxes. Using an AI to 'guess' someone's tax based on previous data would be unreliable, expensive, and legally dangerous.<br><br><strong>Rule of thumb:</strong> Use traditional programming for exact logic. Use ML for 'fuzzy' logic (like recognizing speech, translating languages, or identifying objects in photos) where writing exact rules is impossible.</div></details>
+<details class="interactive-toggle"><summary>Deep Dive: When should you NOT use Machine Learning?</summary><div class="toggle-content">Machine Learning is powerful, but it is not magic. It is essentially just advanced pattern guessing. 
+
+You should **never** use ML when the rules are simple, exact, and mathematically known. For example, building a calculator app or calculating an employee's income tax. The government provides exact, strict math rules for taxes. Using an AI to 'guess' someone's tax based on previous data would be unreliable, expensive, and legally dangerous.
+
+**Rule of thumb:** Use traditional programming for exact logic. Use ML for 'fuzzy' logic (like recognizing speech, translating languages, or identifying objects in photos) where writing exact rules is impossible.</div></details>
 
 <h2 id="self-check">Self Check</h2>
 <details class="interactive-toggle"><summary>Q1: In the Machine Learning paradigm, what exactly is the algorithm producing as its final output?</summary><div class="toggle-content">**Answer:** The rules (a model) mapping inputs to outputs

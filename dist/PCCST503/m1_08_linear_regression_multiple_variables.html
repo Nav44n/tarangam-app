@@ -252,26 +252,20 @@ body { background-color: var(--bg-color, #1e1e1e); color: var(--text-color, #fff
     <main class="content" id="content">
       <h1 id="linear-regression-with-multiple-variables">Linear Regression with Multiple Variables</h1>
 <p><strong>What happens when house prices depend on size, bedrooms, AND age? We add more dimensions!</strong></p>
-<pre><code>&lt;p&gt;In the previous topic, we predicted a house's price using just one variable: its size. But in the real world, price depends on many things: size ($x_1$), number of bedrooms ($x_2$), and age of the house ($x_3$).&lt;/p&gt;
-
-&lt;p&gt;To handle this, we just make our equation longer. Instead of one slope ($w_1$), we give every feature its own weight (multiplier).&lt;br&gt;
-$\hat{y} = w_0 + w_1x_1 + w_2x_2 + w_3x_3$&lt;br&gt;
-If $w_2$ (the bedroom weight) is high, it means bedrooms have a massive impact on the price.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;How do we find all these weights at once? Two Methods:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;1. The Normal Equation (The Instant Math Formula)&lt;/strong&gt;&lt;br&gt;
-Calculus gives us a magical matrix formula that calculates the perfect weights instantly in one step. It's like finding the bottom of the error valley by just teleporting there. 
-&lt;br&gt;&lt;em&gt;The Catch:&lt;/em&gt; Matrix math is extremely heavy. If you have 100,000 features, calculating the Normal Equation will literally crash your computer's memory. It only works for small datasets.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;2. Gradient Descent (The Blindfolded Hiker)&lt;/strong&gt;&lt;br&gt;
-Instead of teleporting, Gradient Descent takes small steps down the error valley. It slowly adjusts all the weights simultaneously until the error hits zero. It takes longer for small datasets, but it is the &lt;em&gt;only&lt;/em&gt; method that works for massive, modern Machine Learning datasets with millions of features.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;The Danger of Unscaled Data (Feature Scaling)&lt;/strong&gt;&lt;br&gt;
-Imagine $x_1$ is House Size (range: 1000 to 4000 sqft) and $x_2$ is Bedrooms (range: 1 to 5). The computer looks at these raw numbers and thinks "Size is 1,000 times larger, so it must be 1,000 times more important!" &lt;br&gt;
-This creates an elongated, stretched-out error valley. Gradient Descent will zig-zag wildly back and forth across the valley, taking forever to reach the bottom. &lt;br&gt;
-&lt;strong&gt;The Fix:&lt;/strong&gt; We mathematically squish all features so they share the exact same scale (e.g., all numbers fall between -1 and 1). This makes the error valley a perfect circle, allowing Gradient Descent to step straight to the center instantly!&lt;/p&gt;
-</code></pre>
+<p>In the previous topic, we predicted a house's price using just one variable: its size. But in the real world, price depends on many things: size ($x_1$), number of bedrooms ($x_2$), and age of the house ($x_3$).</p>
+<p>To handle this, we just make our equation longer. Instead of one slope ($w_1$), we give every feature its own weight (multiplier).</p>
+<p>$\hat{y} = w_0 + w_1x_1 + w_2x_2 + w_3x_3$</p>
+<p>If $w_2$ (the bedroom weight) is high, it means bedrooms have a massive impact on the price.</p>
+<p><strong>How do we find all these weights at once? Two Methods:</strong></p>
+<p><strong>1. The Normal Equation (The Instant Math Formula)</strong></p>
+<p>Calculus gives us a magical matrix formula that calculates the perfect weights instantly in one step. It's like finding the bottom of the error valley by just teleporting there. </p>
+<p><em>The Catch:</em> Matrix math is extremely heavy. If you have 100,000 features, calculating the Normal Equation will literally crash your computer's memory. It only works for small datasets.</p>
+<p><strong>2. Gradient Descent (The Blindfolded Hiker)</strong></p>
+<p>Instead of teleporting, Gradient Descent takes small steps down the error valley. It slowly adjusts all the weights simultaneously until the error hits zero. It takes longer for small datasets, but it is the <em>only</em> method that works for massive, modern Machine Learning datasets with millions of features.</p>
+<p><strong>The Danger of Unscaled Data (Feature Scaling)</strong></p>
+<p>Imagine $x_1$ is House Size (range: 1000 to 4000 sqft) and $x_2$ is Bedrooms (range: 1 to 5). The computer looks at these raw numbers and thinks "Size is 1,000 times larger, so it must be 1,000 times more important!" </p>
+<p>This creates an elongated, stretched-out error valley. Gradient Descent will zig-zag wildly back and forth across the valley, taking forever to reach the bottom. </p>
+<p><strong>The Fix:</strong> We mathematically squish all features so they share the exact same scale (e.g., all numbers fall between -1 and 1). This makes the error valley a perfect circle, allowing Gradient Descent to step straight to the center instantly!</p>
 <p>$$\text{Model: } \hat{y} = \mathbf{w}^\top \mathbf{x} \ \text{Normal Equation: } \mathbf{w} = (X^\top X)^{-1}X^\top \mathbf{y} \ \text{Gradient Descent Update: } w_j = w_j - \eta \frac{1}{n} \sum_{i=1}^n (\hat{y}<em ij="ij">i - y_i) x</em>$$</p>
 <blockquote>
 <p><strong>Vectors and Matrices</strong>
@@ -280,10 +274,14 @@ You will often see the formula written as $\hat{y} = \mathbf{w}^\top \mathbf{x}$
 <h2 id="worked-example-scenario-feature-scaling-standardization">Worked Example: Scenario: Feature Scaling (Standardization)</h2>
 <ol>
 <li><strong>The Problem:</strong> You have a feature vector for a house: Size = 2000 sqft, Bedrooms = 3. Let's scale the 'Size' feature so it doesn't overwhelm the math.</li>
-<li><strong>Step 1: Find the Mean (Average).</strong><br> You check your whole dataset and find the average house size is 1500 sqft ($\mu = 1500$).</li>
-<li><strong>Step 2: Find the Standard Deviation.</strong><br> The standard deviation (how spread out sizes are) is 500 sqft ($\sigma = 500$).</li>
-<li><strong>Step 3: Apply the Z-Score Standardization formula.</strong><br> $x_{scaled} = \frac{x - \mu}{\sigma}$</li>
-<li><strong>Step 4: Calculate.</strong><br> $x_{scaled} = \frac{2000 - 1500}{500} = \frac{500}{500} = 1.0$.</li>
+<li><strong>Step 1: Find the Mean (Average).</strong>
+ You check your whole dataset and find the average house size is 1500 sqft ($\mu = 1500$).</li>
+<li><strong>Step 2: Find the Standard Deviation.</strong>
+ The standard deviation (how spread out sizes are) is 500 sqft ($\sigma = 500$).</li>
+<li><strong>Step 3: Apply the Z-Score Standardization formula.</strong>
+ $x_{scaled} = \frac{x - \mu}{\sigma}$</li>
+<li><strong>Step 4: Calculate.</strong>
+ $x_{scaled} = \frac{2000 - 1500}{500} = \frac{500}{500} = 1.0$.</li>
 <li><strong>Result:</strong> The massive number '2000' is now represented simply as '1.0' (meaning it is exactly 1 standard deviation above average). The algorithm can now compare it safely against small bedroom numbers!</li>
 </ol>
 <h2 id="visualizing-the-concept">Visualizing the Concept</h2>

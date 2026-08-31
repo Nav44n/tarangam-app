@@ -2,7 +2,9 @@
 
 **Overview of Back Propagation Algorithm**
 
-<p>Content for Back Propagation Algorithm goes here.</p>
+Content for Back Propagation Algorithm goes here.
+
+
 
 
 ## Visualizing the Concept

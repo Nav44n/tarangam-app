@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 3 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -394,45 +394,61 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="application-layer-paradigms-client-server-architecture">Application-Layer Paradigms: Client-Server Architecture</h1>
-<p><strong>Socket addressing, port numbers, client processes, and server concurrency.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Application-Layer Paradigms: Client-Server Architecture</strong> will be detailed here.</p></div></div>
-
 <hr />
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p>id: m1_03_application_layer_paradigms
+title: "Application Layer Paradigms"
+sidebar_label: "1.3 App Layer Paradigms"
+description: "An exploration of Client-Server and Peer-to-Peer network application architectures."</p>
 <hr />
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
-
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
-
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
-
+<h1 id="application-layer-paradigms">Application Layer Paradigms</h1>
+<p>When a software developer creates a network application, they do not write code for the routers or switches in the network core. They write code that runs on the end systems (hosts). To structure this software, developers choose between two dominant architectural paradigms: Client-Server and Peer-to-Peer (P2P).</p>
 <hr />
-<p><a id="self-check"></a></p>
-<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
-<div class="quiz-widget">
-  <div class="quiz-header">
-    <span class="quiz-category">Q1: Foundational Concept</span>
-    <span class="quiz-xp">+10 XP</span>
-  </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Application-Layer Paradigms: Client-Server Architecture?</div>
-  <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
-
-  </div>
-  <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Application-Layer Paradigms: Client-Server Architecture in Computer Networks.
-  </div>
-</div>
+<h2 id="1-the-client-server-architecture">1. The Client-Server Architecture</h2>
+<p>In a client-server architecture, there is an always-on host, called the server, which services requests from many other hosts, called clients.</p>
+<h3 id="key-characteristics">Key Characteristics</h3>
+<ul>
+<li><strong>Asymmetry:</strong> The server provides a service; the client consumes it.</li>
+<li><strong>Always-on Server:</strong> The server must have a permanent, fixed IP address so clients can always find it.</li>
+<li><strong>Clients Do Not Communicate Directly:</strong> If Client A wants to talk to Client B (like in early chat rooms), Client A sends the message to the Server, and the Server forwards it to Client B.</li>
+<li>
+<p><strong>Scalability Bottleneck:</strong> If millions of clients hit the server at once, the server can crash (this is how a DDoS attack works). To fix this, tech giants use data centers containing hundreds of thousands of servers acting as a single virtual server.</p>
+</li>
+<li>
+<p><strong>Examples:</strong> Web (HTTP), Email (SMTP), File Transfer (FTP), Netflix.</p>
+</li>
+</ul>
+<hr />
+<h2 id="2-the-peer-to-peer-p2p-architecture">2. The Peer-to-Peer (P2P) Architecture</h2>
+<p>In a P2P architecture, there is minimal (or no) reliance on dedicated servers. Instead, direct communication occurs between pairs of intermittently connected hosts, called peers.</p>
+<p>Peers are not owned by the service provider but are the users' own desktops and laptops.</p>
+<h3 id="key-characteristics_1">Key Characteristics</h3>
+<ul>
+<li><strong>Symmetry:</strong> Every peer acts as both a client (requesting data) and a server (providing data to others).</li>
+<li><strong>Self-Scalability:</strong> As new peers join the network, they generate new workload (requests for files), but they also add service capacity to the network (by uploading files to others).</li>
+<li><strong>Decentralized:</strong> No single point of failure. If one peer turns off their computer, the network survives.</li>
+<li>
+<p><strong>Challenges:</strong> Security is difficult, performance is highly variable (depends on user upload speeds), and IP addresses change constantly (dynamic IPs).</p>
+</li>
+<li>
+<p><strong>Examples:</strong> BitTorrent, Blockchain/Bitcoin nodes, Skype (in its early days).</p>
+</li>
+</ul>
+<hr />
+<h2 id="3-processes-communicating-via-sockets">3. Processes Communicating via Sockets</h2>
+<p>Regardless of whether it's Client-Server or P2P, the actual communication happens between processes running on the end systems.</p>
+<p>When a process wants to send a message to another process on a different machine, it sends it out through a software interface called a <strong>socket</strong>.</p>
+<ul>
+<li><strong>The Door Analogy:</strong> A process is like a house, and its socket is the door. When a sender process wants to send a message, it shoves the message out the door (socket). The sender assumes that there is a transport infrastructure (the postal service / network layers) on the other side of the door that will deliver the message to the receiver's door.</li>
+<li><strong>Addressing:</strong> To deliver the message, the network needs two identifiers:</li>
+<li><strong>IP Address:</strong> To find the correct destination host computer (like a street address).</li>
+<li><strong>Port Number:</strong> To find the correct receiving process running on that computer (like an apartment number). For example, a Web Server process usually listens on Port 80.</li>
+</ul>
+<hr />
+<h2 id="4-active-recall-quiz">4. Active Recall Quiz</h2>
+<ul>
+<li><strong>Question 1:</strong> Why is P2P considered "self-scaling"?</li>
+<li><strong>Question 2:</strong> If two processes are communicating over the Internet, why isn't an IP address alone sufficient to get the data to the correct application?</li>
+</ul>
     </main>
 
     <footer class="pagefoot" id="pagefoot">

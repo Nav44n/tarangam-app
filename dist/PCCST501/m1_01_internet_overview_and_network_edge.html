@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 4 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -394,45 +394,62 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="overview-of-the-internet-network-edge">Overview of the Internet &amp; Network Edge</h1>
-<p><strong>Hosts, end systems, access networks, physical media, network core, and packet switching.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Overview of the Internet &amp; Network Edge</strong> will be detailed here.</p></div></div>
-
 <hr />
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p>id: m1_01_internet_overview_and_network_edge
+title: "Internet Overview &amp; The Network Edge"
+sidebar_label: "1.1 Internet &amp; Network Edge"
+description: "An introduction to the nuts and bolts of the Internet, end systems, and access networks."</p>
 <hr />
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
-
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
-
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
-
+<h1 id="internet-overview-the-network-edge">Internet Overview &amp; The Network Edge</h1>
+<h2 id="1-the-big-picture-what-is-the-internet">1. The Big Picture: What is the Internet?</h2>
+<p>When you open an app on your phone to send a message, you are utilizing the largest engineered system in human history. The Internet can be defined in two distinct ways: by its "nuts and bolts" (the physical components) and by its services (what it does for applications).</p>
+<h3 id="the-nuts-and-bolts-view">The "Nuts and Bolts" View</h3>
+<p>Imagine the global highway system. The Internet is similar, but instead of moving cars, it moves data.</p>
+<ul>
+<li><strong>End Systems (Hosts):</strong> Laptops, smartphones, servers, smart TVs, and IoT devices. They sit at the "edge" of the network.</li>
+<li><strong>Communication Links:</strong> The roads. These include fiber optics, copper wire, radio, and satellite. Different links have different transmission rates (bandwidth).</li>
+<li><strong>Packet Switches:</strong> The intersections and roundabouts. Routers and switches take chunks of data (packets) arriving on one incoming communication link and forward them to an outgoing communication link.</li>
+</ul>
+<h3 id="the-services-view">The "Services" View</h3>
+<p>From a software engineering perspective, the Internet is a distributed application platform. It provides a communication infrastructure that enables applications (like web browsers, social media networks, and streaming services) to exchange data.</p>
 <hr />
-<p><a id="self-check"></a></p>
-<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
-<div class="quiz-widget">
-  <div class="quiz-header">
-    <span class="quiz-category">Q1: Foundational Concept</span>
-    <span class="quiz-xp">+10 XP</span>
-  </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Overview of the Internet & Network Edge?</div>
-  <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
-
-  </div>
-  <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Overview of the Internet & Network Edge in Computer Networks.
-  </div>
-</div>
+<h2 id="2-the-network-edge">2. The Network Edge</h2>
+<p>The "Network Edge" refers to the devices and systems that sit on the absolute boundary of the Internet. If the Internet is a vast city, the edge consists of the houses and businesses where the trips actually begin and end.</p>
+<h3 id="end-systems-hosts">End Systems (Hosts)</h3>
+<p>We call them "end systems" because they sit at the edge, and we call them "hosts" because they host (run) application programs such as a web browser or a web server.</p>
+<p>Hosts are broadly divided into:</p>
+<ul>
+<li><strong>Clients:</strong> Desktops, mobile devices, and laptops that request information.</li>
+<li><strong>Servers:</strong> Powerful machines that store and distribute web pages, stream video, or relay emails. Today, most servers reside in massive data centers.</li>
+</ul>
+<h3 id="access-networks">Access Networks</h3>
+<p>How do you connect your laptop (at the edge) to the very first router (the edge router) in the vast network core? This is done via an Access Network.</p>
+<p>Common types of access networks include:</p>
+<ul>
+<li><strong>Home Networks (DSL, Cable, FTTH):</strong> Uses digital subscriber lines (copper telephone wire), cable (coaxial television cable), or Fiber to the Home.</li>
+<li><strong>Enterprise Networks (Ethernet):</strong> Used in companies and universities. Devices connect to Ethernet switches, which connect to an institutional router.</li>
+<li><strong>Wireless Access Networks (Wi-Fi, 4G/5G):</strong></li>
+<li><strong>Wireless LANs (Wi-Fi):</strong> Within a building, transmitting to a local base station (access point).</li>
+<li><strong>Wide-Area Wireless Networks (Cellular):</strong> Transmitting to a cell tower tens of kilometers away.</li>
+</ul>
+<hr />
+<h2 id="3-physical-media">3. Physical Media</h2>
+<p>Data doesn't teleport; it requires a physical medium to travel from point A to point B. Bits propagate across these media via electromagnetic waves or light pulses.</p>
+<ul>
+<li><strong>Guided Media:</strong> The waves are guided along a solid medium.</li>
+<li><strong>Twisted-Pair Copper Wire:</strong> The oldest and most common. Used in Ethernet cables (Cat5, Cat6).</li>
+<li><strong>Coaxial Cable:</strong> Two concentric copper conductors. Can achieve high download speeds.</li>
+<li><strong>Fiber Optics:</strong> Thin flexible glass fibers conducting pulses of light. Extremely fast, immune to electromagnetic interference, and used for long-haul transatlantic links.</li>
+<li><strong>Unguided Media:</strong> The waves propagate in the atmosphere and in outer space.</li>
+<li><strong>Terrestrial Radio Channels:</strong> AM/FM radio, Wi-Fi.</li>
+<li><strong>Satellite Radio Channels:</strong> Geosynchronous or Low Earth Orbit (LEO, like Starlink) satellites.</li>
+</ul>
+<hr />
+<h2 id="4-active-recall-quiz">4. Active Recall Quiz</h2>
+<ul>
+<li><strong>Question 1:</strong> Why is a smartphone considered an "end system" or "host"?</li>
+<li><strong>Question 2:</strong> If you are watching a Netflix movie on a smart TV connected via Wi-Fi, which parts of the "nuts and bolts" are involved?</li>
+</ul>
     </main>
 
     <footer class="pagefoot" id="pagefoot">

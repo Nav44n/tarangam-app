@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 3 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -394,45 +394,60 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
+<hr />
+<p>id: m1_05_file_transfer_protocol_ftp
+title: "File Transfer Protocol (FTP)"
+sidebar_label: "1.5 FTP"
+description: "Understanding the out-of-band control and data mechanisms of the File Transfer Protocol."</p>
+<hr />
 <h1 id="file-transfer-protocol-ftp">File Transfer Protocol (FTP)</h1>
-<p><strong>Control vs data connections, out-of-band signaling, active vs passive modes, and command structures.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>File Transfer Protocol (FTP)</strong> will be detailed here.</p></div></div>
-
+<p>Before the Web became dominant, downloading and uploading files over the Internet was primarily handled by the <strong>File Transfer Protocol (FTP)</strong>. While HTTP is used to transfer web pages (which are also files), FTP is optimized for bulk file transfers, directory navigation, and account management.</p>
 <hr />
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<h2 id="1-the-dual-connection-architecture">1. The Dual-Connection Architecture</h2>
+<p>The defining characteristic of FTP is that it uses <strong>two separate parallel TCP connections</strong> to transfer a file. This is fundamentally different from HTTP, which sends control headers and data over the exact same connection.</p>
+<ul>
+<li><strong>Control Connection (Port 21):</strong> Used for sending control information between the two hosts—such as user identification, passwords, commands to change remote directories (<code>CWD</code>), and commands to upload (<code>STOR</code>) or download (<code>RETR</code>) files.</li>
+<li><strong>Data Connection (Port 20):</strong> Used strictly for transmitting the actual file data.</li>
+</ul>
+<h3 id="the-out-of-band-analogy">The "Out-of-Band" Analogy</h3>
+<p>Because FTP sends its control information over a separate connection, FTP is said to use <strong>out-of-band</strong> control.</p>
+<blockquote>
+<p><strong>Analogy:</strong> Imagine ordering a refrigerator. You call the store on the telephone (the <strong>Control Connection / Port 21</strong>) to place the order and verify your identity. The store then dispatches a large delivery truck (the <strong>Data Connection / Port 20</strong>) carrying the actual refrigerator to your house. The conversation and the heavy lifting occur over two entirely separate channels.</p>
+<p><em>HTTP, by contrast, uses </em><em>in-band</em><em> control, placing both the request headers and payload data within the same channel.</em></p>
+</blockquote>
 <hr />
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
-
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
-
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
-
+<h2 id="2-how-an-ftp-session-works">2. How an FTP Session Works</h2>
+<ol>
+<li><strong>Establishing Control:</strong> The client contacts the server on port 21 to establish a TCP control connection.</li>
+<li><strong>Authentication:</strong> The client sends the user ID and password over the control connection.</li>
+<li><strong>Issuing Commands:</strong> The client browses remote directories (using commands like <code>LIST</code> or <code>CWD</code>) over the control connection.</li>
+<li><strong>Opening Data Connection:</strong> When the server receives a transfer command (e.g., <code>RETR</code> for get, <code>STOR</code> for put), a TCP data connection is initiated.</li>
+<li><strong>Transfer &amp; Closure:</strong> The server sends exactly one file over the data connection and closes it immediately after completion.</li>
+<li><strong>Subsequent Transfers:</strong> If the client requests another file, a brand new TCP data connection is established.</li>
+</ol>
+<blockquote>
+<p><strong>Key Rule:</strong> The <strong>Control Connection</strong> remains open for the entire duration of the user session, whereas a separate <strong>Data Connection</strong> is opened and closed for every individual file transferred.</p>
+</blockquote>
 <hr />
-<p><a id="self-check"></a></p>
-<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
-<div class="quiz-widget">
-  <div class="quiz-header">
-    <span class="quiz-category">Q1: Foundational Concept</span>
-    <span class="quiz-xp">+10 XP</span>
-  </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of File Transfer Protocol (FTP)?</div>
-  <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
-
-  </div>
-  <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to File Transfer Protocol (FTP) in Computer Networks.
-  </div>
-</div>
+<h2 id="3-active-vs-passive-ftp">3. Active vs. Passive FTP</h2>
+<p>Because firewalls block unsolicited incoming connections, FTP's original design caused connectivity issues with modern security configurations.</p>
+<ul>
+<li><strong>Active Mode:</strong> The client opens a random port for data and instructs the server to connect back to it. Firewalls on the client side typically block this incoming connection attempt from the server.</li>
+<li><strong>Passive Mode (<code>PASV</code>):</strong> The client requests a passive connection. The server opens a random high-order port (e.g., Port 5050) and informs the client to connect to it. Because the client initiates the connection outbound, client firewalls allow the traffic.</li>
+</ul>
+<hr />
+<h2 id="4-ftp-state">4. FTP State</h2>
+<p>Unlike HTTP, which is stateless, FTP is <strong>stateful</strong>.</p>
+<p>The FTP server maintains state information for each connected user throughout their session. It tracks:
+* The user's current working directory (enabling relative paths).
+* The user's authentication and authorization state.</p>
+<p><em>Trade-off: Maintaining state limits the total number of simultaneous active sessions an FTP server can sustain compared to a stateless HTTP server.</em></p>
+<hr />
+<h2 id="5-active-recall-quiz">5. Active Recall Quiz</h2>
+<ul>
+<li><strong>Question 1:</strong> What does it mean when we say FTP uses "out-of-band" control?</li>
+<li><strong>Question 2:</strong> Why did FTP introduce "Passive Mode"?</li>
+</ul>
     </main>
 
     <footer class="pagefoot" id="pagefoot">

@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 4 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -394,45 +394,73 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="world-wide-web-the-http-protocol">World Wide Web &amp; The HTTP Protocol</h1>
-<p><strong>HTTP/1.0, HTTP/1.1 persistent connections, HTTP/2 multiplexing, status codes, cookies, and web caching.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>World Wide Web &amp; The HTTP Protocol</strong> will be detailed here.</p></div></div>
-
 <hr />
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p>id: m1_04_world_wide_web_and_http
+title: "The Web and HTTP"
+sidebar_label: "1.4 Web &amp; HTTP"
+description: "Deep dive into the Hypertext Transfer Protocol (HTTP), persistent vs non-persistent connections, and cookies."</p>
 <hr />
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
-
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
-
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
-
+<h1 id="the-world-wide-web-and-http">The World Wide Web and HTTP</h1>
+<p>The World Wide Web transformed the Internet from an academic tool into a global mainstream phenomenon. The Web operates on a strict Client-Server paradigm, and its central communication protocol is <strong>HTTP</strong> (Hypertext Transfer Protocol).</p>
 <hr />
-<p><a id="self-check"></a></p>
-<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
-<div class="quiz-widget">
-  <div class="quiz-header">
-    <span class="quiz-category">Q1: Foundational Concept</span>
-    <span class="quiz-xp">+10 XP</span>
-  </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of World Wide Web & The HTTP Protocol?</div>
-  <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
-
-  </div>
-  <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to World Wide Web & The HTTP Protocol in Computer Networks.
-  </div>
-</div>
+<h2 id="1-web-terminology-basics">1. Web Terminology Basics</h2>
+<ul>
+<li><strong>Web Page:</strong> A document, usually containing base HTML and several referenced objects (like images, CSS files, JavaScript).</li>
+<li><strong>Object:</strong> Simply a file (e.g., an HTML file, a JPEG image, a video clip).</li>
+<li><strong>URL (Uniform Resource Locator):</strong> The address of the object, consisting of a hostname (<code>www.example.com</code>) and a path name (<code>/images/pic.jpg</code>).</li>
+</ul>
+<hr />
+<h2 id="2-http-overview">2. HTTP Overview</h2>
+<p>HTTP is implemented in two programs: a client program (your web browser) and a server program (e.g., Apache, Nginx). It defines how web clients request web pages from web servers and how servers transfer them to clients.</p>
+<ul>
+<li><strong>Transport Protocol:</strong> HTTP uses <strong>TCP</strong> as its underlying transport protocol to ensure reliable delivery. It does not use UDP.</li>
+<li><strong>Statelessness:</strong> HTTP is a <strong>stateless</strong> protocol. The server maintains absolutely no information about past client requests. If you request a page and then request the exact same page 2 seconds later, the server treats it as a completely new request.</li>
+</ul>
+<hr />
+<h2 id="3-non-persistent-vs-persistent-connections">3. Non-Persistent vs. Persistent Connections</h2>
+<p>How does a client pull down a webpage that contains an HTML file and 10 referenced JPEG images?</p>
+<h3 id="non-persistent-http-http10">Non-Persistent HTTP (HTTP/1.0)</h3>
+<ul>
+<li>A brand new TCP connection must be opened and closed for every single object.</li>
+<li><strong>Drawback:</strong> High overhead. Fetching an HTML file and 10 images requires opening and closing 11 separate TCP connections, causing significant latency due to the repeated TCP Three-Way Handshake setup time.</li>
+</ul>
+<h3 id="persistent-http-http11">Persistent HTTP (HTTP/1.1)</h3>
+<ul>
+<li>The server leaves the TCP connection open after sending a response.</li>
+<li>Subsequent requests and responses between the same client and server can be sent over that same open connection.</li>
+<li>Drastically reduces latency and CPU overhead on the server.</li>
+</ul>
+<hr />
+<h2 id="4-http-request-and-response-messages">4. HTTP Request and Response Messages</h2>
+<p>When your browser communicates with a server, it exchanges plain-text HTTP messages.</p>
+<h3 id="http-request-message">HTTP Request Message</h3>
+<ul>
+<li><strong>Request Line:</strong> Contains the method (<code>GET</code>, <code>POST</code>, <code>HEAD</code>, <code>PUT</code>, <code>DELETE</code>), the URL path, and the HTTP version (e.g., <code>GET /index.html HTTP/1.1</code>).</li>
+<li><strong>Header Lines:</strong> Metadata such as <code>Host:</code>, <code>User-Agent:</code> (client browser type), and <code>Accept-Language:</code>.</li>
+<li><strong>Entity Body:</strong> Used primarily in <code>POST</code> requests when submitting form data or payloads to the server.</li>
+</ul>
+<h3 id="http-response-message">HTTP Response Message</h3>
+<ul>
+<li><strong>Status Line:</strong> Contains the protocol version, a status code, and a status message (e.g., <code>HTTP/1.1 200 OK</code> or <code>HTTP/1.1 404 Not Found</code>).</li>
+<li><strong>Header Lines:</strong> Metadata such as <code>Date:</code>, <code>Server:</code>, <code>Content-Length:</code>, and <code>Content-Type:</code>.</li>
+<li><strong>Data (Body):</strong> The actual requested object payload (the HTML file, image data, etc.).</li>
+</ul>
+<hr />
+<h2 id="5-cookies-maintaining-state">5. Cookies: Maintaining State</h2>
+<p>Because HTTP is stateless, websites use <strong>Cookies</strong> to keep track of sessions, authentication, and shopping carts:</p>
+<ol>
+<li><strong>Initial Visit:</strong> You visit a website (e.g., Amazon) for the first time.</li>
+<li><strong>Identification:</strong> The server creates a unique identification number (e.g., <code>1678</code>) and saves it in a backend database.</li>
+<li><strong>Cookie Assignment:</strong> The server responds with an HTTP header: <code>Set-cookie: 1678</code>.</li>
+<li><strong>Client Storage:</strong> Your browser saves this cookie locally.</li>
+<li><strong>Session Continuity:</strong> On your next request to Amazon, your browser automatically includes the header: <code>Cookie: 1678</code>. The server reads the ID, looks it up in the database, and retrieves your state.</li>
+</ol>
+<hr />
+<h2 id="6-active-recall-quiz">6. Active Recall Quiz</h2>
+<ul>
+<li><strong>Question 1:</strong> Why is HTTP referred to as a "stateless" protocol?</li>
+<li><strong>Question 2:</strong> An HTML page contains text and 5 image references. How many total TCP connections are established to fetch this entire page in Non-Persistent HTTP vs. Persistent HTTP?</li>
+</ul>
     </main>
 
     <footer class="pagefoot" id="pagefoot">

@@ -1,4 +1,8 @@
-# Module 1 Practice Lab: The Complete Numerical Vault
+import os
+
+CONTENT_DIR = os.path.join("content", "PCCST503")
+
+m1_practice = r"""# Module 1 Practice Lab: The Complete Numerical Vault
 
 **Every major numerical problem type, variation, and in-depth derivation required for university exams, GATE, and ML technical interviews.**
 
@@ -231,3 +235,9 @@ $$ (X^T X)^{-1} = \frac{1}{6} \begin{bmatrix} 14 & -6 \\ -6 & 3 \end{bmatrix} $$
 $$ \theta = \frac{1}{6} \begin{bmatrix} 14 & -6 \\ -6 & 3 \end{bmatrix} \begin{bmatrix} 6 \\ 13 \end{bmatrix} = \frac{1}{6} \begin{bmatrix} (14 \times 6) + (-6 \times 13) \\ (-6 \times 6) + (3 \times 13) \end{bmatrix} = \frac{1}{6} \begin{bmatrix} 84 - 78 \\ -36 + 39 \end{bmatrix} = \frac{1}{6} \begin{bmatrix} 6 \\ 3 \end{bmatrix} = \begin{bmatrix} 1.0 \\ 0.5 \end{bmatrix} $$
 **Final Model:** $\hat{y} = 1.0 + 0.5x$
 :::
+"""
+
+with open(os.path.join(CONTENT_DIR, "m1_99_practice.md"), "w", encoding="utf-8") as f:
+    f.write(m1_practice)
+
+print("Module 1 Practice Numerical Vault generated successfully.")

@@ -1,4 +1,8 @@
-# Module 2 Practice Lab: The Complete Numerical Vault
+import os
+
+CONTENT_DIR = os.path.join("content", "PCCST503")
+
+m2_practice = r"""# Module 2 Practice Lab: The Complete Numerical Vault
 
 **Every major classification numerical problem, variance analysis, information theory calculation, and distance matrix derivation.**
 
@@ -208,3 +212,9 @@ $$ F_1 = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} 
 Notice how Accuracy is **$96.5\%$**, yet Precision is only **$60.0\%$**!
 A dummy model that blindly predicted "Healthy" for every patient would have achieved $95.0\%$ accuracy while killing all 50 cancer patients. **Never rely on pure Accuracy for imbalanced classification tasks!**
 :::
+"""
+
+with open(os.path.join(CONTENT_DIR, "m2_99_practice.md"), "w", encoding="utf-8") as f:
+    f.write(m2_practice)
+
+print("Module 2 Practice Numerical Vault generated successfully.")

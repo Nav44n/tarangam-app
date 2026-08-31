@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 12 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -309,92 +309,258 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="module-1-practice-problems">Module 1 Practice Problems</h1>
-<p>Master these exact numerical types for the university exam.</p>
-<h2 id="type-11-maximum-likelihood-estimation-mle">Type 1.1: Maximum Likelihood Estimation (MLE)</h2>
-<p>You flip a coin $n = 10$ times, and get $k = 7$ heads. Find the Maximum Likelihood Estimate for the probability of heads, $p$.</p>
-<details class="interactive-toggle"><summary>Show Step-by-Step Solution</summary><div class="toggle-content"><p><strong>Step 1: Write the Log-Likelihood equation</strong></p>
-<p>\ell(p) = 7 \log(p) + 3 \log(1-p)</p>
-<p><strong>Step 2: Take the derivative with respect to $p$</strong></p>
-<p>The derivative of $?\log(x)$ is $1/x$. So, taking the derivative gives us: </p>
-<p>\frac{d}{dp}\ell(p) = \frac{7}{p} - \frac{3}{1-p} 
-<em>(Note: The minus sign comes from applying the chain rule to the $1-p$ term).</em></p>
-<p><strong>Step 3: Set to zero to find the peak of the hill</strong></p>
-<p>\frac{7}{p} - \frac{3}{1-p} = 0</p>
-<p><strong>Step 4: Solve for $p$ with basic algebra</strong></p>
-<p>Move the negative term over: \frac{7}{p} = \frac{3}{1-p} 
- Cross multiply: 7(1-p) = 3p 
- Expand: 7 - 7p = 3p 
- Move $p$s to one side: 7 = 10p </p>
-<p><strong>Answer:</strong> p = \frac{7}{10} = 0.7</p></div></details>
+<h1 id="module-1-practice-lab-the-complete-numerical-vault">Module 1 Practice Lab: The Complete Numerical Vault</h1>
+<p><strong>Every major numerical problem type, variation, and in-depth derivation required for university exams, GATE, and ML technical interviews.</strong></p>
+<hr />
+<p><a id="the-intuition"></a></p>
+<h2 id="overview-of-module-1-problem-types">Overview of Module 1 Problem Types</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Problem Category</th>
+<th style="text-align: left;">Core Concept</th>
+<th style="text-align: left;">What is Evaluated?</th>
+<th style="text-align: left;">Typical Exam Marks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Type 1.1</strong></td>
+<td style="text-align: left;">Maximum Likelihood Estimation (MLE)</td>
+<td style="text-align: left;">First-order calculus condition $\frac{d}{d\theta}\ln L(\theta) = 0$ on Bernoulli &amp; Gaussian distributions</td>
+<td style="text-align: left;">7 – 10 Marks</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Type 1.2</strong></td>
+<td style="text-align: left;">Maximum A Posteriori (MAP)</td>
+<td style="text-align: left;">Incorporating Beta &amp; Gaussian priors to regularize small datasets</td>
+<td style="text-align: left;">7 – 10 Marks</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Type 1.3</strong></td>
+<td style="text-align: left;">Loss &amp; Error Metric Computation</td>
+<td style="text-align: left;">Mean Squared Error (MSE), Root MSE, Mean Absolute Error (MAE), and Cross-Entropy</td>
+<td style="text-align: left;">3 – 5 Marks</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Type 1.4</strong></td>
+<td style="text-align: left;">Simple Linear Regression (OLS)</td>
+<td style="text-align: left;">Closed-form slope $\theta_1 = \frac{\text{Cov}(x,y)}{\text{Var}(x)}$ and intercept $\theta_0$</td>
+<td style="text-align: left;">10 Marks</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Type 1.5</strong></td>
+<td style="text-align: left;">Manual Gradient Descent Execution</td>
+<td style="text-align: left;">Computing gradient updates step-by-step for 1–2 iterations</td>
+<td style="text-align: left;">7 – 10 Marks</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Type 1.6</strong></td>
+<td style="text-align: left;">Multiple Linear Regression (Normal Eq)</td>
+<td style="text-align: left;">Matrix formulation $\theta = (X^TX)^{-1}X^TY$ and singularity conditions</td>
+<td style="text-align: left;">10 – 15 Marks</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><a id="the-math"></a></p>
+<h2 id="category-11-maximum-likelihood-estimation-mle">Category 1.1: Maximum Likelihood Estimation (MLE)</h2>
+<h3 id="problem-111-discrete-coin-toss-quality-control-standard-bernoulli">Problem 1.1.1: Discrete Coin Toss / Quality Control (Standard Bernoulli)</h3>
+<p><strong>Problem Statement:</strong> A quality inspection machine tests $n = 20$ semiconductor chips and finds $k = 6$ defective chips. Derive the Maximum Likelihood Estimator (MLE) from first principles and calculate the estimated defect rate $\hat{p}_{\text{MLE}}$.</p>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Conceptual Breakdown</div><div class="callout-body"><ul>
+<li><strong>WHAT:</strong> Find the parameter value $p \in [0, 1]$ that maximizes the joint likelihood of observing our 20 test results.</li>
+<li><strong>WHY:</strong> We use the Log-Likelihood trick ($\ln L(p)$) because multiplying 20 probabilities causes numerical underflow and makes calculus derivatives intractable. The log function turns products into clean additions.</li>
+<li><strong>WHEN &amp; WHERE:</strong> Used in sensor calibration, binary click-through-rate (CTR) estimation, and QA testing.</li>
+</ul></div></div>
+
+<div class="step-card"><div class="step-badge">Step 1: Write Joint Likelihood</div><div class="step-title">Product of Independent Probabilities</div><div class="step-content"><p>Let $x_i = 1$ for defective and $x_i = 0$ for non-defective. Assuming i.i.d. trials:
+$$ L(p) = \prod_{i=1}^n P(x_i \mid p) = p^k (1-p)^{n-k} = p^6 (1-p)^{14} $$</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 2: Apply Natural Logarithm</div><div class="step-title">Convert to Sum</div><div class="step-content"><p>$$ \ell(p) = \ln L(p) = 6 \ln(p) + 14 \ln(1-p) $$</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 3: Compute First Derivative</div><div class="step-title">First-Order Condition</div><div class="step-content"><p>$$ \frac{d}{dp}\ell(p) = \frac{6}{p} - \frac{14}{1-p} $$
+<em>(Note: By chain rule, $\frac{d}{dp}\ln(1-p) = \frac{1}{1-p} \cdot (-1) = -\frac{1}{1-p}$).</em></p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 4: Set to Zero & Solve for Parameter</div><div class="step-title">Find Global Maximum</div><div class="step-content"><p>$$ \frac{6}{p} - \frac{14}{1-p} = 0 \implies \frac{6}{p} = \frac{14}{1-p} $$
+Cross-multiplying:
+$$ 6(1-p) = 14p \implies 6 - 6p = 14p \implies 6 = 20p $$
+$$ \hat{p}_{\text{MLE}} = \frac{6}{20} = 0.30 \quad (30\% \text{ Defect Rate}) $$</p></div></div>
 
 <hr />
-<h2 id="type-12-maximum-a-posteriori-map">Type 1.2: Maximum A Posteriori (MAP)</h2>
-<p>You run an e-commerce website. A brand new product gets exactly 1 rating, and it's a 5-star positive review. Using MLE, the product has a perfect 100% score. Use MAP to find a safer estimate, assuming a Prior belief of 2 positive and 2 negative reviews.</p>
-<details class="interactive-toggle"><summary>Show Step-by-Step Solution</summary><div class="toggle-content"><p><strong>Step 1: Identify the Likelihood (Real Data)</strong></p>
-<p>Actual data: $k = 1$ positive rating out of $n = 1$ total ratings.</p>
-<p><strong>Step 2: Identify the Prior (Virtual Data)</strong></p>
-<p>Virtual data: $?\alpha = 2$ positive ratings, $?\beta = 2$ negative ratings. Total virtual ratings = 4.</p>
-<p><strong>Step 3: Combine them (The Posterior)</strong></p>
-<p>Total positive = $1 \text{ (real)} + 2 \text{ (virtual)} = 3$.
- Total ratings = $1 \text{ (real)} + 4 \text{ (virtual)} = 5$.</p>
-<p><strong>Step 4: Calculate the MAP estimate</strong></p>
-<p>\hat{p}_{MAP} = \frac{3}{5} = 0.60 </p>
-<p><strong>Answer:</strong> The algorithm rates the product at 60% positive, protecting your store from ranking a product at #1 just because it got a single lucky review.</p></div></details>
+<h3 id="variation-112-continuous-1d-normal-gaussian-distribution">Variation 1.1.2: Continuous 1D Normal (Gaussian) Distribution</h3>
+<p><strong>Problem Statement:</strong> Derive the Maximum Likelihood Estimator for the mean parameter $\mu$ of a Normal Distribution $\mathcal{N}(\mu, \sigma^2)$ given $m$ samples $x = {x_1, x_2, \dots, x_m}$.</p>
+<div class="step-card"><div class="step-badge">Step 1: Gaussian Likelihood Function</div><div class="step-title">Probability Density Function</div><div class="step-content"><p>$$ P(x_i \mid \mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left( -\frac{(x_i - \mu)^2}{2\sigma^2} \right) $$
+$$ L(\mu, \sigma^2) = \prod_{i=1}^m \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left( -\frac{(x_i - \mu)^2}{2\sigma^2} \right) = \left( 2\pi\sigma^2 \right)^{-\frac{m}{2}} \exp\left( -\sum_{i=1}^m \frac{(x_i - \mu)^2}{2\sigma^2} \right) $$</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 2: Log-Likelihood Formulation]
+$$ \ell(\mu, \sigma^2) = -\frac{m}{2} \ln(2\pi) - \frac{m}{2} \ln(\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^m (x_i - \mu)^2 $$
+:::
+
+::: step [Step 3: Partial Derivative with respect to Mean $\mu$]
+$$ \frac{\partial}{\partial \mu} \ell(\mu, \sigma^2) = 0 - 0 - \frac{1}{2\sigma^2} \sum_{i=1}^m 2(x_i - \mu)(-1) = \frac{1}{\sigma^2} \sum_{i=1}^m (x_i - \mu) $$
+:::
+
+::: step [Step 4: Set to Zero & Solve]
+$$ \frac{1}{\sigma^2} \sum_{i=1}^m (x_i - \mu) = 0 \implies \sum_{i=1}^m x_i - m\mu = 0 \implies \hat{\mu}_{\text{MLE}} = \frac{1}{m} \sum_{i=1}^m x_i $$
+*Key Pedagogical Insight:* The Maximum Likelihood Estimator of a Gaussian mean is mathematically identical to the arithmetic sample average!
+:::
+
+---
+
+## Category 1.2: Maximum A Posteriori (MAP) Estimation
+
+### Problem 1.2.1: The Cold-Start Rating Problem (Beta Prior)
+**Problem Statement:** An e-commerce product is launched. It receives $n = 2$ customer reviews, and both are 5-star positive ($k = 2$). 
+1. Compute the pure MLE rating score.
+2. Assuming a Beta prior $\text{Beta}(\alpha = 4, \beta = 4)$ representing past historical knowledge of average product quality, compute the Bayesian MAP rating estimate.
+
+<div class="callout callout-pitfall"><div class="callout-header">⚠️ Common Exam Trap: Why MAP is Crucial Here</div><div class="callout-body"><ul>
+<li><strong>MLE Result:</strong> $\hat{p}_{\text{MLE}} = \frac{2}{2} = 1.00$ (100% perfect rating). If an e-commerce ranking algorithm used pure MLE, a product with only 2 reviews would rank higher than a top-rated product with 50,000 positive reviews and 1 negative review!</li>
+<li><strong>MAP Solution:</strong> MAP acts as a regularizer by adding "pseudo-counts" to both the numerator and denominator.</li>
+</ul></div></div>
+
+::: step [Step 1: Formulate Conjugate Posterior</div><div class="step-title">Beta-Binomial Conjugacy</div><div class="step-content"><p>Prior: $P(p) \propto p^{\alpha - 1} (1-p)^{\beta - 1} = p^{4-1} (1-p)^{4-1} = p^3 (1-p)^3$
+Likelihood: $L(p) \propto p^k (1-p)^{n-k} = p^2 (1-p)^0$
+Posterior: $P(p \mid D) \propto p^{k + \alpha - 1} (1-p)^{n - k + \beta - 1} = p^{2+3} (1-p)^{0+3} = p^5 (1-p)^3$</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 2: Compute Mode of Posterior Distribution</div><div class="step-title">MAP Formula</div><div class="step-content"><p>$$ \hat{p}<em _text_MAP="\text{MAP">{\text{MAP}} = \frac{k + \alpha - 1}{n + \alpha + \beta - 2} $$
+Substituting the values ($k = 2, n = 2, \alpha = 4, \beta = 4$):
+$$ \hat{p}</em> = 0.625 \quad (62.5\%) $$}} = \frac{2 + 4 - 1}{2 + 4 + 4 - 2} = \frac{5}{8</p></div></div>
 
 <hr />
-<h2 id="type-13-calculating-the-cost-mse">Type 1.3: Calculating the Cost (MSE)</h2>
-<p>You have a tiny dataset of 3 students. You try to predict their test scores out of 100. Calculate the Mean Squared Error (MSE) Cost for your model.</p>
-<p><strong>True Scores ($y$):</strong> [80, 90, 70]
-<strong>Model's Predictions ($\hat{y}$):</strong> [75, 90, 78]</p>
-<details class="interactive-toggle"><summary>Show Step-by-Step Solution</summary><div class="toggle-content"><p><strong>Step 1: Calculate the individual errors ($y - \hat{y}$)</strong></p>
-<p>Student 1: $80 - 75 = 5$
-Student 2: $90 - 90 = 0$
-Student 3: $70 - 78 = -8$</p>
-<p><strong>Step 2: Square the errors</strong></p>
-<p>Student 1: $5^2 = 25$
-Student 2: $0^2 = 0$
-Student 3: $(-8)^2 = 64$</p>
-<p><strong>Step 3: Find the Average (Mean) to get the final Cost</strong></p>
-<p>J = \frac{25 + 0 + 64}{3} = \frac{89}{3} \approx 29.67</p>
-<p><strong>Result:</strong> Your model's total Cost is 29.67.</p></div></details>
-
+<h2 id="category-13-cost-loss-function-computations">Category 1.3: Cost &amp; Loss Function Computations</h2>
+<h3 id="problem-131-mse-vs-mae-outlier-sensitivity-analysis">Problem 1.3.1: MSE vs MAE Outlier Sensitivity Analysis</h3>
+<p><strong>Problem Statement:</strong> Given 4 actual house prices $y = [200, 300, 400, 500]$ (in thousands) and model predictions $\hat{y} = [210, 290, 410, 800]$:
+1. Compute Mean Squared Error (MSE).
+2. Compute Root Mean Squared Error (RMSE).
+3. Compute Mean Absolute Error (MAE).
+4. Explain why MSE is drastically higher due to sample 4.</p>
+<p>::: step [Step 1: Compute Individual Residuals]
+| Sample $i$ | Actual $y^{(i)}$ | Predicted $\hat{y}^{(i)}$ | Residual $(y - \hat{y})$ | Absolute $|y - \hat{y}|$ | Squared $(y - \hat{y})^2$ |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | 200 | 210 | $-10$ | 10 | 100 |
+| 2 | 300 | 290 | $+10$ | 10 | 100 |
+| 3 | 400 | 410 | $-10$ | 10 | 100 |
+| 4 (Outlier) | 500 | 800 | $-300$ | 300 | 90,000 |
+| <strong>Sum</strong> | | | | <strong>330</strong> | <strong>90,300</strong> |
+:::</p>
+<p>::: step [Step 2: Calculate Metrics]
+- <strong>MAE:</strong> $\frac{1}{4}(330) = 82.5\text{k}$
+- <strong>MSE:</strong> $\frac{1}{4}(90,300) = 22,575$
+- <strong>RMSE:</strong> $\sqrt{22,575} \approx 150.25\text{k}$
+- <strong>Why?</strong> Squaring the single 300k error in sample 4 $(300^2 = 90,000)$ accounts for $99.6\%$ of the entire MSE! MAE treats errors linearly, making it far more robust to corrupted outlier data.
+:::</p>
 <hr />
-<h2 id="type-14-linear-regression-ordinary-least-squares">Type 1.4: Linear Regression (Ordinary Least Squares)</h2>
-<p>You have a tiny dataset of 3 houses. Size $x = [1, 2, 3]$. Price $y = [2, 4, 5]$. Find the perfect straight line ($w_1$ and $w_0$) using the Least Squares formula.</p>
-<details class="interactive-toggle"><summary>Show Step-by-Step Solution</summary><div class="toggle-content"><p><strong>Step 1: Find the Averages (Means)</strong></p>
-<p>Average of $x$ ($\bar{x}$) = \frac{1+2+3}{3} = 2$
- Average of $y$ ($\bar{y}$) = \frac{2+4+5}{3} = 3.67$</p>
-<p><strong>Step 2: Calculate the Deviations for the Numerator</strong></p>
-<p>Subtract the mean from each $x$ and $y$, then multiply them together: $(x_i - \bar{x}) \times (y_i - \bar{y})$.</p>
-<p>House 1: $(1 - 2) \times (2 - 3.67) = (-1) \times (-1.67) = 1.67$
- House 2: $(2 - 2) \times (4 - 3.67) = (0) \times (0.33) = 0$
- House 3: $(3 - 2) \times (5 - 3.67) = (1) \times (1.33) = 1.33$</p>
-<p><em>Sum of Numerator:</em> $1.67 + 0 + 1.33 = 3.0$.</p>
-<p><strong>Step 3: Calculate the Denominator</strong></p>
-<p>Square the $x$ deviations: $(x_i - \bar{x})^2$.</p>
-<p>House 1: $(-1)^2 = 1$
- House 2: $(0)^2 = 0$
- House 3: $(1)^2 = 1$</p>
-<p><em>Sum of Denominator:</em> $1 + 0 + 1 = 2.0$.</p>
-<p><strong>Step 4: Find the Slope ($w_1$) and Intercept ($w_0$)</strong></p>
-<p>w_1 = \frac{\text{Numerator}}{\text{Denominator}} = \frac{3.0}{2.0} = 1.5</p>
-<p>w_0 = \bar{y} - w_1\bar{x} = 3.67 - (1.5 \times 2) = 0.67</p>
-<p><strong>Answer:</strong> The best fit line is $\hat{y} = 0.67 + 1.5x$.</p></div></details>
-
+<h2 id="category-14-simple-linear-regression-ordinary-least-squares">Category 1.4: Simple Linear Regression (Ordinary Least Squares)</h2>
+<h3 id="problem-141-end-to-end-analytical-model-fitting">Problem 1.4.1: End-to-End Analytical Model Fitting</h3>
+<p><strong>Problem Statement:</strong> Fit an optimal linear regression line $\hat{y} = \theta_0 + \theta_1 x$ for the following training data:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Student</th>
+<th style="text-align: left;">Study Hours ($x$)</th>
+<th style="text-align: left;">Exam Score ($y$)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr>
+<td style="text-align: left;">B</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">4</td>
+</tr>
+<tr>
+<td style="text-align: left;">C</td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">5</td>
+</tr>
+<tr>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">4</td>
+</tr>
+<tr>
+<td style="text-align: left;">E</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">5</td>
+</tr>
+</tbody>
+</table>
+<p>Calculate:
+1. Sample means $\bar{x}$ and $\bar{y}$.
+2. Covariance $\text{Cov}(x, y)$ and Variance $\text{Var}(x)$.
+3. Optimal slope $\theta_1$ and intercept $\theta_0$.
+4. Predicted score for a student who studies $x = 6$ hours.</p>
+<p>::: step [Step 1: Compute Sample Means]
+$$ \bar{x} = \frac{1 + 2 + 3 + 4 + 5}{5} = \frac{15}{5} = 3.0 $$
+$$ \bar{y} = \frac{2 + 4 + 5 + 4 + 5}{5} = \frac{20}{5} = 4.0 $$
+:::</p>
+<p>::: step [Step 2: Construct the Computation Table]
+| $x_i$ | $y_i$ | $(x_i - \bar{x})$ | $(y_i - \bar{y})$ | $(x_i - \bar{x})(y_i - \bar{y})$ | $(x_i - \bar{x})^2$ |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | 2 | $-2$ | $-2$ | $+4$ | 4 |
+| 2 | 4 | $-1$ | $0$ | $0$ | 1 |
+| 3 | 5 | $0$ | $+1$ | $0$ | 0 |
+| 4 | 4 | $+1$ | $0$ | $0$ | 1 |
+| 5 | 5 | $+2$ | $+1$ | $+2$ | 4 |
+| <strong>Sum</strong> | | | | <strong>$\sum = 6.0$</strong> | <strong>$\sum = 10.0$</strong> |
+:::</p>
+<p>::: step [Step 3: Solve Slope &amp; Intercept]
+$$ \theta_1 = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sum (x_i - \bar{x})^2} = \frac{6.0}{10.0} = 0.60 $$
+$$ \theta_0 = \bar{y} - \theta_1 \bar{x} = 4.0 - (0.60 \times 3.0) = 4.0 - 1.8 = 2.20 $$
+<strong>Fitted Regression Model:</strong> $\hat{y} = 2.20 + 0.60x$
+:::</p>
+<p>::: step [Step 4: Inference Prediction for $x=6$]
+$$ \hat{y}(6) = 2.20 + 0.60(6) = 2.20 + 3.60 = 5.80\text{ Marks} $$
+:::</p>
 <hr />
-<h2 id="type-15-feature-scaling-standardization">Type 1.5: Feature Scaling (Standardization)</h2>
-<p>You have a feature vector for a house: Size = 2000 sqft, Bedrooms = 3. Let's scale the 'Size' feature so it doesn't overwhelm the math. Assume you checked your whole dataset and found the average house size is 1500 sqft with a standard deviation of 500 sqft.</p>
-<details class="interactive-toggle"><summary>Show Step-by-Step Solution</summary><div class="toggle-content"><p><strong>Step 1: Identify Mean and Standard Deviation</strong></p>
-<p>$\mu = 1500
-$\sigma = 500</p>
-<p><strong>Step 2: Apply the Z-Score Standardization formula</strong></p>
-<p>x_{scaled} = \frac{x - \mu}{\sigma}</p>
-<p><strong>Step 3: Calculate</strong></p>
-<p>x_{scaled} = \frac{2000 - 1500}{500} = \frac{500}{500} = 1.0</p>
-<p><strong>Result:</strong> The massive number '2000' is now represented simply as '1.0' (meaning it is exactly 1 standard deviation above average). The algorithm can now compare it safely against the smaller bedroom numbers.</p></div></details>
-
+<h2 id="category-15-manual-gradient-descent-execution">Category 1.5: Manual Gradient Descent Execution</h2>
+<h3 id="problem-151-2-step-hand-calculated-optimization">Problem 1.5.1: 2-Step Hand-Calculated Optimization</h3>
+<p><strong>Problem Statement:</strong> Given a simple hypothesis $h_\theta(x) = \theta_1 x$ (with no bias term $\theta_0 = 0$), initial weight $\theta_1^{(0)} = 0.0$, learning rate $\alpha = 0.1$, and training dataset:
+$(x^{(1)}, y^{(1)}) = (1, 2)$, $(x^{(2)}, y^{(2)}) = (2, 4)$.
+Manually execute <strong>Iteration 1</strong> and <strong>Iteration 2</strong> of Gradient Descent using MSE cost $J(\theta_1) = \frac{1}{2m}\sum (h(x) - y)^2$.</p>
+<p>::: step [Step 1: Gradient Formula]
+$$ \frac{\partial J}{\partial \theta_1} = \frac{1}{m} \sum_{i=1}^m \left( \theta_1 x^{(i)} - y^{(i)} \right) x^{(i)} $$
+:::</p>
+<p>::: step [Step 2: Iteration 1 ($\theta_1^{(0)} = 0.0$)]
+- Sample 1 error: $(0 \cdot 1 - 2) \cdot 1 = -2$
+- Sample 2 error: $(0 \cdot 2 - 4) \cdot 2 = -8$
+- Average Gradient: $\frac{1}{2}(-2 + -8) = \frac{-10}{2} = -5.0$
+- <strong>Weight Update:</strong>
+$$ \theta_1^{(1)} = \theta_1^{(0)} - \alpha \cdot \text{Gradient} = 0.0 - (0.1 \times -5.0) = 0.0 + 0.5 = 0.50 $$
+:::</p>
+<p>::: step [Step 3: Iteration 2 ($\theta_1^{(1)} = 0.50$)]
+- Sample 1 error: $(0.5 \cdot 1 - 2) \cdot 1 = (0.5 - 2) \cdot 1 = -1.5$
+- Sample 2 error: $(0.5 \cdot 2 - 4) \cdot 2 = (1.0 - 4) \cdot 2 = -6.0$
+- Average Gradient: $\frac{1}{2}(-1.5 + -6.0) = \frac{-7.5}{2} = -3.75$
+- <strong>Weight Update:</strong>
+$$ \theta_1^{(2)} = 0.50 - (0.1 \times -3.75) = 0.50 + 0.375 = 0.875 $$
+<em>Notice how $\theta_1$ is climbing smoothly toward the true optimal value $\theta_1^</em> = 2.0$!*
+:::</p>
 <hr />
+<h2 id="category-16-multiple-linear-regression-via-normal-equations">Category 1.6: Multiple Linear Regression via Normal Equations</h2>
+<h3 id="problem-161-matrix-form-inversion-xtx-1xty">Problem 1.6.1: Matrix Form Inversion $(X^TX)^{-1}X^TY$</h3>
+<p><strong>Problem Statement:</strong> Find the parameter vector $\theta = [\theta_0, \theta_1]^T$ for the dataset $(1, 1), (2, 3), (3, 2)$ using the Normal Equation.</p>
+<p>::: step [Step 1: Construct Design Matrix $X$ and Target Vector $Y$]
+$$ X = \begin{bmatrix} 1 &amp; 1 \ 1 &amp; 2 \ 1 &amp; 3 \end{bmatrix}, \quad Y = \begin{bmatrix} 1 \ 3 \ 2 \end{bmatrix} $$
+:::</p>
+<p>::: step [Step 2: Compute $X^T X$ and $X^T Y$]
+$$ X^T X = \begin{bmatrix} 1 &amp; 1 &amp; 1 \ 1 &amp; 2 &amp; 3 \end{bmatrix} \begin{bmatrix} 1 &amp; 1 \ 1 &amp; 2 \ 1 &amp; 3 \end{bmatrix} = \begin{bmatrix} 1+1+1 &amp; 1+2+3 \ 1+2+3 &amp; 1+4+9 \end{bmatrix} = \begin{bmatrix} 3 &amp; 6 \ 6 &amp; 14 \end{bmatrix} $$
+$$ X^T Y = \begin{bmatrix} 1 &amp; 1 &amp; 1 \ 1 &amp; 2 &amp; 3 \end{bmatrix} \begin{bmatrix} 1 \ 3 \ 2 \end{bmatrix} = \begin{bmatrix} 1+3+2 \ 1+6+6 \end{bmatrix} = \begin{bmatrix} 6 \ 13 \end{bmatrix} $$
+:::</p>
+<p>::: step [Step 3: Compute Matrix Inverse $(X^T X)^{-1}$]
+Determinant: $\det(X^TX) = (3)(14) - (6)(6) = 42 - 36 = 6$.
+Adjugate matrix: $\begin{bmatrix} 14 &amp; -6 \ -6 &amp; 3 \end{bmatrix}$.
+$$ (X^T X)^{-1} = \frac{1}{6} \begin{bmatrix} 14 &amp; -6 \ -6 &amp; 3 \end{bmatrix} $$
+:::</p>
+<p>::: step [Step 4: Solve $\theta^<em> = (X^T X)^{-1} X^T Y$]
+$$ \theta = \frac{1}{6} \begin{bmatrix} 14 &amp; -6 \ -6 &amp; 3 \end{bmatrix} \begin{bmatrix} 6 \ 13 \end{bmatrix} = \frac{1}{6} \begin{bmatrix} (14 \times 6) + (-6 \times 13) \ (-6 \times 6) + (3 \times 13) \end{bmatrix} = \frac{1}{6} \begin{bmatrix} 84 - 78 \ -36 + 39 \end{bmatrix} = \frac{1}{6} \begin{bmatrix} 6 \ 3 \end{bmatrix} = \begin{bmatrix} 1.0 \ 0.5 \end{bmatrix} $$
+</em><em>Final Model:</em>* $\hat{y} = 1.0 + 0.5x$
+:::</p>
     </main>
 
     <footer class="pagefoot" id="pagefoot">

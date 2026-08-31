@@ -41,58 +41,94 @@
         "title": "Module 1",
         "topics": [
           {
-            "id": "m1_01_ml_vs_traditional",
-            "title": "M1 01 Ml Vs Traditional",
-            "filename": "m1_01_ml_vs_traditional.html",
-            "source_path": "content\\PCCST503\\m1_01_ml_vs_traditional.md"
+            "id": "m1_01_ml_definition_and_intuition",
+            "title": "M1 01 Ml Definition And Intuition",
+            "filename": "m1_01_ml_definition_and_intuition.html",
+            "source_path": "content\\PCCST503\\m1_01_ml_definition_and_intuition.md"
           },
           {
-            "id": "m1_02_ml_paradigms",
-            "title": "M1 02 Ml Paradigms",
-            "filename": "m1_02_ml_paradigms.html",
-            "source_path": "content\\PCCST503\\m1_02_ml_paradigms.md"
+            "id": "m1_02_ml_vs_traditional_programming",
+            "title": "M1 02 Ml Vs Traditional Programming",
+            "filename": "m1_02_ml_vs_traditional_programming.html",
+            "source_path": "content\\PCCST503\\m1_02_ml_vs_traditional_programming.md"
           },
           {
-            "id": "m1_03_parameter_estimation_mle",
-            "title": "M1 03 Parameter Estimation Mle",
-            "filename": "m1_03_parameter_estimation_mle.html",
-            "source_path": "content\\PCCST503\\m1_03_parameter_estimation_mle.md"
+            "id": "m1_03_learning_paradigms_supervised_unsupervised",
+            "title": "M1 03 Learning Paradigms Supervised Unsupervised",
+            "filename": "m1_03_learning_paradigms_supervised_unsupervised.html",
+            "source_path": "content\\PCCST503\\m1_03_learning_paradigms_supervised_unsupervised.md"
           },
           {
-            "id": "m1_04_parameter_estimation_map",
-            "title": "M1 04 Parameter Estimation Map",
-            "filename": "m1_04_parameter_estimation_map.html",
-            "source_path": "content\\PCCST503\\m1_04_parameter_estimation_map.md"
+            "id": "m1_04_learning_paradigms_semi_and_rl",
+            "title": "M1 04 Learning Paradigms Semi And Rl",
+            "filename": "m1_04_learning_paradigms_semi_and_rl.html",
+            "source_path": "content\\PCCST503\\m1_04_learning_paradigms_semi_and_rl.md"
           },
           {
-            "id": "m1_05_supervised_learning_formulation",
-            "title": "M1 05 Supervised Learning Formulation",
-            "filename": "m1_05_supervised_learning_formulation.html",
-            "source_path": "content\\PCCST503\\m1_05_supervised_learning_formulation.md"
+            "id": "m1_05_mle_intuition_and_bernoulli",
+            "title": "M1 05 Mle Intuition And Bernoulli",
+            "filename": "m1_05_mle_intuition_and_bernoulli.html",
+            "source_path": "content\\PCCST503\\m1_05_mle_intuition_and_bernoulli.md"
           },
           {
-            "id": "m1_06_loss_functions_optimization",
-            "title": "M1 06 Loss Functions Optimization",
-            "filename": "m1_06_loss_functions_optimization.html",
-            "source_path": "content\\PCCST503\\m1_06_loss_functions_optimization.md"
+            "id": "m1_06_mle_gaussian_distribution",
+            "title": "M1 06 Mle Gaussian Distribution",
+            "filename": "m1_06_mle_gaussian_distribution.html",
+            "source_path": "content\\PCCST503\\m1_06_mle_gaussian_distribution.md"
           },
           {
-            "id": "m1_07_linear_regression_one_variable",
-            "title": "M1 07 Linear Regression One Variable",
-            "filename": "m1_07_linear_regression_one_variable.html",
-            "source_path": "content\\PCCST503\\m1_07_linear_regression_one_variable.md"
+            "id": "m1_07_map_bayes_theorem_and_priors",
+            "title": "M1 07 Map Bayes Theorem And Priors",
+            "filename": "m1_07_map_bayes_theorem_and_priors.html",
+            "source_path": "content\\PCCST503\\m1_07_map_bayes_theorem_and_priors.md"
           },
           {
-            "id": "m1_08_linear_regression_multiple_variables",
-            "title": "M1 08 Linear Regression Multiple Variables",
-            "filename": "m1_08_linear_regression_multiple_variables.html",
-            "source_path": "content\\PCCST503\\m1_08_linear_regression_multiple_variables.md"
+            "id": "m1_08_map_beta_prior_derivation",
+            "title": "M1 08 Map Beta Prior Derivation",
+            "filename": "m1_08_map_beta_prior_derivation.html",
+            "source_path": "content\\PCCST503\\m1_08_map_beta_prior_derivation.md"
           },
           {
-            "id": "m1_99_practice",
-            "title": "M1 99 Practice",
-            "filename": "m1_99_practice.html",
-            "source_path": "content\\PCCST503\\m1_99_practice.md"
+            "id": "m1_09_supervised_learning_formalism",
+            "title": "M1 09 Supervised Learning Formalism",
+            "filename": "m1_09_supervised_learning_formalism.html",
+            "source_path": "content\\PCCST503\\m1_09_supervised_learning_formalism.md"
+          },
+          {
+            "id": "m1_10_loss_and_cost_functions",
+            "title": "M1 10 Loss And Cost Functions",
+            "filename": "m1_10_loss_and_cost_functions.html",
+            "source_path": "content\\PCCST503\\m1_10_loss_and_cost_functions.md"
+          },
+          {
+            "id": "m1_11_gradient_descent_optimization",
+            "title": "M1 11 Gradient Descent Optimization",
+            "filename": "m1_11_gradient_descent_optimization.html",
+            "source_path": "content\\PCCST503\\m1_11_gradient_descent_optimization.md"
+          },
+          {
+            "id": "m1_12_linear_regression_one_variable_ols",
+            "title": "M1 12 Linear Regression One Variable Ols",
+            "filename": "m1_12_linear_regression_one_variable_ols.html",
+            "source_path": "content\\PCCST503\\m1_12_linear_regression_one_variable_ols.md"
+          },
+          {
+            "id": "m1_13_multiple_linear_regression_matrices",
+            "title": "M1 13 Multiple Linear Regression Matrices",
+            "filename": "m1_13_multiple_linear_regression_matrices.html",
+            "source_path": "content\\PCCST503\\m1_13_multiple_linear_regression_matrices.md"
+          },
+          {
+            "id": "m1_14_normal_equations_and_multicollinearity",
+            "title": "M1 14 Normal Equations And Multicollinearity",
+            "filename": "m1_14_normal_equations_and_multicollinearity.html",
+            "source_path": "content\\PCCST503\\m1_14_normal_equations_and_multicollinearity.md"
+          },
+          {
+            "id": "m1_99_practice_lab_mle_map_regression",
+            "title": "M1 99 Practice Lab Mle Map Regression",
+            "filename": "m1_99_practice_lab_mle_map_regression.html",
+            "source_path": "content\\PCCST503\\m1_99_practice_lab_mle_map_regression.md"
           }
         ]
       },
@@ -101,34 +137,100 @@
         "title": "Module 2",
         "topics": [
           {
-            "id": "m2_01_logistic_regression",
-            "title": "M2 01 Logistic Regression",
-            "filename": "m2_01_logistic_regression.html",
-            "source_path": "content\\PCCST503\\m2_01_logistic_regression.md"
+            "id": "m2_01_classification_intro_and_linear_flaws",
+            "title": "M2 01 Classification Intro And Linear Flaws",
+            "filename": "m2_01_classification_intro_and_linear_flaws.html",
+            "source_path": "content\\PCCST503\\m2_01_classification_intro_and_linear_flaws.md"
           },
           {
-            "id": "m2_02_naive_bayes",
-            "title": "M2 02 Naive Bayes",
-            "filename": "m2_02_naive_bayes.html",
-            "source_path": "content\\PCCST503\\m2_02_naive_bayes.md"
+            "id": "m2_02_logistic_sigmoid_function",
+            "title": "M2 02 Logistic Sigmoid Function",
+            "filename": "m2_02_logistic_sigmoid_function.html",
+            "source_path": "content\\PCCST503\\m2_02_logistic_sigmoid_function.md"
           },
           {
-            "id": "m2_03_knn",
-            "title": "M2 03 Knn",
-            "filename": "m2_03_knn.html",
-            "source_path": "content\\PCCST503\\m2_03_knn.md"
+            "id": "m2_03_odds_log_odds_and_logit",
+            "title": "M2 03 Odds Log Odds And Logit",
+            "filename": "m2_03_odds_log_odds_and_logit.html",
+            "source_path": "content\\PCCST503\\m2_03_odds_log_odds_and_logit.md"
           },
           {
-            "id": "m2_04_decision_trees",
-            "title": "M2 04 Decision Trees",
-            "filename": "m2_04_decision_trees.html",
-            "source_path": "content\\PCCST503\\m2_04_decision_trees.md"
+            "id": "m2_04_cross_entropy_loss_for_logistic",
+            "title": "M2 04 Cross Entropy Loss For Logistic",
+            "filename": "m2_04_cross_entropy_loss_for_logistic.html",
+            "source_path": "content\\PCCST503\\m2_04_cross_entropy_loss_for_logistic.md"
           },
           {
-            "id": "m2_99_practice",
-            "title": "M2 99 Practice",
-            "filename": "m2_99_practice.html",
-            "source_path": "content\\PCCST503\\m2_99_practice.md"
+            "id": "m2_05_naive_bayes_fundamentals_and_bayes_rule",
+            "title": "M2 05 Naive Bayes Fundamentals And Bayes Rule",
+            "filename": "m2_05_naive_bayes_fundamentals_and_bayes_rule.html",
+            "source_path": "content\\PCCST503\\m2_05_naive_bayes_fundamentals_and_bayes_rule.md"
+          },
+          {
+            "id": "m2_06_naive_bayes_independence_assumption",
+            "title": "M2 06 Naive Bayes Independence Assumption",
+            "filename": "m2_06_naive_bayes_independence_assumption.html",
+            "source_path": "content\\PCCST503\\m2_06_naive_bayes_independence_assumption.md"
+          },
+          {
+            "id": "m2_07_naive_bayes_zero_probability_and_laplace",
+            "title": "M2 07 Naive Bayes Zero Probability And Laplace",
+            "filename": "m2_07_naive_bayes_zero_probability_and_laplace.html",
+            "source_path": "content\\PCCST503\\m2_07_naive_bayes_zero_probability_and_laplace.md"
+          },
+          {
+            "id": "m2_08_knn_lazy_learning_and_intuition",
+            "title": "M2 08 Knn Lazy Learning And Intuition",
+            "filename": "m2_08_knn_lazy_learning_and_intuition.html",
+            "source_path": "content\\PCCST503\\m2_08_knn_lazy_learning_and_intuition.md"
+          },
+          {
+            "id": "m2_09_knn_distance_metrics",
+            "title": "M2 09 Knn Distance Metrics",
+            "filename": "m2_09_knn_distance_metrics.html",
+            "source_path": "content\\PCCST503\\m2_09_knn_distance_metrics.md"
+          },
+          {
+            "id": "m2_10_knn_hyperparameter_k_and_scaling",
+            "title": "M2 10 Knn Hyperparameter K And Scaling",
+            "filename": "m2_10_knn_hyperparameter_k_and_scaling.html",
+            "source_path": "content\\PCCST503\\m2_10_knn_hyperparameter_k_and_scaling.md"
+          },
+          {
+            "id": "m2_11_decision_trees_anatomy_and_intuition",
+            "title": "M2 11 Decision Trees Anatomy And Intuition",
+            "filename": "m2_11_decision_trees_anatomy_and_intuition.html",
+            "source_path": "content\\PCCST503\\m2_11_decision_trees_anatomy_and_intuition.md"
+          },
+          {
+            "id": "m2_12_information_theory_entropy",
+            "title": "M2 12 Information Theory Entropy",
+            "filename": "m2_12_information_theory_entropy.html",
+            "source_path": "content\\PCCST503\\m2_12_information_theory_entropy.md"
+          },
+          {
+            "id": "m2_13_information_gain_and_id3_algorithm",
+            "title": "M2 13 Information Gain And Id3 Algorithm",
+            "filename": "m2_13_information_gain_and_id3_algorithm.html",
+            "source_path": "content\\PCCST503\\m2_13_information_gain_and_id3_algorithm.md"
+          },
+          {
+            "id": "m2_14_gini_impurity_and_cart_trees",
+            "title": "M2 14 Gini Impurity And Cart Trees",
+            "filename": "m2_14_gini_impurity_and_cart_trees.html",
+            "source_path": "content\\PCCST503\\m2_14_gini_impurity_and_cart_trees.md"
+          },
+          {
+            "id": "m2_15_decision_tree_overfitting_and_pruning",
+            "title": "M2 15 Decision Tree Overfitting And Pruning",
+            "filename": "m2_15_decision_tree_overfitting_and_pruning.html",
+            "source_path": "content\\PCCST503\\m2_15_decision_tree_overfitting_and_pruning.md"
+          },
+          {
+            "id": "m2_99_practice_lab_classification",
+            "title": "M2 99 Practice Lab Classification",
+            "filename": "m2_99_practice_lab_classification.html",
+            "source_path": "content\\PCCST503\\m2_99_practice_lab_classification.md"
           }
         ]
       },

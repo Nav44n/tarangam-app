@@ -8,7 +8,9 @@ class GradientDescentOptimizationScene(Scene):
             axis_config={"color": BLUE}
         )
         objective_parabola = coordinate_axes.plot(lambda x: x**2, color=WHITE)
-        function_label = coordinate_axes.get_graph_label(objective_parabola, label="J(\\theta) = \\theta^2")
+        
+        # Avoid get_graph_label because it defaults to MathTex
+        function_label = Text("J(t) = t^2", font_size=24).next_to(objective_parabola, UP)
         
         optimization_dot = Dot(color=RED)
         initial_x = 2.5

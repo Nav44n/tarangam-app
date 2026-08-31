@@ -172,3 +172,85 @@ window.addProblemSet(2, {
         }
     ]
 });
+
+// --- MODULE 3 PROBLEMS ---
+window.addProblemSet(3, {
+    type: "Type 3.1",
+    title: "Regression Evaluation (RMSE)",
+    scenario: "You are evaluating a regression model. The true house prices (in $100k) are $y = [3, -0.5, 2, 7]$ and the model predicts $\\hat{y} = [2.5, 0.0, 2, 8]$. Calculate the Root Mean Squared Error (RMSE).",
+    steps: [
+        {
+            title: "Step 1: Calculate the Error (Residuals)",
+            body: "$e_i = y_i - \\hat{y}_i$<br>House 1: $3 - 2.5 = 0.5$<br>House 2: $-0.5 - 0.0 = -0.5$<br>House 3: $2 - 2 = 0$<br>House 4: $7 - 8 = -1.0$"
+        },
+        {
+            title: "Step 2: Square the Errors",
+            body: "$e_i^2$<br>House 1: $0.5^2 = 0.25$<br>House 2: $(-0.5)^2 = 0.25$<br>House 3: $0^2 = 0$<br>House 4: $(-1.0)^2 = 1.0$"
+        },
+        {
+            title: "Step 3: Calculate the Mean (MSE)",
+            body: "MSE = \\frac{0.25 + 0.25 + 0 + 1.0}{4} = \\frac{1.5}{4} = 0.375"
+        },
+        {
+            title: "Step 4: Take the Square Root (RMSE)",
+            body: "RMSE = \\sqrt{0.375} \\approx 0.612<br><br><strong>Result:</strong> The RMSE is 0.612 (or $61,200)."
+        }
+    ]
+});
+
+window.addProblemSet(3, {
+    type: "Type 3.2",
+    title: "Perceptron Weight Update",
+    scenario: "A perceptron has weights $w_1 = 0.5, w_2 = -0.5$ and bias $b = 0$. An input vector $x = [1, 2]$ belongs to class $y = 1$ (positive). The learning rate $\\eta = 0.1$. First, find if the perceptron classifies it correctly (using a step function where output is 1 if sum $\\ge 0$, else -1). If incorrect, update the weights.",
+    steps: [
+        {
+            title: "Step 1: Calculate the weighted sum",
+            body: "z = (w_1 \\times x_1) + (w_2 \\times x_2) + b<br>z = (0.5 \\times 1) + (-0.5 \\times 2) + 0<br>z = 0.5 - 1.0 = -0.5"
+        },
+        {
+            title: "Step 2: Apply the activation function",
+            body: "Since $z = -0.5 < 0$, the predicted output $\\hat{y} = -1$.<br>The true target is $y = 1$. The prediction is incorrect."
+        },
+        {
+            title: "Step 3: Apply the update rule",
+            body: "Formula: $w_i \\leftarrow w_i + \\eta (y - \\hat{y}) x_i$<br>Error term: $(y - \\hat{y}) = 1 - (-1) = 2$<br><br>Update $w_1$:<br>w_1 = 0.5 + 0.1 \\times 2 \\times 1 = 0.5 + 0.2 = 0.7<br><br>Update $w_2$:<br>w_2 = -0.5 + 0.1 \\times 2 \\times 2 = -0.5 + 0.4 = -0.1<br><br>Update $b$:<br>b = 0 + 0.1 \\times 2 \\times 1 = 0.2"
+        }
+    ]
+});
+
+// --- MODULE 4 PROBLEMS ---
+window.addProblemSet(4, {
+    type: "Type 4.1",
+    title: "K-Means: Centroid Update",
+    scenario: "In a K-Means clustering step, a specific cluster has been assigned three 2D points: $P_1(1, 2)$, $P_2(3, 4)$, and $P_3(5, 0)$. Calculate the new coordinate for this cluster's centroid.",
+    steps: [
+        {
+            title: "Step 1: Understand the Centroid Formula",
+            body: "The new centroid is simply the mean of all points assigned to that cluster, calculated separately for each dimension ($x$ and $y$)."
+        },
+        {
+            title: "Step 2: Calculate the mean of X coordinates",
+            body: "C_x = \\frac{1 + 3 + 5}{3} = \\frac{9}{3} = 3"
+        },
+        {
+            title: "Step 3: Calculate the mean of Y coordinates",
+            body: "C_y = \\frac{2 + 4 + 0}{3} = \\frac{6}{3} = 2<br><br><strong>Result:</strong> The updated centroid is located at $(3, 2)$."
+        }
+    ]
+});
+
+window.addProblemSet(4, {
+    type: "Type 4.2",
+    title: "Distance Metrics: Euclidean & Manhattan",
+    scenario: "You are comparing two data points representing users: $A(2, 7)$ and $B(5, 3)$. Calculate both the Euclidean Distance (L2 norm) and Manhattan Distance (L1 norm) between them.",
+    steps: [
+        {
+            title: "Step 1: Calculate Euclidean Distance (L2)",
+            body: "Formula: $d = \\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$<br><br>d = \\sqrt{(5 - 2)^2 + (3 - 7)^2}<br>d = \\sqrt{3^2 + (-4)^2}<br>d = \\sqrt{9 + 16} = \\sqrt{25} = 5"
+        },
+        {
+            title: "Step 2: Calculate Manhattan Distance (L1)",
+            body: "Formula: $d = |x_2 - x_1| + |y_2 - y_1|$<br><br>d = |5 - 2| + |3 - 7|<br>d = |3| + |-4| = 3 + 4 = 7<br><br><strong>Result:</strong> Euclidean distance is 5, Manhattan distance is 7."
+        }
+    ]
+});

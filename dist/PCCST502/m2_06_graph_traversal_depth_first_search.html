@@ -352,7 +352,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -368,20 +368,51 @@
 <p><strong>Stack/recursive traversal, discovery and finishing timestamps, tree/back/forward/cross edges, and cycle detection.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Depth-First Search (DFS) &amp; Edge Classification</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>If BFS explores like ripples spreading evenly outward from a pebble, <strong>Depth-First Search (DFS)</strong> explores like a person navigating a corn-maze by always picking a random new direction and committing to it fully — walking as far as possible down one path, only backing up (backtracking) once you hit a dead end or a spot you've already visited, and only <em>then</em> trying the next unexplored branch from wherever you last had a choice. Instead of exploring "wide and shallow, one wave at a time," DFS goes "deep and narrow first," diving as far down one branch as it possibly can before ever coming back to explore a sibling branch.</p>
+<p>This deep-diving order turns out to reveal something BFS's wave-by-wave order doesn't: by recording <em>when</em> you first arrive at a room (discovery time) and <em>when</em> you finally leave it for good, having explored everything reachable from it (finishing time), you can classify every corridor (edge) in the maze into one of four distinct categories — and one of those categories, in particular, directly reveals whether the maze contains a loop back on itself (a cycle).</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>The mechanism: a stack (explicit, or implicit via recursion).</strong> DFS is most naturally written recursively, where the call stack itself plays the role of the "stack" data structure, keeping track of the path taken so far so we can backtrack correctly:</p>
+<pre><code>DFS(G):
+    for each vertex v: visited[v] = False; color[v] = WHITE
+    time = 0
+    for each vertex v:
+        if not visited[v]: DFS-Visit(v)
+
+DFS-Visit(u):
+    visited[u] = True; color[u] = GRAY   # currently being explored (&quot;on the current path&quot;)
+    time = time + 1; discovery[u] = time
+    for each neighbour v of u:
+        classify edge (u,v) based on color[v]     # see classification rules below
+        if color[v] == WHITE:
+            parent[v] = u
+            DFS-Visit(v)
+    color[u] = BLACK   # fully finished — everything reachable from u has been explored
+    time = time + 1; finish[u] = time
+</code></pre>
+<p>The outer loop over "for each vertex v" (calling <code>DFS-Visit</code> on any not-yet-visited vertex) ensures the <em>entire</em> graph is explored, even if it's disconnected into several separate pieces — unlike BFS, which by default only explores whatever is reachable from a single given source. This produces, in general, a <strong>DFS forest</strong> (a collection of DFS trees, one per connected/reachable component), rather than a single tree.</p>
+<p><strong>Discovery and finishing times.</strong> Each vertex gets timestamped twice: <code>discovery[u]</code> (when first reached) and <code>finish[u]</code> (when DFS has completely finished exploring everything reachable from <code>u</code>, and is about to backtrack away from it for good). These timestamps are what enable edge classification.</p>
+<p><strong>Edge classification (for a directed graph — the general case; some categories coincide for undirected graphs):</strong>
+- <strong>Tree edge:</strong> an edge $(u,v)$ where $v$ was WHITE (unvisited) when first examined from $u$ — this is exactly the edge used to <em>discover</em> $v$, and becomes part of the DFS tree/forest.
+- <strong>Back edge:</strong> an edge $(u,v)$ where $v$ is GRAY (currently on the active path, an ancestor of $u$ in the current DFS tree) when examined — this points "backward" toward an ancestor still being explored. <strong>A back edge is the direct, definitive signature of a cycle</strong> — it means you can walk from $v$ down to $u$ (through tree edges already traversed) and then follow this one extra edge straight back to $v$, closing a loop.
+- <strong>Forward edge:</strong> an edge $(u,v)$ where $v$ is BLACK (already fully finished) and $v$ is a <em>descendant</em> of $u$ in the DFS tree — points "forward" to something already completely explored, but reachable another way too. (Only possible in directed graphs.)
+- <strong>Cross edge:</strong> an edge $(u,v)$ where $v$ is BLACK and $v$ is <em>not</em> a descendant of $u$ — connects two unrelated branches of the DFS tree/forest, neither an ancestor nor descendant of the other. (Only possible in directed graphs.)
+- For <strong>undirected graphs</strong>, only tree edges and back edges occur (forward and cross edges reduce to being classified as back edges instead, due to how undirected edges are examined from both endpoints).</p>
+<p><strong>Cycle detection via DFS:</strong> a graph contains a cycle if and only if a DFS traversal encounters at least one <strong>back edge</strong>. This is the standard, provably correct way to detect cycles using DFS, applicable to both directed and undirected graphs (with the caveat that, for undirected graphs, you must be careful to not count the trivial "back edge" to your own immediate parent — since an undirected edge $(u,v)$ is naturally seen from both directions — as a false cycle).</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Given a directed graph with edges $A\to B$, $B\to C$, $C\to A$, run DFS starting from $A$, record discovery/finish times, and classify every edge. Determine whether the graph contains a cycle.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><code>DFS-Visit(A)</code>: mark $A$ GRAY, <code>discovery[A]=1</code>. Examine edge $A\to B$: $B$ is WHITE → <strong>tree edge</strong>; recurse.
+<code>DFS-Visit(B)</code>: mark $B$ GRAY, <code>discovery[B]=2</code>. Examine edge $B\to C$: $C$ is WHITE → <strong>tree edge</strong>; recurse.
+<code>DFS-Visit(C)</code>: mark $C$ GRAY, <code>discovery[C]=3</code>. Examine edge $C\to A$: $A$ is currently <strong>GRAY</strong> (still on the active path — an ancestor of $C$) → this is a <strong>back edge</strong>. No further unvisited neighbours from $C$; mark $C$ BLACK, <code>finish[C]=4</code>.
+Back to $B$: no further unvisited neighbours; mark $B$ BLACK, <code>finish[B]=5</code>.
+Back to $A$: no further unvisited neighbours; mark $A$ BLACK, <code>finish[A]=6</code>.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Edge classification: $A\to B$ and $B\to C$ are <strong>tree edges</strong>; $C\to A$ is a <strong>back edge</strong>. Since a back edge was found, DFS confirms this graph <strong>contains a cycle</strong> — specifically, exactly the cycle $A \to B \to C \to A$ that's visually obvious here, but which DFS's back-edge rule detects systematically and correctly even in graphs far too large or complex to check "by eye."</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -391,16 +422,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Depth-First Search (DFS) & Edge Classification?</div>
+  <div class="quiz-prompt">Which type of edge, discovered during a DFS traversal, definitively indicates that the graph contains a cycle?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>Tree edge</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Back edge</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Forward edge</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Cross edge</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Depth-First Search (DFS) & Edge Classification in Design and Analysis of Algorithms.
+    <strong>Pedagogical Insight:</strong> A back edge points from the current vertex to an ancestor that is still GRAY (currently being explored, i.e. still on the active recursion path) — meaning you can trace a path from that ancestor down to the current vertex via tree edges, then follow this one back edge straight back to the ancestor, forming a closed loop: a cycle.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What do the "discovery time" and "finish time" of a vertex represent in DFS?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>The number of edges connected to that vertex</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The timestamp when the vertex is first reached (turns GRAY) and the timestamp when DFS has completely finished exploring everything reachable from it (turns BLACK)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The vertex's distance from the source, as in BFS</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>A random number assigned for identification purposes only</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Discovery time marks when a vertex is first encountered and DFS begins exploring from it; finish time marks when DFS has fully explored every vertex reachable from it and is backtracking away for good. These two timestamps, and the color state (WHITE/GRAY/BLACK) they imply at any point in the traversal, are exactly what allow every edge to be classified into one of the four categories.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Why does the outer loop of the DFS algorithm ("for each vertex v: if not visited, call DFS-Visit(v)") matter, compared to just calling DFS-Visit once on a single starting vertex?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>It has no real purpose and can be removed</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It ensures every vertex is eventually visited even if the graph is disconnected into multiple separate pieces, producing a DFS forest rather than missing unreachable components</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It guarantees the traversal finds the shortest path</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It converts DFS into BFS</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> A single call to `DFS-Visit` only explores vertices reachable from that one starting vertex. If the graph has multiple disconnected components (or, in a directed graph, vertices unreachable from the chosen start), those vertices would be missed entirely without the outer loop, which restarts DFS from any still-unvisited vertex, building a full DFS forest that covers the entire graph.
   </div>
 </div>
     </main>

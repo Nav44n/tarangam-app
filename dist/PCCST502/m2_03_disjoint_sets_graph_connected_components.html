@@ -352,7 +352,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -368,20 +368,31 @@
 <p><strong>Detecting cycles in undirected graphs and incremental dynamic connectivity.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Application: Connected Components &amp; Cycle Detection in Graphs</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Now that Union-Find is fast (thanks to union by rank and path compression), here's where it earns its keep in practice: <strong>graphs</strong>. Picture a map of towns connected by roads, where roads are being built one at a time, and you're constantly asked two questions as construction proceeds: "can you currently get from town A to town B by some sequence of roads?" and "does the road we're about to build create a loop (a way to leave a town and eventually come back to it without retracing your steps)?"</p>
+<p>Union-Find answers both, elegantly, using the machinery you already have: represent each town as an element, and each time a road is built between two towns, that's a <code>Union</code> call on those two towns. To check "are A and B connected?", just check <code>Find(A) == Find(B)</code>. To check "does adding this new road create a cycle?" — check <em>before</em> performing the union: if <code>Find(A) == Find(B)</code> already (they're already in the same group through some other path), then this new direct road would create a redundant, cycle-forming connection; only if they're currently in <em>different</em> groups does adding this edge genuinely connect two previously-separate pieces without forming a loop.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>Connected components via Union-Find.</strong> Given an undirected graph $G=(V,E)$, initialise a disjoint-set structure with <code>MakeSet(v)</code> for every vertex $v \in V$. Then, for every edge $(u,v) \in E$, call <code>Union(u,v)</code>. After processing all edges, two vertices are in the same <strong>connected component</strong> if and only if <code>Find(u) == Find(v)</code>. The total number of distinct connected components equals the number of distinct representatives (roots) remaining across all vertices.</p>
+<p><strong>Cycle detection in an undirected graph.</strong> Process edges one at a time. For each edge $(u,v)$:
+- If <code>Find(u) == Find(v)</code>: $u$ and $v$ are <em>already</em> connected through some other existing path — adding this edge directly would create a <strong>cycle</strong>. Report the cycle (or simply skip adding this edge, depending on the application — this is exactly the core check inside Kruskal's Minimum Spanning Tree algorithm, which skips any edge that would create a cycle).
+- If <code>Find(u) \ne Find(v)</code>: they are currently in different components — call <code>Union(u,v)</code> to merge them; this edge is "safe" (doesn't create a cycle).</p>
+<p>This gives an efficient algorithm, running in roughly $O(E \cdot \alpha(V))$ time overall (near-linear, thanks to the near-constant amortized cost of each Union-Find operation) — far better than re-running a full traversal (like DFS/BFS, covered in upcoming topics) from scratch after every single edge addition.</p>
+<p><strong>Incremental dynamic connectivity.</strong> In many real applications, edges arrive <em>over time</em> (a social network gaining new friend connections, a network of computers gaining new links) rather than all being known upfront. Union-Find is naturally suited to this <strong>incremental</strong> ("edges only ever added, never removed") setting: each new edge triggers one <code>Union</code> call, and any "are $u$ and $v$ connected?" query is answered by a single <code>Find</code>-and-compare, without ever needing to re-scan the whole graph from scratch. This is a genuine practical advantage over graph-traversal algorithms like BFS/DFS, which would need to be re-run entirely (or at least substantially) whenever the graph structure changes.</p>
+<p><strong>An important limitation.</strong> Plain Union-Find, as covered so far, handles edges being <em>added</em> efficiently, but does <em>not</em> efficiently support edges being <em>removed</em> — there's no simple, cheap way to "undo" a Union once performed, since after a union you've lost track of exactly which original edge caused the merge. Handling edge deletions efficiently requires substantially more advanced data structures beyond this module's scope.</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Given an undirected graph with vertices ${A,B,C,D}$ and edges added in this order: $(A,B)$, $(B,C)$, $(A,C)$, $(C,D)$. Using Union-Find, determine which edge (if any) creates a cycle, and identify the final connected component(s).</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Start: <code>MakeSet</code> for A, B, C, D — four separate singleton groups.
+Edge $(A,B)$: <code>Find(A)=A</code>, <code>Find(B)=B</code> — different, so no cycle; <code>Union(A,B)</code>.
+Edge $(B,C)$: <code>Find(B)</code> traces to (say) $A$ (the merged group's representative), <code>Find(C)=C</code> — different, so no cycle; <code>Union(B,C)</code> merges C's group into A's group too. Now ${A,B,C}$ are one group.
+Edge $(A,C)$: <code>Find(A)</code> and <code>Find(C)</code> both now trace to the same representative (since A, B, C are all one group already) — <strong>equal!</strong> This means A and C are already connected via the earlier edges (A–B–C), so adding a direct A–C edge creates a <strong>cycle</strong>.
+Edge $(C,D)$: <code>Find(C)</code> traces to the ${A,B,C}$ group's representative, <code>Find(D)=D</code> — different, so no cycle; <code>Union(C,D)</code> merges D into the group too.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The edge $(A,C)$ is identified as creating a cycle (since A and C were already connected through B before this edge was even added). After processing all four edges, all four vertices ${A,B,C,D}$ end up in a <strong>single connected component</strong> — even though the direct edge A–C was redundant for connectivity purposes, it was still useful information (it tells us a cycle A–B–C–A exists in the graph), which is exactly the kind of detection Kruskal's algorithm relies on to build a cycle-free spanning tree.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -391,16 +402,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Application: Connected Components & Cycle Detection in Graphs?</div>
+  <div class="quiz-prompt">When processing an edge $(u,v)$ for cycle detection using Union-Find, what does `Find(u) == Find(v)` (checked *before* performing the union) indicate?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>The graph has no edges at all</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$u$ and $v$ are already connected via some other existing path, so adding this edge directly would create a cycle</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$u$ and $v$ are guaranteed to never be connected</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The graph must be re-initialised</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Application: Connected Components & Cycle Detection in Graphs in Design and Analysis of Algorithms.
+    <strong>Pedagogical Insight:</strong> If `Find(u)` and `Find(v)` already return the same representative before this edge is processed, it means some earlier sequence of edges already connects $u$ and $v$ — so this new edge would form a redundant, loop-closing connection: a cycle.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Why is Union-Find particularly well-suited to answering connectivity queries as new edges arrive incrementally over time, compared to re-running a full graph traversal (BFS/DFS) after every new edge?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Union-Find and graph traversal have identical costs in every scenario</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Each new edge only requires a single, fast `Union` call, and each query only requires a single `Find`-and-compare — no need to re-scan the entire graph from scratch each time</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Union-Find can only be used on graphs with no edges</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Graph traversal is always faster for incremental updates</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Union-Find's whole design supports cheap, localized updates: adding an edge is one `Union` call (near-constant amortized time), and checking connectivity is one `Find`-and-compare — no need to revisit the entire graph structure, unlike re-running BFS/DFS from scratch, which examines the whole graph each time.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What is a key limitation of plain Union-Find in the context of dynamic graph connectivity?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>It cannot handle graphs with more than 100 vertices</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It efficiently supports edges being *added* but does not efficiently support edges being *removed* (deleted)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It can only be used on trees, never general graphs</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It requires the entire graph to be known in advance, with no incremental updates possible</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Union-Find naturally handles the "edges only ever added" (incremental) case very efficiently, but once two groups have been merged via a Union, there's no simple, cheap way to "split" them back apart if the edge that caused the merge is later removed — handling deletions requires more advanced (and more complex) data structures beyond plain Union-Find.
   </div>
 </div>
     </main>

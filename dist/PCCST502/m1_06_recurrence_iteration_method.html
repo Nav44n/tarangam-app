@@ -352,7 +352,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -368,20 +368,34 @@
 <p><strong>Repeated substitution, identifying generalized patterns at step k, arithmetic and geometric series summation.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Solution of Recurrences: Iteration / Expansion Method</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>If the substitution method is "guess the answer, then prove it," the iteration (expansion) method is "unroll the recursion by hand, a few levels at a time, until you <em>see</em> the pattern yourself — no guessing required." It's like pulling apart those nesting dolls one at a time and laying them all out in a row: doll 1 contains doll 2, which contains doll 3, which contains doll 4... After unrolling a few, you notice "oh, doll $k$ is always exactly $2$ centimetres smaller than doll $k-1$" — a pattern you can now write down as a general formula for the $k$-th doll, and from there, figure out exactly how many dolls there are in total (which tells you when the recursion bottoms out).</p>
+<p>Concretely, you take the recurrence $T(n) = T(n-1) + f(n)$, and instead of leaving $T(n-1)$ as a mystery, you <em>substitute its own definition back in</em> — replacing $T(n-1)$ with $T(n-2) + f(n-1)$, then replacing that inner $T(n-2)$ with $T(n-3) + f(n-2)$, and so on. Each substitution "expands" the expression by one more level. After doing this enough times, you spot the general pattern at an arbitrary level $k$, and finally you know exactly when the expansion must stop (usually when the argument hits the base case, like $n-k=1$) — giving you a plain sum to evaluate.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>The mechanical procedure:</strong>
+1. Write the recurrence: $T(n) = T(n-1) + f(n)$ (or the divide-and-conquer form $T(n) = aT(n/b) + f(n)$).
+2. Expand one level: substitute the recurrence's own definition for the recursive term. E.g. $T(n) = [T(n-2) + f(n-1)] + f(n)$.
+3. Expand again: $T(n) = [T(n-3)+f(n-2)] + f(n-1) + f(n)$.
+4. Continue for a few more levels until the pattern at a general level $k$ becomes clear: $T(n) = T(n-k) + \sum_{i=0}^{k-1} f(n-i)$.
+5. Determine the value of $k$ at which the recursion reaches its base case (e.g. $n-k=1 \Rightarrow k=n-1$), and substitute that value of $k$ back in.
+6. What remains is a plain summation — evaluate it using standard series formulas (arithmetic: $\sum_{i=1}^n i = \frac{n(n+1)}{2}$; geometric: $\sum_{i=0}^{k} r^i = \frac{r^{k+1}-1}{r-1}$ for $r\ne1$), and finally simplify to Big-O/Big-Theta form.</p>
+<p><strong>For divide-and-conquer recurrences</strong> $T(n) = aT(n/b) + f(n)$, the same idea applies but the argument shrinks by <em>division</em> rather than subtraction: level $k$ has $a^k$ sub-problems, each of size $n/b^k$, and the total "extra work" summed across levels becomes $\sum_{i=0}^{k-1} a^i f(n/b^i)$, with recursion bottoming out once $n/b^k = 1$, i.e. $k = \log_b n$.</p>
+<p><strong>Why this method is valuable even though the Master Theorem (next topic) often gives shortcuts:</strong> the Master Theorem only applies to recurrences of a specific standard shape, and even then only tells you the <em>answer</em>, not <em>why</em> it's true. The iteration method works on a wider variety of recurrences (including non-standard ones the Master Theorem can't handle) and builds genuine intuition for <em>why</em> the final complexity comes out the way it does, because you watch the total work accumulate level by level.</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Solve $T(n) = 2T(n/2) + n$, with base case $T(1) = 1$, using the iteration method. (This recurrence describes algorithms like Merge Sort: split into 2 halves, recurse on each, then do $O(n)$ work to combine.)</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>Level 0:</strong> $T(n) = 2T(n/2) + n$.
+<strong>Level 1 (expand $T(n/2)$):</strong> $T(n/2) = 2T(n/4) + n/2$, so $T(n) = 2[2T(n/4)+n/2] + n = 4T(n/4) + n + n = 4T(n/4) + 2n$.
+<strong>Level 2 (expand $T(n/4)$):</strong> similarly, $T(n) = 8T(n/8) + 3n$.
+<strong>Spotting the pattern at level $k$:</strong> $T(n) = 2^k T(n/2^k) + kn$ — at each level, the "extra work" contributed is exactly $n$ (not growing, not shrinking — this is the key feature of this particular recurrence), and there are $k$ levels so far.
+<strong>Finding when recursion bottoms out:</strong> the recursion reaches the base case when $n/2^k = 1$, i.e. $2^k = n$, i.e. $k = \log_2 n$.
+<strong>Substituting $k = \log_2 n$:</strong> $T(n) = 2^{\log_2 n} \cdot T(1) + (\log_2 n)\cdot n = n \cdot 1 + n\log_2 n = n + n\log_2 n$.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$T(n) = n + n\log_2 n$. As $n$ grows large, $n\log_2 n$ dominates the smaller $n$ term, so the final asymptotic answer is $T(n) = \Theta(n\log n)$ — exactly the well-known complexity of Merge Sort, derived here from first principles by literally watching the recursion unfold level by level, rather than quoting a memorised formula.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -391,16 +405,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Solution of Recurrences: Iteration / Expansion Method?</div>
+  <div class="quiz-prompt">In the iteration/expansion method, what determines the number of levels $k$ you expand before stopping?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>You always stop after exactly 3 levels</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>You stop once the recursive argument reaches the base case (e.g. $n/2^k = 1$ or $n-k=1$), and solve for $k$ accordingly</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>You stop as soon as the pattern looks complicated</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The number of levels is always equal to $n$</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Solution of Recurrences: Iteration / Expansion Method in Design and Analysis of Algorithms.
+    <strong>Pedagogical Insight:</strong> The whole point of finding the "general pattern at level $k$" is to then determine exactly which value of $k$ makes the recursive term hit its base case (a directly solvable, non-recursive instance) — this is what lets you convert the infinite-looking pattern into a concrete, finite formula.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">For the recurrence $T(n) = 2T(n/2) + n$, the iteration method reveals that at every level of expansion, the total "extra work" contributed (outside the recursive calls) is:</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Increasing with each level</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Exactly $n$ at every level, because the halving of problem size is exactly compensated by the doubling of the number of sub-problems</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Decreasing with each level</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Zero at every level except the last</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> At level $k$ there are $2^k$ sub-problems, each contributing $n/2^k$ extra work (from the $f(n)=n$ term evaluated at the sub-problem's size), and $2^k \times \frac{n}{2^k} = n$ — the level count and the per-problem shrinkage exactly cancel, so every level contributes the same total, $n$. This is exactly the "Case 2" balance point of the Master Theorem, covered next.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Using the iteration method's result $T(n) = n + n\log_2 n$ for the Merge-Sort-style recurrence, the final Big-Theta complexity is:</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>$\Theta(n)$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$\Theta(n \log n)$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$\Theta(n^2)$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$\Theta(\log n)$</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Between the two terms $n$ and $n\log_2 n$, the second dominates as $n$ grows (since $\log_2 n$ grows without bound, however slowly), so asymptotic notation keeps only the dominant term, giving $\Theta(n\log n)$.
   </div>
 </div>
     </main>

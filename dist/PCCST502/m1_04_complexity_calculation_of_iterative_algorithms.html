@@ -352,7 +352,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -368,20 +368,50 @@
 <p><strong>Single loops, nested loops, logarithmic increment loops, dependent inner loops, and amortized loop bounds.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Complexity Analysis of Iterative Loops</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Counting how many times a loop runs is a bit like counting steps on a staircase. A single flight of $n$ steps takes $n$ steps to climb — simple. But now imagine a building where, for <em>each</em> of the $n$ floors, you also have to climb a separate flight of $n$ steps just to check something on that floor before moving up — now you're doing $n \times n = n^2$ steps total, because the work is <em>nested</em>. And if, instead of climbing linearly, each step you take lets you skip to double your current floor (floor 1 → 2 → 4 → 8 → 16...), you'll reach the top in only about $\log_2 n$ steps — dramatically fewer, because the loop variable <em>grows multiplicatively</em> rather than by fixed increments.</p>
+<p>This section teaches you a systematic recipe: look at how the loop variable changes each iteration (does it go up by 1? by doubling? does the inner loop's range depend on the outer loop's current value?), and translate that pattern directly into a Big-O bound — without needing to run the code or guess.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>Single loop, incrementing by a constant:</strong></p>
+<pre><code>for i = 1 to n:
+    do O(1) work
+</code></pre>
+<p>Runs exactly $n$ times, each iteration doing constant work → total $\Theta(n)$.</p>
+<p><strong>Nested loops, independent ranges:</strong></p>
+<pre><code>for i = 1 to n:
+    for j = 1 to m:
+        do O(1) work
+</code></pre>
+<p>The inner loop runs $m$ times for <em>each</em> of the $n$ outer iterations, giving $n \times m$ total iterations → $\Theta(nm)$. When both loops run to $n$ (i.e. $m=n$), this becomes the very common $\Theta(n^2)$.</p>
+<p><strong>Dependent nested loops (inner range depends on outer variable):</strong></p>
+<pre><code>for i = 1 to n:
+    for j = 1 to i:
+        do O(1) work
+</code></pre>
+<p>The inner loop runs $i$ times, and $i$ itself ranges from $1$ to $n$. Total iterations $= 1 + 2 + 3 + \dots + n = \frac{n(n+1)}{2}$ — this is the classic <strong>arithmetic series</strong> sum, which is $\Theta(n^2)$ (the leading term dominates; the constant $\frac{1}{2}$ is dropped by asymptotic notation, but the <em>degree</em>, $n^2$, survives).</p>
+<p><strong>Logarithmic loops (variable changes multiplicatively):</strong></p>
+<pre><code>i = 1
+while i &lt;= n:
+    do O(1) work
+    i = i * 2
+</code></pre>
+<p>$i$ takes values $1, 2, 4, 8, \dots$ — i.e. $2^0, 2^1, 2^2, \dots$ — and the loop stops once $2^k &gt; n$, i.e. once $k &gt; \log_2 n$. So the loop runs $\Theta(\log n)$ times. (The same logic applies symmetrically to a loop that starts at $n$ and <em>divides</em> by 2 each time until reaching 1 — this is exactly what happens inside binary search.)</p>
+<p><strong>Amortized analysis (a brief preview).</strong> Sometimes a single operation looks expensive in isolation, but happens rarely enough that its cost, <em>averaged over a long sequence of operations</em>, is actually small. Classic example: a dynamic array (like Python's list or Java's ArrayList) that doubles its capacity whenever it's full. A single "resize" copies all $n$ existing elements — an $O(n)$ operation — but resizes only happen $O(\log n)$ times total across $n$ insertions, and the total cost of all resizes across $n$ insertions sums to $O(n)$ (a geometric series: $1+2+4+\dots+n \approx 2n$). So the <em>amortized</em> (averaged) cost per insertion is $O(1)$, even though occasional individual insertions cost $O(n)$.</p>
+<p><strong>General technique — the summation method:</strong> express the total work as a sum over the loop's range, then evaluate that sum using standard series formulas (arithmetic series $\sum_{i=1}^n i = \frac{n(n+1)}{2}$, geometric series $\sum_{i=0}^{k} 2^i = 2^{k+1}-1$), and finally express the result in Big-O by keeping only the dominant (fastest-growing) term.</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Determine the time complexity of the following nested loop, where the inner loop's bound depends on the outer loop variable:</p>
+<pre><code>for i = 1 to n:
+    for j = 1 to i:
+        print(i, j)
+</code></pre></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>For $i=1$, the inner loop runs $1$ time. For $i=2$, it runs $2$ times. ... For $i=n$, it runs $n$ times. The total number of <code>print</code> calls is $1 + 2 + 3 + \dots + n$. Using the arithmetic series formula, $\sum_{i=1}^{n} i = \frac{n(n+1)}{2} = \frac{n^2+n}{2}$.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Expanding $\frac{n^2+n}{2} = \frac{1}{2}n^2 + \frac{1}{2}n$. As $n$ grows large, the $n^2$ term dominates the $n$ term, and asymptotic notation drops both the constant factor $\frac{1}{2}$ and the lower-order term $\frac{1}{2}n$. Final answer: $\Theta(n^2)$ — the <em>same</em> asymptotic complexity as two fully independent nested loops running $n$ times each, even though this version does roughly half the total work in absolute terms. This illustrates why Big-Theta cares about growth rate, not exact operation counts.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -391,16 +421,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Complexity Analysis of Iterative Loops?</div>
+  <div class="quiz-prompt">A loop where the control variable doubles each iteration (e.g. `i = i * 2`) until it exceeds $n$ has time complexity:</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>$\Theta(n)$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$\Theta(\log n)$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$\Theta(n^2)$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$\Theta(n \log n)$</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Complexity Analysis of Iterative Loops in Design and Analysis of Algorithms.
+    <strong>Pedagogical Insight:</strong> If $i$ doubles each iteration starting from 1, after $k$ iterations $i = 2^k$. The loop stops once $2^k$ exceeds $n$, which happens at $k \approx \log_2 n$. So the number of iterations grows logarithmically with $n$.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">A nested loop where the inner loop runs from $1$ to the current value of the outer loop variable $i$ (which itself ranges from 1 to $n$) has a total number of iterations equal to which sum, and what is its asymptotic complexity?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>$\sum_{i=1}^{n} n$, giving $\Theta(n^2)$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$, giving $\Theta(n^2)$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$\sum_{i=1}^{n} \log i$, giving $\Theta(n \log n)$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$\sum_{i=1}^{n} 1$, giving $\Theta(n)$</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> The inner loop runs $i$ times for each outer value of $i$, so total iterations $= 1+2+\dots+n = \frac{n(n+1)}{2}$ (the arithmetic series sum). Once expanded, the dominant term is $n^2$, and asymptotic notation drops the constant $\frac12$ and the lower-order $n$ term, giving $\Theta(n^2)$ — the same growth rate as a fully independent $n \times n$ nested loop.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">In amortized analysis of a dynamic array that doubles its size whenever full, why is the *amortized* cost per insertion $O(1)$ even though a single resize operation costs $O(n)$?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Resizes never actually happen in practice</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Resizes happen rarely (only $O(\log n)$ times across $n$ insertions), and their total cost across all insertions sums to $O(n)$, which averages to $O(1)$ per insertion</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The cost of a resize is always exactly 1 operation</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Amortized analysis ignores expensive operations entirely</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Even though an individual resize copies up to $n$ elements ($O(n)$ for that one operation), resizes become exponentially rarer as the array grows (doubling means only $\log_2 n$ resizes total for $n$ insertions), and the sum of all resize costs across the whole sequence is a geometric series that totals $O(n)$. Spread over $n$ insertions, that's $O(1)$ per insertion on average — which is what "amortized $O(1)$" means.
   </div>
 </div>
     </main>

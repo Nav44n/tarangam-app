@@ -352,7 +352,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -368,20 +368,36 @@
 <p><strong>Formal mathematical definitions via limits and constants (c, n0), transitivity, reflexivity, and symmetry.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Asymptotic Notations: Big-O, Omega, Theta, Little-o, Little-omega</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Imagine describing how fast two runners are, but instead of saying "Runner A finishes in exactly 42.7 seconds," you say "Runner A is <em>roughly twice as fast</em> as Runner B, for long enough races." You're deliberately throwing away the exact number and keeping only the <em>growth relationship</em> — because the exact number depends on today's wind, the runner's shoes, and a dozen irrelevant details, while the growth relationship (twice as fast) is the durable, meaningful fact.</p>
+<p>Asymptotic notation does exactly this for algorithms. Instead of saying "this algorithm takes exactly $3n^2 + 5n + 2$ operations" (a number that depends on irrelevant implementation details like which programming language or which specific hardware), we say "this algorithm's work grows like $n^2$" — throwing away the constants ($3$, $5$, $2$) and keeping only the <em>shape</em> of growth as $n$ gets large. Big-O, Big-Omega, and Big-Theta are three different "flavours" of this idea: Big-O gives an <em>upper bound</em> ("it never grows faster than this"), Big-Omega gives a <em>lower bound</em> ("it never grows slower than this"), and Big-Theta gives a <em>tight bound</em> ("it grows at exactly this rate, both above and below"). Little-o and little-omega are their stricter cousins, meaning <em>strictly</em> faster or slower, never equal.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p>Let $f(n)$ and $g(n)$ be functions from positive integers to positive real numbers (typically, $f$ is an algorithm's actual operation count, and $g$ is a simple reference function like $n$, $n^2$, or $\log n$).</p>
+<p><strong>Big-O (upper bound, "at most this fast-growing"):</strong>
+$$f(n) = O(g(n)) \iff \exists\ c &gt; 0,\ n_0 &gt; 0 \text{ such that } 0 \le f(n) \le c\cdot g(n)\ \ \forall n \ge n_0$$
+In words: beyond some threshold input size $n_0$, $f(n)$ never exceeds a constant multiple of $g(n)$. This is the notation used for worst-case guarantees: "$f(n) = O(n^2)$" means $f$ grows <em>no faster than</em> $n^2$.</p>
+<p><strong>Big-Omega (lower bound, "at least this fast-growing"):</strong>
+$$f(n) = \Omega(g(n)) \iff \exists\ c &gt; 0,\ n_0 &gt; 0 \text{ such that } 0 \le c\cdot g(n) \le f(n)\ \ \forall n \ge n_0$$
+$f$ grows <em>at least as fast as</em> a constant multiple of $g(n)$, beyond $n_0$. Used for best-case guarantees, or for proving a problem's inherent difficulty ("any correct algorithm must take at least this long").</p>
+<p><strong>Big-Theta (tight bound, "grows at exactly this rate"):</strong>
+$$f(n) = \Theta(g(n)) \iff f(n) = O(g(n)) \text{ and } f(n) = \Omega(g(n))$$
+Equivalently, $\exists\ c_1, c_2 &gt; 0,\ n_0$ such that $c_1 g(n) \le f(n) \le c_2 g(n)$ for all $n \ge n_0$. This is the strongest, most informative statement — $f$ is sandwiched between two constant multiples of $g$ — and is the notation to reach for whenever you can prove both bounds match.</p>
+<p><strong>Little-o (strict upper bound):</strong> $f(n) = o(g(n))$ means $f$ grows <em>strictly slower</em> than $g$ — formally, $\lim_{n\to\infty} \frac{f(n)}{g(n)} = 0$. Unlike Big-O, this rules out $f$ and $g$ growing at the <em>same</em> rate.</p>
+<p><strong>Little-omega (strict lower bound):</strong> $f(n) = \omega(g(n))$ means $f$ grows <em>strictly faster</em> than $g$ — formally, $\lim_{n\to\infty} \frac{f(n)}{g(n)} = \infty$.</p>
+<p><strong>Key structural properties</strong> (these let you manipulate asymptotic statements like algebraic relations):
+- <strong>Reflexivity:</strong> $f(n) = O(f(n))$, $f(n) = \Omega(f(n))$, $f(n) = \Theta(f(n))$ — every function is (weakly) bounded by itself. (Note: reflexivity does <em>not</em> hold for little-o / little-omega, since those require <em>strict</em> inequality.)
+- <strong>Symmetry:</strong> $f(n) = \Theta(g(n)) \iff g(n) = \Theta(f(n))$ — Theta is a two-way relationship; if $f$ and $g$ bound each other, the reverse statement is automatically true too. (Big-O and Big-Omega are <em>not</em> symmetric: $f=O(g)$ does not imply $g=O(f)$ in general.)
+- <strong>Transitivity:</strong> if $f(n) = O(g(n))$ and $g(n) = O(h(n))$, then $f(n) = O(h(n))$ — the same holds for $\Omega$ and $\Theta$. This lets you chain comparisons: if you know $A$ is $O(B)$ and $B$ is $O(C)$, you immediately know $A$ is $O(C)$ without re-deriving it from scratch.</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Prove formally that $f(n) = 3n^2 + 5n + 2$ is $O(n^2)$ — i.e., find explicit constants $c$ and $n_0$ satisfying the Big-O definition.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>We need $3n^2 + 5n + 2 \le c \cdot n^2$ for all $n \ge n_0$. For $n \ge 1$: $5n \le 5n^2$ and $2 \le 2n^2$, so $3n^2 + 5n + 2 \le 3n^2 + 5n^2 + 2n^2 = 10n^2$. This shows the inequality holds with $c = 10$ for every $n \ge 1$.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Choosing $c = 10$ and $n_0 = 1$ satisfies the definition: $3n^2+5n+2 \le 10n^2$ for all $n \ge 1$. Therefore $f(n) = O(n^2)$ is formally proven — not just "intuitively obvious," but backed by an explicit witness pair $(c, n_0)$, exactly as the definition demands. (Tighter constants exist too — e.g. $c=4$ works for $n_0 \ge 3$ — but the definition only requires <em>some</em> valid pair, not the best possible one.)</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -391,16 +407,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Asymptotic Notations: Big-O, Omega, Theta, Little-o, Little-omega?</div>
+  <div class="quiz-prompt">Which asymptotic notation gives the *tightest* possible statement about a function's growth — both an upper and a lower bound simultaneously?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>Big-O</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Big-Omega</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Big-Theta</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Little-o</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Asymptotic Notations: Big-O, Omega, Theta, Little-o, Little-omega in Design and Analysis of Algorithms.
+    <strong>Pedagogical Insight:</strong> Big-Theta requires proving both $f(n) = O(g(n))$ (upper bound) and $f(n) = \Omega(g(n))$ (lower bound) hold with the *same* $g(n)$, sandwiching $f(n)$ between two constant multiples of $g(n)$. Big-O alone only gives an upper bound, and Big-Omega alone only gives a lower bound.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">If $f(n) = O(g(n))$, is it necessarily true that $g(n) = O(f(n))$?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Yes, Big-O is always symmetric</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>No — Big-O is not symmetric in general; only Big-Theta guarantees this two-way relationship</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Yes, but only when $n_0 = 0$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>No relationship can ever be inferred</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Big-O is a one-directional upper-bound statement. For example, $n = O(n^2)$ is true, but $n^2 = O(n)$ is false — $n^2$ grows strictly faster than $n$. Only Big-Theta ($f=\Theta(g)$) is guaranteed symmetric, because it requires bounds in both directions by definition.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Using transitivity, if you know Algorithm A is $O(n \log n)$ and $n \log n$ is $O(n^2)$, what can you immediately conclude about Algorithm A?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Nothing further can be concluded</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Algorithm A is also $O(n^2)$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Algorithm A must be exactly $\Theta(n^2)$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Algorithm A is $O(\log n)$</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Transitivity of Big-O states: if $f(n)=O(g(n))$ and $g(n)=O(h(n))$, then $f(n)=O(h(n))$. Here $f = $ Algorithm A's cost, $g = n\log n$, $h = n^2$, so Algorithm A is $O(n^2)$ — though note this is a weaker (looser) statement than the original, tighter $O(n\log n)$ bound.
   </div>
 </div>
     </main>

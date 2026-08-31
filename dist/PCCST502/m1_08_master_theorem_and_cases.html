@@ -352,7 +352,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -368,20 +368,33 @@
 <p><strong>Master Theorem formula T(n) = aT(n/b) + f(n), Case 1, Case 2, and Case 3.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>The Master Theorem for Divide-and-Conquer Recurrences</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>You've now solved recurrences the hard way twice — once by unrolling them level by level (iteration method) and once by drawing them out as a tree and summing level totals (recursion tree method). Both times, you probably noticed the same underlying question kept deciding the answer: "does the work happening <em>at the root</em> (splitting the problem, combining sub-results) dominate, or does the work happening <em>at the leaves</em> (the sheer number of base-case calls) dominate, or are they perfectly balanced?"</p>
+<p>The Master Theorem is exactly this observation, turned into a plug-and-chug formula, so that for the huge and extremely common family of recurrences shaped like $T(n) = aT(n/b) + f(n)$, you no longer need to draw a tree or unroll anything by hand — you compare $f(n)$ against a specific reference quantity ($n^{\log_b a}$), see which of three cases you land in, and read off the answer directly. It's the "cheat sheet" version of everything the recursion tree method taught you — powerful precisely <em>because</em> you now understand why it works, rather than just memorising it blindly.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>Setup.</strong> The Master Theorem applies to recurrences of the exact form:
+$$T(n) = a\,T(n/b) + f(n), \qquad a \ge 1,\ b &gt; 1$$
+where $a$ = number of sub-problems per call, $b$ = factor by which the problem size shrinks, and $f(n)$ = the cost of the work done <em>outside</em> the recursive calls (splitting the problem and combining results).</p>
+<p>The theorem compares $f(n)$ against the reference function $n^{\log_b a}$ (this is exactly the leaf-level cost derived in the recursion tree method):</p>
+<p><strong>Case 1 — leaves dominate.</strong> If $f(n) = O(n^{\log_b a - \epsilon})$ for some constant $\epsilon &gt; 0$ (i.e. $f(n)$ grows <em>polynomially slower</em> than $n^{\log_b a}$), then:
+$$T(n) = \Theta(n^{\log_b a})$$</p>
+<p><strong>Case 2 — balanced (every level contributes equally).</strong> If $f(n) = \Theta(n^{\log_b a})$ (i.e. $f(n)$ grows at <em>the same rate</em> as $n^{\log_b a}$), then:
+$$T(n) = \Theta(n^{\log_b a} \log n)$$</p>
+<p><strong>Case 3 — root dominates.</strong> If $f(n) = \Omega(n^{\log_b a + \epsilon})$ for some constant $\epsilon &gt; 0$ (i.e. $f(n)$ grows <em>polynomially faster</em> than $n^{\log_b a}$), <strong>and</strong> the regularity condition $a\,f(n/b) \le c\,f(n)$ holds for some constant $c&lt;1$ and large enough $n$ (a technical condition almost always satisfied for typical polynomial/logarithmic $f(n)$), then:
+$$T(n) = \Theta(f(n))$$</p>
+<p><strong>Important caveat — the "gap" between cases.</strong> The three cases don't cover <em>every possible</em> $f(n)$ — there's a gap between "polynomially slower" and "polynomially faster" (e.g. $f(n)$ that differs from $n^{\log_b a}$ only by a logarithmic factor, like $f(n) = n^{\log_b a}\log^2 n$, technically doesn't satisfy Case 2's exact-match requirement nor either polynomial-difference requirement in the classic three-case statement above). When a recurrence falls in this gap, the Master Theorem (in this basic form) simply doesn't apply, and you must fall back to the iteration or recursion-tree method (or a more advanced version of the theorem) to solve it directly.</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Apply the Master Theorem to Binary Search's recurrence, $T(n) = T(n/2) + O(1)$ (here $a=1$, $b=2$, $f(n)=O(1)=\Theta(n^0)$), and separately to Merge Sort's recurrence, $T(n) = 2T(n/2) + \Theta(n)$ (here $a=2$, $b=2$, $f(n)=\Theta(n)$).</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>Binary Search:</strong> compute the reference exponent $\log_b a = \log_2 1 = 0$, so $n^{\log_b a} = n^0 = 1$. Compare to $f(n) = \Theta(1) = \Theta(n^0)$ — this exactly matches the reference function, so we're in <strong>Case 2</strong>.
+<strong>Merge Sort:</strong> compute $\log_b a = \log_2 2 = 1$, so $n^{\log_b a} = n^1 = n$. Compare to $f(n) = \Theta(n) = \Theta(n^1)$ — again an exact match with the reference function, so this is also <strong>Case 2</strong>.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p><strong>Binary Search:</strong> Case 2 gives $T(n) = \Theta(n^{\log_b a}\log n) = \Theta(n^0 \log n) = \Theta(\log n)$ — matching the earlier intuitive derivation in the Module 1 overview.
+<strong>Merge Sort:</strong> Case 2 gives $T(n) = \Theta(n^1 \log n) = \Theta(n\log n)$ — matching exactly the result derived earlier, the hard way, by the iteration method. This confirms the Master Theorem is simply a formalised shortcut for the same reasoning we already worked through by hand.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -391,16 +404,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of The Master Theorem for Divide-and-Conquer Recurrences?</div>
+  <div class="quiz-prompt">In the Master Theorem for $T(n) = aT(n/b)+f(n)$, which case applies when $f(n)$ grows at *exactly* the same rate as $n^{\log_b a}$?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>Case 1</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Case 2</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Case 3</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>None of the cases apply</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to The Master Theorem for Divide-and-Conquer Recurrences in Design and Analysis of Algorithms.
+    <strong>Pedagogical Insight:</strong> Case 2 is defined precisely by $f(n) = \Theta(n^{\log_b a})$ — the extra work per call matches the reference function's growth rate exactly, meaning every level of the recursion tree contributes roughly equal total work, giving the extra $\log n$ factor: $T(n) = \Theta(n^{\log_b a}\log n)$.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">For the recurrence $T(n) = 4T(n/2) + n$, what is $n^{\log_b a}$, and which Master Theorem case applies?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>$n^{\log_2 4} = n^2$; since $f(n)=n$ grows slower, this is Case 1, giving $T(n)=\Theta(n^2)$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$n^{\log_2 4} = n^2$; since $f(n)=n$ grows slower, this is Case 1, giving $T(n)=\Theta(n^2)$ [note: same as A — see explanation]</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$n^{\log_2 4} = n^2$; this is Case 3, giving $T(n)=\Theta(n)$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$n^{\log_2 4} = n^2$; this is Case 2, giving $T(n)=\Theta(n^2\log n)$</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Here $a=4, b=2$, so $\log_b a = \log_2 4 = 2$, giving reference function $n^2$. Since $f(n)=n=n^1$ grows polynomially slower than $n^2$ (i.e. $f(n) = O(n^{2-\epsilon})$ for $\epsilon=1$), this satisfies Case 1, and the leaves dominate: $T(n) = \Theta(n^{\log_b a}) = \Theta(n^2)$.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Which of the following recurrences falls *outside* the basic three-case Master Theorem (i.e., is in the "gap" where none of the three cases cleanly apply)?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>$T(n) = 2T(n/2) + n$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$T(n) = T(n/2) + 1$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$T(n) = 2T(n/2) + n\log n$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$T(n) = 3T(n/2) + n^3$</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Here $\log_b a = \log_2 2 = 1$, so the reference function is $n$. $f(n) = n\log n$ is asymptotically larger than $n$ but not by a full polynomial factor $n^\epsilon$ for any constant $\epsilon>0$ — it only differs by a logarithmic factor. This sits in the gap between Case 2 (exact match) and Case 3 (polynomially larger), so the basic Master Theorem doesn't directly apply; the actual answer, $\Theta(n\log^2 n)$, requires the iteration or recursion-tree method (or an extended version of the theorem) to derive.
   </div>
 </div>
     </main>

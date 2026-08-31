@@ -352,7 +352,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -368,20 +368,35 @@
 <p><strong>Memory bounds O(V^2) vs O(V+E), edge lookup speed, and incidence matrices.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Graph Representations: Adjacency Matrix vs Adjacency List</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Suppose you want to record which pairs of people, among a group of $V$ people, are friends. One way: draw a giant $V \times V$ grid (spreadsheet), with every person listed down the rows <em>and</em> across the columns, and put a checkmark in cell (row $i$, column $j$) if person $i$ and person $j$ are friends. This grid answers "are $i$ and $j$ friends?" instantly — just look up one cell — but it wastes a <em>lot</em> of space if most people <em>aren't</em> friends with most other people (most cells are empty), which is exactly the typical situation in most real-world networks (a person has a handful of friends, not thousands).</p>
+<p>The other way: give each person their own personal address book, listing <em>only</em> the names of their actual friends. This uses space proportional to the actual number of friendships, not the number of <em>possible</em> pairs — much more efficient when friendships are sparse — but now, answering "are $i$ and $j$ friends?" means searching through $i$'s address book to see if $j$ is listed, which can be slower than a single grid lookup.</p>
+<p>These two approaches are exactly the <strong>adjacency matrix</strong> and the <strong>adjacency list</strong> — the two standard ways to represent a graph in a computer, each with a clear trade-off between memory usage and lookup speed, and the right choice depends entirely on how "dense" (many edges relative to possible pairs) or "sparse" (few edges) the specific graph is.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p>Let $V$ = number of vertices, $E$ = number of edges.</p>
+<p><strong>Adjacency Matrix.</strong> A $V \times V$ 2D array <code>adj[][]</code>, where <code>adj[i][j] = 1</code> (or a weight, for weighted graphs) if there's an edge from vertex $i$ to vertex $j$, and <code>0</code> (or $\infty$, for weighted graphs, meaning "no edge") otherwise. For an undirected graph, this matrix is always symmetric (<code>adj[i][j] == adj[j][i]</code>).
+- <strong>Space:</strong> $\Theta(V^2)$ — fixed, regardless of how many actual edges exist.
+- <strong>Edge lookup</strong> ("is there an edge between $i$ and $j$?"): $O(1)$ — a single array access.
+- <strong>Listing all neighbours of a vertex $i$:</strong> $O(V)$ — must scan the entire row, even if vertex $i$ has very few actual neighbours.
+- <strong>Best suited for:</strong> <em>dense</em> graphs (where $E$ is close to $V^2$, i.e. most possible edges actually exist), or applications that need very frequent single-edge existence checks.</p>
+<p><strong>Adjacency List.</strong> An array (or hash map) of $V$ lists, where list $i$ contains only the vertices directly connected to vertex $i$ (i.e. its actual neighbours).
+- <strong>Space:</strong> $\Theta(V+E)$ — proportional to the number of vertices <em>plus</em> the actual number of edges (each edge appears once, or twice for undirected graphs — once in each endpoint's list — but this is still just a constant factor, not changing the asymptotic bound).
+- <strong>Edge lookup</strong> ("is there an edge between $i$ and $j$?"): $O(\deg(i))$ in the worst case (must scan through $i$'s neighbour list) — this is $O(V)$ in the absolute worst case (a vertex connected to everyone), but typically much faster in sparse graphs where each vertex has only a few neighbours.
+- <strong>Listing all neighbours of a vertex $i$:</strong> $O(\deg(i))$ — directly returns exactly the list of actual neighbours, no wasted scanning of non-edges.
+- <strong>Best suited for:</strong> <em>sparse</em> graphs (where $E \ll V^2$), which describes the vast majority of real-world graphs (social networks, road networks, the web graph) — this is why adjacency lists are the default choice in most practical graph algorithm implementations, including the BFS, DFS, and later topics in this module.</p>
+<p><strong>Incidence Matrix (a less commonly used third representation).</strong> A $V \times E$ matrix, with one row per vertex and one <em>column per edge</em> (rather than per vertex-pair). Entry <code>inc[i][j] = 1</code> if vertex $i$ is one of the endpoints of edge $j$ (for directed graphs, sometimes $+1$/$-1$ is used to distinguish "edge leaves this vertex" from "edge enters this vertex"). This representation is less common in typical algorithm coursework but appears in specialised contexts (e.g., certain linear-algebra-based graph techniques, or representing hypergraphs where an "edge" can connect more than two vertices) — its space cost is $\Theta(VE)$, generally larger than either the adjacency matrix or list for typical simple graphs, but it explicitly represents edges as first-class objects (with their own column), which some algorithms find convenient.</p>
+<p><strong>Choosing between matrix and list — the deciding question.</strong> "Roughly how many edges does this graph actually have, relative to $V^2$?" If $E$ is close to $V^2$ (dense graph), the matrix's $\Theta(V^2)$ space is no worse than the list's $\Theta(V+E)\approx\Theta(V^2)$ space anyway, and the matrix's $O(1)$ edge lookups become a clear win. If $E$ is much smaller than $V^2$ (sparse graph, by far the more common real-world case), the list's $\Theta(V+E)$ space is dramatically smaller, and its neighbour-listing speed (crucial for traversal algorithms like BFS and DFS) is much better.</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A social network has $V = 1{,}000{,}000$ users, and on average each user has about $150$ friends (so $E \approx \frac{1{,}000{,}000 \times 150}{2} = 75{,}000{,}000$ edges, dividing by 2 since each friendship is one undirected edge shared by two people). Compare the space required by an adjacency matrix versus an adjacency list for this graph.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>Adjacency matrix:</strong> $V^2 = (1{,}000{,}000)^2 = 10^{12}$ cells — one trillion entries, regardless of how many are actually "1" (edges) versus "0" (no edge). Even using just 1 bit per cell, that's $10^{12}$ bits $\approx 125$ GB — utterly impractical for a typical machine.
+<strong>Adjacency list:</strong> space is $\Theta(V+E) = \Theta(1{,}000{,}000 + 75{,}000{,}000) \approx 76{,}000{,}000$ entries total (counting each undirected edge as appearing in two neighbour lists) — a few hundred megabytes at most with reasonable per-entry storage, easily manageable on ordinary hardware.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>For this graph — sparse, since each user connects to only about $150$ out of a possible $999{,}999$ other users, an utterly tiny fraction — the adjacency list uses roughly four to five orders of magnitude less memory than the adjacency matrix, while still supporting fast "list this person's friends" queries (exactly what a social network needs constantly). This concretely illustrates why virtually every real-world large-scale graph system (social networks, road networks, the web) uses adjacency-list-style representations, reserving adjacency matrices for smaller or genuinely dense graphs.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -391,16 +406,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Graph Representations: Adjacency Matrix vs Adjacency List?</div>
+  <div class="quiz-prompt">What is the space complexity of an adjacency matrix representation of a graph with $V$ vertices, regardless of how many edges it actually has?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>$\Theta(V+E)$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$\Theta(V^2)$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$\Theta(E)$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$\Theta(\log V)$</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Graph Representations: Adjacency Matrix vs Adjacency List in Design and Analysis of Algorithms.
+    <strong>Pedagogical Insight:</strong> An adjacency matrix always allocates a full $V \times V$ grid, one cell for every possible pair of vertices, regardless of how many of those pairs are actually connected by an edge — so its space cost is fixed at $\Theta(V^2)$, independent of the actual edge count.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">For a sparse graph (where $E$ is much smaller than $V^2$), which representation is generally preferred, and why?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Adjacency matrix, because $O(1)$ edge lookup is always the top priority</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Adjacency list, because its space usage $\Theta(V+E)$ scales with the actual number of edges rather than the number of *possible* pairs, avoiding massive wasted memory on non-existent edges</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Incidence matrix, because it is the most memory-efficient in all cases</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Neither — sparse graphs cannot be represented efficiently</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> For a sparse graph, $V^2$ vastly overstates the actual number of edges, so an adjacency matrix wastes enormous amounts of memory storing "no edge" entries. An adjacency list only stores space proportional to vertices plus actual edges, which is dramatically smaller for sparse graphs — the overwhelmingly common case in real-world graph data.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Listing all neighbours of a single vertex $i$ takes how long using an adjacency list, versus using an adjacency matrix?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>$O(1)$ for both representations</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$O(\deg(i))$ for the adjacency list (directly returns only actual neighbours); $O(V)$ for the adjacency matrix (must scan the entire row, including all non-edges)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$O(V)$ for the adjacency list; $O(1)$ for the adjacency matrix</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$O(E)$ for both representations</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> An adjacency list stores exactly (and only) vertex $i$'s actual neighbours, so listing them takes time proportional to how many neighbours there are, $\deg(i)$. An adjacency matrix requires scanning all $V$ entries in row $i$ to find which ones are marked as edges, even though most of those entries will typically be "no edge" in a sparse graph.
   </div>
 </div>
     </main>

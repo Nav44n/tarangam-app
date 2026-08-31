@@ -352,7 +352,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -368,20 +368,35 @@
 <p><strong>Finiteness, definiteness, input, output, effectiveness, space vs time efficiency, and RAM model of computation.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Algorithms: Characteristics &amp; Analysis Criteria</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Think of an algorithm like a recipe for making tea. A real recipe has to: (1) actually end — it can't say "keep stirring forever," (2) every instruction has to be crystal clear — "add sugar" is vague, "add 2 teaspoons of sugar" is not, (3) it needs ingredients to start with (input) — you can't make tea from nothing, (4) it needs to produce tea at the end (output) — a recipe that produces nothing is useless, and (5) every step has to be something you can <em>actually do</em> with what you have — "add a pinch of moon dust" fails this, because moon dust isn't a real, obtainable ingredient.</p>
+<p>An algorithm in computer science is judged by exactly these five properties. If even one is missing, it's not a valid algorithm — it might be a vague idea, or an infinite process, or a wish list, but not something a computer (or a person) can reliably execute and get a guaranteed result from. This section pins down these five properties precisely, and then introduces the <strong>RAM model</strong> — a simplified, idealised computer we imagine when analysing algorithms, so that our analysis doesn't depend on which actual physical machine the code runs on.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>Definition.</strong> An algorithm is a <em>finite</em> sequence of well-defined, unambiguous instructions to solve a problem or perform a computation.</p>
+<p><strong>The five defining criteria</strong> (all must hold):</p>
+<ol>
+<li><strong>Finiteness</strong> — the algorithm must terminate after a finite number of steps, for every valid input. A process that can run forever (like an operating system's main loop) is <em>not</em> an algorithm in this strict sense — it's sometimes called a "computational procedure" instead.</li>
+<li><strong>Definiteness</strong> — every instruction must be precisely and unambiguously specified. There should be no room for a person or machine to interpret a step in two different ways.</li>
+<li><strong>Input</strong> — an algorithm has zero or more quantities supplied to it externally, before or during execution.</li>
+<li><strong>Output</strong> — an algorithm produces at least one quantity as a result, and this output must have a specified, provable relationship to the inputs (i.e., it must actually solve the stated problem).</li>
+<li><strong>Effectiveness</strong> — every operation used in the algorithm must be basic enough to be done, in principle, exactly and in a finite amount of time, by a person using pencil and paper. "Guess the right answer" is not effective; "add two numbers" is.</li>
+</ol>
+<p><strong>The RAM (Random Access Machine) model.</strong> To analyse algorithms mathematically, we imagine a simplified idealised computer:
+- It has an unlimited amount of memory, organised as a sequence of numbered cells, each holding one value, and each cell can be accessed ("randomly accessed," hence the name) in exactly one unit of time regardless of its address.
+- Basic operations — addition, subtraction, comparison, assignment, array indexing — each take exactly one unit of time ("$O(1)$," a constant amount of work), regardless of the size of the numbers involved.
+- Instructions execute one at a time, sequentially (no parallelism).</p>
+<p>This model deliberately ignores real-world complications like CPU cache effects, pipelining, or memory hierarchy, because including them would make analysis depend on a specific physical machine. The RAM model gives every algorithm a fair, hardware-independent playing field.</p>
+<p><strong>Space vs time efficiency — the fundamental trade-off.</strong> <em>Time efficiency</em> asks "how many basic operations does this algorithm perform, as a function of input size $n$?" <em>Space efficiency</em> asks "how much extra memory does it need, beyond the input itself, as a function of $n$?" These two often trade off against each other: e.g., you can speed up a computation by <em>pre-computing and storing</em> results (using more space to save time — "memoization"), or save space by <em>recomputing</em> values instead of storing them (using more time to save space). Neither is "better" in general — the right choice depends on what resource (time or memory) is scarcer for the situation at hand.</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Consider this pseudo-procedure: "To find the largest number in a list, keep guessing numbers until you feel confident you've found the biggest one." We want to check whether this qualifies as an algorithm.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Check it against all five criteria: Finiteness — "keep guessing until you feel confident" has no guaranteed stopping point; it could run forever if you're never confident. Definiteness — "feel confident" is not a precise, checkable condition; two different people (or the same person twice) could stop at different points. Input — the list is given input, so this criterion is fine. Output — a number is produced, so this is fine. Effectiveness — "guessing" a number without a rule for which number to guess isn't a well-defined, mechanically executable operation.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>This procedure fails Finiteness, Definiteness, and Effectiveness — so it is <em>not</em> a valid algorithm. A valid algorithm for the same task: "Set max = first element. For each remaining element, if it is greater than max, set max = that element. Return max." This version terminates after exactly $n-1$ comparisons (finite), has an unambiguous rule at every step (definite), and every operation (compare, assign) is basic and mechanically executable (effective).</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -391,16 +406,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Algorithms: Characteristics & Analysis Criteria?</div>
+  <div class="quiz-prompt">A set of instructions that includes the step "repeat until the result looks good enough" fails which criterion of a valid algorithm?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>Input</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Output</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Definiteness (and possibly Finiteness, since "good enough" has no guaranteed stopping point)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Effectiveness only</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Algorithms: Characteristics & Analysis Criteria in Design and Analysis of Algorithms.
+    <strong>Pedagogical Insight:</strong> "Looks good enough" is subjective and not precisely specified — two executions could stop at different points, or never stop at all. This directly violates Definiteness, and since there's no guarantee it ever terminates, it also threatens Finiteness.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">In the RAM model of computation, an operation like adding two numbers or comparing two array elements is assumed to take:</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Time proportional to the size of the numbers involved</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A constant amount of time, $O(1)$, regardless of input size</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Time proportional to the total memory available on the machine</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>An unpredictable, machine-dependent amount of time</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> The RAM model's whole purpose is to give a hardware-independent baseline: it assumes basic operations (arithmetic, comparison, assignment, memory access) each cost exactly one unit of time, so that analysis of an algorithm's growth rate isn't muddied by real machine quirks like cache misses or clock speed.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Which statement best captures the relationship between time efficiency and space efficiency?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>They always improve together — a faster algorithm always uses less memory</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>They often trade off against each other — using extra memory to store precomputed results can save time, and vice versa</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Space efficiency is irrelevant in modern computing and can be ignored</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Time efficiency only matters for recursive algorithms</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> A classic example is memoization: storing (caching) previously computed results uses more space, but saves the time of recomputing them. Conversely, recomputing values on the fly instead of storing them saves memory at the cost of extra computation time. Good algorithm design often means consciously choosing where on this trade-off you want to sit.
   </div>
 </div>
     </main>

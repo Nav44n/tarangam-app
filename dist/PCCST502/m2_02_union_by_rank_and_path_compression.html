@@ -352,7 +352,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -368,20 +368,34 @@
 <p><strong>Rank heuristics, tree flattening during Find, and Inverse Ackermann complexity.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Optimized Union by Rank &amp; Path Compression</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>The previous topic ended on a problem: naive union-find can degrade into a long, skinny chain, making <code>Find</code> slow. Two independent, complementary fixes solve this — and the fact that they were invented separately but combine so powerfully is one of the nicer stories in algorithm design.</p>
+<p><strong>Union by rank</strong> is a <em>preventive</em> fix: instead of arbitrarily attaching one tree under the other during Union, always attach the <em>shorter</em> tree under the <em>taller</em> one's root (like always adding the smaller stack of boxes on top of the bigger, sturdier stack, rather than the other way round) — this alone caps how tall the tree can ever get.</p>
+<p><strong>Path compression</strong> is a <em>corrective, self-healing</em> fix: every time you do a <code>Find(x)</code> and walk up a possibly-long chain to reach the root, you take the opportunity — while you're already there, having done the walk — to reattach every element you passed through <em>directly</em> to the root, flattening the path for next time. It's like, after walking up a long, winding staircase once to check something, installing an elevator direct to the top before you leave, so that everyone who follows takes the direct route from now on.</p>
+<p>Individually, each trick already helps a lot. Combined, something remarkable happens: the <em>amortized</em> cost per operation becomes so close to constant that it's described using one of the slowest-growing functions in all of mathematics — the inverse Ackermann function.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>Union by rank.</strong> Maintain a <code>rank[x]</code> value for each representative — an upper bound on the height of the tree rooted at <code>x</code> (not tracked exactly for non-roots, but bounded correctly at roots, which is all that matters). During <code>Union(x, y)</code>:
+- Find both roots, <code>rootX</code> and <code>rootY</code>.
+- If <code>rank[rootX] &lt; rank[rootY]</code>, attach <code>rootX</code> under <code>rootY</code> (<code>parent[rootX] = rootY</code>).
+- If <code>rank[rootX] &gt; rank[rootY]</code>, attach <code>rootY</code> under <code>rootX</code>.
+- If ranks are equal, attach either under the other arbitrarily, and <strong>increment</strong> the resulting root's rank by 1 (this is the <em>only</em> situation where a tree's height can actually increase).</p>
+<p>This guarantees a tree's height only grows when merging two trees of <em>equal</em> rank — which, by an inductive argument, means a tree of rank $r$ must contain at least $2^r$ elements, so the height of any tree is bounded by $O(\log n)$ — matching the same logarithmic guarantee AVL trees achieve, but through an entirely different mechanism.</p>
+<p><strong>Path compression.</strong> During <code>Find(x)</code>, after locating the root by walking up the parent chain, make a <em>second</em> pass, resetting every node visited along the way to point <em>directly</em> to the root, instead of to its immediate former parent:
+$$\text{Find}(x): \text{if } parent[x] \ne x: \ parent[x] \leftarrow \text{Find}(parent[x]); \ \text{return } parent[x]$$
+(This recursive formulation naturally implements path compression: the recursive call finds the true root, and the assignment <code>parent[x] = Find(parent[x])</code> rewires <code>x</code> to point directly at that root on the way back out of the recursion.) Path compression doesn't just help the current call — it permanently shortens the path for <em>every future</em> <code>Find</code> call on any node that was on this path.</p>
+<p><strong>Combined complexity — the inverse Ackermann function.</strong> When union by rank and path compression are used <em>together</em>, the amortized time per operation (across a sequence of $m$ Union/Find operations on $n$ elements) is:
+$$O(\alpha(n))$$
+where $\alpha(n)$ is the <strong>inverse Ackermann function</strong> — the functional inverse of the notoriously fast-growing Ackermann function. $\alpha(n)$ grows so slowly that for <em>any</em> input size conceivable in the real world (up to numbers vastly larger than the number of atoms in the observable universe), $\alpha(n) \le 4$. In every practical sense, this makes each operation <em>effectively</em> constant time, even though it's not, technically, a fixed constant in the strict mathematical sense.</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Suppose (before any optimisation) a chain exists: <code>parent[1]=2, parent[2]=3, parent[3]=4, parent[4]=4</code> (so 4 is the root, and 1→2→3→4 is a chain of length 3). Call <code>Find(1)</code> with path compression enabled, and describe the structure afterward.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><code>Find(1)</code> walks: <code>1 → 2 → 3 → 4</code> (root, since <code>parent[4]=4</code>). Using the recursive path-compression formulation, as the recursion unwinds back down from the root: node 3's parent is reset directly to 4 (already true, no change); node 2's parent is reset directly to 4 (was 3, now 4); node 1's parent is reset directly to 4 (was 2, now 4).</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>After this single <code>Find(1)</code> call, the structure becomes: <code>parent[1]=4, parent[2]=4, parent[3]=4, parent[4]=4</code> — every element on the original chain now points <em>directly</em> to the root. Any future <code>Find</code> call on 1, 2, or 3 will now take just one step, instead of retracing the original 3-step chain. This is exactly the "install an elevator after the first long climb" behaviour described in the intuition — the tree gets flatter every time it's touched, which is precisely why the amortized cost across many operations stays so low.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -391,16 +405,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Optimized Union by Rank & Path Compression?</div>
+  <div class="quiz-prompt">Under union by rank, when does a tree's height actually increase during a Union operation?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>Every single time two trees are merged</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Only when the two trees being merged have equal rank</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Only when the smaller tree is attached under the larger</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Height never increases under union by rank</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Optimized Union by Rank & Path Compression in Design and Analysis of Algorithms.
+    <strong>Pedagogical Insight:</strong> Union by rank always attaches the lower-rank (shorter) tree beneath the higher-rank (taller) one's root, which never increases the taller tree's height. Height only increases in the tie-breaking case, when both trees have equal rank — attaching one under the other in that case does add one level, so the rank (and height bound) is incremented by exactly 1.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What does path compression do during a `Find` operation?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>It deletes all but the last element on the path</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>After locating the root, it reattaches every node visited along the way to point directly at the root, flattening the tree for future operations</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It merges the tree with a completely unrelated tree</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It reverses the direction of the parent pointers only, without changing which node they point to</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Path compression is a "while I'm here anyway" optimisation: having walked the full path to find the root, it rewires every visited node's parent pointer to point straight at that root, so any future `Find` call on those same nodes takes a direct, one-hop path instead of retracing the original chain.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">When union by rank and path compression are used together, the amortized time per operation is described by which function?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>$O(\log n)$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$O(n)$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$O(\alpha(n))$, the inverse Ackermann function, which is effectively constant for any realistic input size</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$O(n \log n)$</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> The combination of these two optimisations yields the famous $O(\alpha(n))$ amortized bound, where $\alpha(n)$ (inverse Ackermann) grows so slowly that it never exceeds 4 for any input size that could realistically occur, making the practical behaviour essentially constant time per operation.
   </div>
 </div>
     </main>

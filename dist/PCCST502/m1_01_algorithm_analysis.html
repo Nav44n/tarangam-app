@@ -352,7 +352,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -364,8 +364,74 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="algorithm-analysis">Algorithm Analysis</h1>
-<p>Welcome to PCCST502. Content coming soon.</p>
+<h1 id="algorithm-analysis-module-1-overview">Algorithm Analysis — Module 1 Overview</h1>
+<p><strong>A beginner's map of everything Module 1 covers, and why it's the foundation for the entire course.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Imagine you and a friend both write a program to search for a word in a dictionary. Yours checks every single page one by one, starting from page 1. Your friend's opens the dictionary in the middle, checks if the word comes before or after, and repeats — like you'd actually search a real dictionary. Both programs <em>work</em>. Both eventually find the word. But your friend's program is obviously smarter, and if the dictionary had a million pages instead of a thousand, the difference would go from "friend finishes a bit sooner" to "friend finishes in the time it takes you to blink, while you're still flipping pages."</p>
+<p>That gap — between "it works" and "it works <em>well</em>" — is exactly what Module 1 is about. Before you can compare two solutions to a problem, you need a fair, mathematical way to measure "how much work" each one does, <em>without</em> actually running both on a real computer (whose speed depends on things like processor model, other apps running, etc. — none of which should matter to the comparison). This module builds that measuring stick from the ground up: first defining what an "algorithm" even is precisely, then defining how to count its work (time and space complexity), then giving you a compact notation to describe that work cleanly (Big-O and friends), then teaching you to actually calculate it for loops and for recursive functions, and finally applying all of that machinery to a real, non-trivial data structure — the AVL tree — where keeping the "work" bounded is the entire point of the design.</p></div></div>
+
+<hr />
+<p><a id="the-math"></a></p>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p>Module 1 of PCCST502 (Design and Analysis of Algorithms, KTU 2024 scheme) is built as a chain — each topic depends on the one before it:</p>
+<ol>
+<li><strong>Algorithm definition &amp; criteria</strong> — what qualifies as an algorithm at all (finiteness, definiteness, effectiveness, input, output).</li>
+<li><strong>Time &amp; space complexity, best/worst/average case</strong> — what we're actually trying to measure.</li>
+<li><strong>Asymptotic notations</strong> (O, Ω, Θ, o, ω) — the mathematical language used to <em>describe</em> that measurement cleanly, ignoring constants and small-input noise.</li>
+<li><strong>Complexity of iterative algorithms</strong> — applying the above to plain loops (the easy case).</li>
+<li><strong>Recurrence relations and three ways to solve them</strong> — substitution, iteration/expansion, and recursion tree — for when an algorithm calls itself (the harder case).</li>
+<li><strong>The Master Theorem</strong> — a shortcut formula that solves a huge chunk of recurrences instantly, once you recognise the pattern.</li>
+<li><strong>AVL trees</strong> — a real data structure whose entire reason for existing is to <em>guarantee</em> good complexity (by staying balanced), used as a concrete, worked case study tying the whole module together.</li>
+</ol>
+<p>By the end of this module you should be able to look at <em>any</em> piece of code — loop-based or recursive — and state its time complexity with a proof, not a guess.</p>
+<hr />
+<p><a id="worked-example"></a></p>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Consider linear search (check every element one by one) versus binary search (repeatedly halve the search space) on a sorted array of $n = 1{,}000{,}000$ elements. We want a way to predict, <em>before running either</em>, roughly how many steps each will take in the worst case.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Linear search's worst case is "the item is last, or not present" — it must inspect all $n$ elements, so its work grows as $n$. Binary search halves the remaining space each step, so the number of steps is the number of times you can halve $n$ before reaching $1$ — this is exactly $\log_2 n$. For $n=1{,}000{,}000$: linear search does up to 1,000,000 comparisons; binary search does about $\log_2(1{,}000{,}000) \approx 20$ comparisons.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Linear search is $O(n)$; binary search is $O(\log n)$. This single comparison — 1,000,000 steps versus 20 — is the entire motivation for this module: without the tools built here (asymptotic notation, complexity analysis), "which is faster" would be a vague guess instead of a provable fact.</p></div></div>
+
+<hr />
+<p><a id="self-check"></a></p>
+<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q1: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Why do we analyse algorithms using abstract notation (like "$O(n)$") instead of just timing them with a stopwatch on a real computer?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Stopwatches are not accurate enough for any measurement</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A stopwatch result depends on the specific machine, language, and system load, and doesn't tell us how the algorithm scales as input size grows</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Because real computers cannot run algorithms larger than a few hundred elements</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Abstract notation is only used when no computer is available</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> A stopwatch measures one run on one machine at one input size. It can't answer "what happens if the input is 100× bigger?" — and it conflates the algorithm's inherent efficiency with hardware speed. Asymptotic analysis strips away machine-specific detail and directly answers "how does the work grow with input size," which is the question that actually matters when choosing between two algorithms.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Which of these best describes the overall structure of Module 1?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>A random collection of unrelated topics</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A build-up from defining what an algorithm is, to measuring its cost, to a notation for describing that cost, to techniques for calculating it in loops and recursion, ending in a real worked case (AVL trees)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>A single topic (Big-O notation) repeated with different examples</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>A history of who invented each algorithm</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Each topic in Module 1 is a prerequisite for the next: you can't use Big-O notation meaningfully until you know what you're measuring (time/space complexity), and you can't calculate the complexity of a recursive AVL insertion until you know how to solve recurrences. The module is deliberately sequential.
+  </div>
+</div>
     </main>
 
     <footer class="pagefoot" id="pagefoot">

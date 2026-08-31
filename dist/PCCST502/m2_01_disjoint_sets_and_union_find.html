@@ -352,7 +352,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -368,20 +368,29 @@
 <p><strong>Set representation, MakeSet, Find, and naive Union operations.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Disjoint Set Data Structure (Union-Find)</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Imagine you're organising a huge group of people into friend circles, where you only get told, one pair at a time, "these two people are friends." Two questions you'll constantly need to answer: "are person A and person B in the same friend circle (even if not directly friends, but connected through a chain of mutual friends)?" and "please merge these two friend circles into one, because we just learned two people from different circles are actually friends."</p>
+<p>A <strong>disjoint set</strong> (also called <strong>union-find</strong>) data structure is built exactly for this: it maintains a collection of non-overlapping ("disjoint") groups, and supports two core operations — <strong>Find</strong> (which group does this element currently belong to?) and <strong>Union</strong> (merge two groups into one). The clever trick used to represent a group is a <strong>tree</strong>: every group is represented as a tree of elements, where each element points to its <strong>parent</strong>, and the very top element (whose parent is itself) is called the <strong>representative</strong> of the whole group. Two elements are in the same group exactly when following the chain of parent-pointers from each of them leads to the <em>same</em> representative at the top.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>Representation.</strong> Each element is stored in an array (or similar structure) <code>parent[]</code>, where <code>parent[x]</code> points to <code>x</code>'s parent in its group's tree. An element that is its own parent (<code>parent[x] == x</code>) is the <strong>representative</strong> (root) of its group.</p>
+<p><strong>MakeSet(x):</strong> initialise a brand-new, singleton group containing only <code>x</code>. Set <code>parent[x] = x</code> — <code>x</code> is its own representative, since it's alone in its own group. This is $O(1)$.</p>
+<p><strong>Find(x):</strong> determine which group <code>x</code> belongs to, by returning its group's representative. Mechanically: follow parent-pointers starting at <code>x</code> — <code>x → parent[x] → parent[parent[x]] → ...</code> — until reaching an element that is its own parent (the root/representative). Return that root.
+$$\text{Find}(x) = x \text{ if } parent[x]=x, \quad \text{else Find}(parent[x])$$</p>
+<p><strong>Union(x, y) — the naive version:</strong> first, find the representatives of both <code>x</code>'s group and <code>y</code>'s group: <code>rootX = Find(x)</code>, <code>rootY = Find(y)</code>. If they're already equal, <code>x</code> and <code>y</code> are already in the same group — nothing to do. Otherwise, merge the two groups by making one root point to the other: e.g. <code>parent[rootX] = rootY</code> — now every element that used to trace up to <code>rootX</code> will, after one more hop, trace up to <code>rootY</code> instead, unifying the two trees into one.</p>
+<p><strong>Why "naive" union can be slow.</strong> The naive version always attaches one root arbitrarily under the other, with no regard for which tree is bigger or taller. If you're unlucky (or an adversary deliberately chooses a bad sequence of unions), you can end up always attaching the bigger tree under the smaller one, repeatedly — producing a long, skinny chain (exactly the "degenerate BST" problem from the AVL topics, appearing again in a different data structure!). In the worst case, <code>Find</code> on such a skewed structure costs $O(n)$ — you might have to walk all the way up a chain of $n$ elements to find the root. This motivates the next topic's two optimisations (union by rank, path compression), which together bring the amortized cost per operation down to <em>almost</em> constant time.</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Start with 5 singleton elements ${1,2,3,4,5}$, each its own group (via MakeSet). Perform the operations, in order: <code>Union(1,2)</code>, <code>Union(3,4)</code>, <code>Union(1,3)</code>. After all three, answer: are elements $2$ and $4$ in the same group?</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Initially: <code>parent[1]=1, parent[2]=2, parent[3]=3, parent[4]=4, parent[5]=5</code>.
+<code>Union(1,2)</code>: <code>Find(1)=1</code>, <code>Find(2)=2</code>; set <code>parent[1]=2</code> (attaching root 1 under root 2, using naive attachment). Now group ${1,2}$ has representative $2$.
+<code>Union(3,4)</code>: <code>Find(3)=3</code>, <code>Find(4)=4</code>; set <code>parent[3]=4</code>. Now group ${3,4}$ has representative $4$.
+<code>Union(1,3)</code>: <code>Find(1)$:</code>1 → parent[1]=2 → parent[2]=2<code>(root), so</code>Find(1)=2<code>.</code>Find(3)<code>:</code>3 → parent[3]=4 → parent[4]=4<code>(root), so</code>Find(3)=4<code>. Since these roots (2 and 4) differ, merge: set</code>parent[2]=4` (attaching root 2 under root 4).</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Now trace <code>Find(2)</code>: <code>2 → parent[2]=4</code> (root), so <code>Find(2)=4</code>. Trace <code>Find(4)</code>: <code>4</code> is its own parent, so <code>Find(4)=4</code>. Both return the same representative, $4$ — so <strong>yes, elements 2 and 4 are now in the same group</strong>, even though no <code>Union</code> call ever directly mentioned both 2 and 4 together — the chain of unions (1 with 2, 3 with 4, then 1 with 3) transitively connected them, exactly the kind of "connected through a chain of mutual friends" reasoning described in the intuition above.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -391,16 +400,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Disjoint Set Data Structure (Union-Find)?</div>
+  <div class="quiz-prompt">In a disjoint-set data structure, how do you determine whether two elements $x$ and $y$ belong to the same group?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>Check if `parent[x] == y`</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Compute `Find(x)` and `Find(y)` (following parent pointers to each element's root/representative) and check if the two results are equal</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Check if $x$ and $y$ have consecutive array indices</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Elements are never grouped; only individual comparisons are supported</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Disjoint Set Data Structure (Union-Find) in Design and Analysis of Algorithms.
+    <strong>Pedagogical Insight:</strong> Two elements are in the same group exactly when their respective chains of parent-pointers lead to the same root/representative element. `Find` is defined precisely to compute this representative, so comparing `Find(x) == Find(y)` is the standard way to test group membership.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What can go wrong with the "naive" Union operation, where one root is arbitrarily attached under the other with no size/height consideration?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Nothing — naive union is always optimal</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Repeatedly attaching in an unlucky order can build a long, skewed chain, making `Find` cost up to $O(n)$ in the worst case</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Naive union always produces a perfectly balanced tree automatically</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Naive union cannot merge more than two groups total</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Because naive union doesn't track which tree is taller or has more elements, an adversarial or unlucky sequence of unions can always attach the larger/taller tree beneath the smaller one, producing a long chain — mirroring the same "skewed tree" problem seen with unbalanced BSTs, and making `Find` degrade to linear time in the worst case.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What is the time complexity of `MakeSet(x)`?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>$O(n)$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$O(1)$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$O(\log n)$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$O(n^2)$</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> `MakeSet` simply initialises a brand-new singleton group by setting `parent[x] = x` — a single constant-time assignment, regardless of how many other elements or groups already exist.
   </div>
 </div>
     </main>

@@ -352,7 +352,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -368,20 +368,43 @@
 <p><strong>Queue-based traversal, level-order expansion, BFS tree, and time complexity O(V+E).</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Breadth-First Search (BFS) &amp; Shortest Path in Unweighted Graphs</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Imagine dropping a single pebble into a still pond. The ripple it creates spreads outward in perfect, expanding circles — everything exactly 1 metre away is disturbed at the same moment, then everything exactly 2 metres away, then 3, and so on — the ripple never "skips ahead" to disturb something far away before finishing everything closer.</p>
+<p><strong>Breadth-First Search (BFS)</strong> explores a graph in exactly this ripple pattern, starting from a chosen source vertex. It first visits every vertex at distance 1 (directly connected to the source), <em>then</em> every vertex at distance 2 (connected to something at distance 1, but not any closer), then distance 3, and so on — visiting the graph in complete, expanding "waves," or <strong>levels</strong>. This level-by-level exploration order is precisely what makes BFS the natural, correct tool for finding the <strong>shortest path</strong> (fewest number of edges) from the source to any other vertex, in an unweighted graph — the moment BFS <em>first</em> reaches a vertex, that arrival is guaranteed to be via the shortest possible route, since anything closer would have already been visited in an earlier wave.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>The mechanism: a queue.</strong> BFS uses a <strong>FIFO (first-in, first-out) queue</strong> to control visiting order — this is the data structure that enforces the "finish the current wave completely before starting the next" behaviour. Pseudocode:</p>
+<pre><code>BFS(G, source):
+    for each vertex v: visited[v] = False; dist[v] = infinity
+    visited[source] = True; dist[source] = 0
+    queue = [source]
+    while queue is not empty:
+        u = queue.dequeue()
+        for each neighbour v of u:
+            if not visited[v]:
+                visited[v] = True
+                dist[v] = dist[u] + 1
+                parent[v] = u          # records the BFS tree
+                queue.enqueue(v)
+</code></pre>
+<p>Every vertex is enqueued exactly once (guarded by the <code>visited</code> check), and every edge is examined exactly once per direction while scanning each dequeued vertex's neighbour list.</p>
+<p><strong>Why the queue guarantees shortest paths (unweighted case).</strong> Because vertices are enqueued in the exact order their distance-from-source increases by 1 each wave, and the queue processes them in that same first-in-first-out order, every vertex at distance $k$ is guaranteed to be dequeued (and have its neighbours examined) <em>before</em> any vertex at distance $k+1$ is even discovered. So when a previously-unvisited vertex $v$ is first reached via some vertex $u$, $u$ must be at the smallest possible distance that could reach $v$ in one more step — meaning <code>dist[v] = dist[u]+1</code> is provably the shortest possible distance to $v$.</p>
+<p><strong>The BFS tree.</strong> The <code>parent[]</code> pointers recorded during the traversal form a tree rooted at the source — following <code>parent</code> pointers backward from any vertex $v$ traces out one shortest path from the source to $v$. This tree is a genuinely useful byproduct, not just an internal bookkeeping detail — it's frequently used directly to reconstruct and report the actual shortest path, not merely its length.</p>
+<p><strong>Time complexity: $O(V+E)$.</strong> Each vertex is enqueued/dequeued exactly once — contributing $O(V)$ total. Each vertex's full neighbour list is scanned exactly once, and summed across all vertices, this totals exactly $E$ (or $2E$ for undirected graphs, since each edge appears in two neighbour lists — still a constant factor) — contributing $O(E)$ total. Together: $O(V+E)$, the standard "linear in the size of the graph" bound that appears throughout graph algorithms, and notably matches the $\Theta(V+E)$ space cost of the adjacency-list representation from the previous topic — BFS essentially does one unit of work per unit of stored graph data, which is about as efficient as a traversal can be.</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Given an undirected graph with edges $A$–$B$, $A$–$C$, $B$–$D$, $C$–$D$, $D$–$E$, run BFS starting from source $A$, and determine the shortest-path distance (in number of edges) from $A$ to every other vertex.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Initialise: <code>dist[A]=0</code>, all others infinity; queue = <code>[A]</code>.
+Dequeue $A$: neighbours are $B, C$ (both unvisited) — mark visited, <code>dist[B]=1</code>, <code>dist[C]=1</code>, enqueue both. Queue = <code>[B, C]</code>.
+Dequeue $B$: neighbours are $A$ (visited, skip), $D$ (unvisited) — mark visited, <code>dist[D] = dist[B]+1 = 2</code>, enqueue. Queue = <code>[C, D]</code>.
+Dequeue $C$: neighbours are $A$ (visited, skip), $D$ (already visited via $B$, skip — its distance is already correctly set to 2). Queue = <code>[D]</code>.
+Dequeue $D$: neighbours are $B$ (visited), $C$ (visited), $E$ (unvisited) — mark visited, <code>dist[E] = dist[D]+1 = 3</code>, enqueue. Queue = <code>[E]</code>.
+Dequeue $E$: neighbours are $D$ (visited). Queue empty — BFS complete.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Final shortest distances from $A$: <code>dist[A]=0, dist[B]=1, dist[C]=1, dist[D]=2, dist[E]=3</code>. Notice that $D$ was reachable via two different 2-edge paths ($A$-$B$-$D$ and $A$-$C$-$D$), but BFS correctly recorded distance $2$ regardless of which path discovered it first — because <em>both</em> paths have exactly 2 edges, either one gives the correct shortest distance; BFS guarantees correctness of the <em>distance</em>, though the specific <code>parent</code> pointer recorded (and thus which single shortest path gets reconstructed) depends on which neighbour happened to be processed first.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -391,16 +414,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Breadth-First Search (BFS) & Shortest Path in Unweighted Graphs?</div>
+  <div class="quiz-prompt">What data structure does BFS use to control the order in which vertices are visited, and why is this specific structure essential to BFS's correctness?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>A stack, because it processes the most recently discovered vertex first</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A FIFO queue, because it ensures all vertices at the current distance level are fully processed before any vertex at the next distance level is discovered, guaranteeing shortest-path correctness</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>A priority queue ordered by vertex name</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>No structure is needed; BFS uses random order</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Breadth-First Search (BFS) & Shortest Path in Unweighted Graphs in Design and Analysis of Algorithms.
+    <strong>Pedagogical Insight:</strong> A FIFO queue processes elements in the exact order they were added — which, in BFS, corresponds exactly to processing vertices in increasing order of distance from the source. This "finish the current wave before starting the next" property is what guarantees that the first time any vertex is reached, it's via the shortest possible path.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What is the overall time complexity of BFS on a graph represented with an adjacency list, and what do the two terms represent?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>$O(V^2)$, always, regardless of representation</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$O(V+E)$ — $O(V)$ for enqueuing/dequeuing every vertex exactly once, and $O(E)$ for scanning every edge exactly once (twice for undirected graphs, a constant factor) across all neighbour-list scans</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$O(E^2)$, from comparing every pair of edges</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$O(\log V)$, since BFS behaves like binary search</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Every vertex enters and leaves the queue exactly once (bounded by the `visited` check), contributing $O(V)$; and summed across all vertices, every edge is examined exactly once (or twice, for undirected graphs, when scanning each endpoint's neighbour list) while scanning neighbour lists, contributing $O(E)$. Together, this gives the standard "linear in graph size" bound $O(V+E)$.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Why does BFS specifically compute *shortest paths* correctly in an unweighted graph, but would *not* directly work correctly for a graph where edges have different weights (costs)?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>BFS cannot handle any graph with more than one edge</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>BFS's correctness relies on the fact that every edge contributes exactly "1" to the path length, so processing vertices in queue (FIFO) order exactly matches increasing true distance — this breaks down if edges have varying weights, since a path with more edges could still have smaller total weight than a path with fewer, heavier edges</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>BFS only works on trees, not general graphs</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>BFS requires the graph to be directed</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> BFS's shortest-path guarantee depends entirely on every edge counting as exactly one unit of distance, which makes "discovered earlier in FIFO order" the same thing as "closer in true distance." If edges have different weights, a vertex reached via more edges could still have a smaller total weighted distance than one reached via fewer, heavier edges — breaking BFS's core assumption. (Weighted shortest-path problems require different algorithms, such as Dijkstra's, covered in later modules.)
   </div>
 </div>
     </main>

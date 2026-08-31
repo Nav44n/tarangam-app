@@ -352,7 +352,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -368,20 +368,31 @@
 <p><strong>Stepped calculations for Master Theorem cases, recursion tree summations, and AVL insertion rotation sequences.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Module 1 Practice Lab: Asymptotic Proofs &amp; Recurrence Solvers</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Every skill in this module — proving a Big-O bound, solving a recurrence three different ways, and rebalancing an AVL tree — is something you only truly own once you've done it yourself, by hand, several times, without a worked example to lean on. Reading a derivation is like watching someone else ride a bicycle: it looks completely obvious right up until <em>you</em> get on and have to balance yourself.</p>
+<p>This practice lab is a deliberately varied set of drills that force you to apply Module 1's tools in combination — sometimes recognising which Master Theorem case applies, sometimes drawing a small recursion tree from scratch, sometimes tracing through several AVL insertions in a row and catching every rotation as it happens. The goal isn't new theory; it's building the reflex of <em>pattern recognition</em> — glancing at a recurrence or a tree and immediately knowing which technique from this module to reach for.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p>This lab deliberately doesn't introduce new formulas — it's a checklist of the tools from this module, and <em>when</em> to reach for each one:</p>
+<ul>
+<li><strong>Given a loop (single, nested, or logarithmic)</strong> → use the summation method from "Complexity Analysis of Iterative Loops": express total iterations as a sum, evaluate using arithmetic/geometric series formulas, extract the dominant term.</li>
+<li><strong>Given a recurrence and asked to <em>prove</em> a specific bound</strong> → use the <strong>substitution method</strong>: guess the bound, assume it for smaller inputs, substitute into the recurrence, verify algebraically.</li>
+<li><strong>Given a recurrence and asked to <em>find</em> the bound (with no guess supplied)</strong> → use the <strong>iteration/expansion method</strong> (unroll level by level until the pattern is clear) or the <strong>recursion tree method</strong> (draw it, sum level totals) — whichever you find more visual.</li>
+<li><strong>Given a recurrence in the exact form $T(n)=aT(n/b)+f(n)$</strong> → check whether it fits one of the three <strong>Master Theorem</strong> cases by comparing $f(n)$ to $n^{\log_b a}$; if it fits cleanly, this is the fastest route to an answer.</li>
+<li><strong>Given a sequence of AVL insertions or deletions</strong> → after each single insertion/deletion, walk from the changed node up toward the root, recomputing balance factors, and apply the correct rotation (LL/RR/LR/RL) the moment any $|BF|&gt;1$ appears, before moving on to the next operation.</li>
+</ul>
+<p><strong>A general debugging habit worth building now:</strong> whenever a derived complexity looks suspicious (e.g., you calculated $O(n)$ for something that clearly does nested work over all pairs of elements), re-derive it a second way — if the loop-based summation and the recursion-tree method (for an equivalent recursive version of the same task) disagree, you've made an arithmetic slip somewhere, and cross-checking is far faster than re-reading your own derivation looking for the mistake.</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Mixed drill: (a) solve $T(n) = 4T(n/2) + n^2$ using the Master Theorem; (b) insert the keys $10, 20, 30, 40, 50$ in that order into an initially empty AVL tree, and identify every rotation triggered along the way.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>(a)</strong> Here $a=4, b=2$, so $\log_b a = \log_2 4 = 2$, reference function $n^2$. Compare to $f(n)=n^2$: this is an <em>exact match</em> ($f(n) = \Theta(n^{\log_b a})$), so <strong>Case 2</strong> applies.
+<strong>(b)</strong> Insert $10$: tree is just ${10}$, balanced. Insert $20$: becomes $10$'s right child; $BF(10) = -1$, fine. Insert $30$: goes right of $10$, then right of $20$; check $BF(20)$: fine (0). Check $BF(10)$: left height $-1$, right height (subtree rooted at 20, now height 1) $=1$; $BF(10) = -1-1=-2$ — imbalance! This is caused by inserting into the right subtree of the right child (30 went right of 20, which is right of 10) — an <strong>RR</strong> shape. Fix: single left rotation at $10$. Result: $20$ becomes root, $10$ its left child, $30$ its right child — balanced. Insert $40$: goes right of $30$; $BF(30)=-1$, fine; $BF(20)$ recomputed: right subtree (rooted at 30) height is now $1$, left subtree (just node 10) height $0$; $BF(20)=0-1=-1$, still fine, no rotation. Insert $50$: goes right of $40$; check up the chain: $BF(40)=-1$ fine; $BF(30)$: right subtree (rooted at 40) now height $1$, left subtree height $-1$ (empty); $BF(30) = -1-1=-2$ — imbalance, another <strong>RR</strong> shape (50 went right of 40, which is right of 30). Fix: single left rotation at $30$.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p><strong>(a)</strong> By Case 2, $T(n) = \Theta(n^2 \log n)$.
+<strong>(b)</strong> Two rotations were triggered in total — both RR (single left rotations), once at node $10$ (after inserting $30$) and once at node $30$ (after inserting $50$) — leaving a final, fully balanced 5-node AVL tree with root $20$: left child $10$, right child $40$ (whose own children are $30$ and $50$). This kind of "insert several keys in increasing order, watch it self-correct repeatedly" drill is exactly what would otherwise degenerate into a useless straight-line BST — the whole point of Module 1's AVL topics.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -391,16 +402,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Module 1 Practice Lab: Asymptotic Proofs & Recurrence Solvers?</div>
+  <div class="quiz-prompt">When a recurrence is given in the exact form $T(n) = aT(n/b) + f(n)$ and you can cleanly classify $f(n)$ against $n^{\log_b a}$, which technique is usually fastest?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>Always draw a full recursion tree regardless</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Apply the Master Theorem directly, since it's a shortcut precisely for recurrences of this standard form</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Always use the substitution method with a random guess</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Rewrite the recursion as an iterative loop first</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Module 1 Practice Lab: Asymptotic Proofs & Recurrence Solvers in Design and Analysis of Algorithms.
+    <strong>Pedagogical Insight:</strong> The Master Theorem exists exactly to shortcut the recursion-tree/iteration reasoning for this common recurrence shape — if $f(n)$ classifies cleanly into one of the three cases, you get the answer immediately without unrolling anything by hand.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">While inserting keys in strictly increasing order into an AVL tree (e.g., 10, 20, 30, 40, 50, ...), what pattern of rotations would you expect to repeatedly see, and why?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>LR and RL double rotations, because increasing order always creates zig-zag shapes</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>RR single (left) rotations, because each new maximum key extends a straight line down the right side, repeatedly triggering the "straight-line-leaning-right" imbalance</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>No rotations are ever needed for sorted insertion order</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>LL single rotations, because the tree leans left</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Inserting strictly increasing keys always extends the rightmost path of the tree — exactly the RR (straight-line-right) imbalance shape — so AVL trees repeatedly trigger single left rotations to keep correcting this lean, which is exactly the mechanism that prevents the tree from ever becoming the fully degenerate, $O(n)$-height line that a plain (non-self-balancing) BST would become under the same insertion order.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">If two different valid derivation methods (e.g., the loop-summation method and the recursion-tree method applied to an equivalent recursive formulation) give *different* final Big-O answers for what should be the same underlying algorithm, what does this most likely indicate?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Both answers are correct simultaneously and no contradiction exists</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>An arithmetic or setup error was made in one of the derivations, and re-deriving via the other method is a fast way to locate the mistake</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Big-O notation is inherently inconsistent between methods</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The algorithm's complexity is undefined</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> A given algorithm has one true asymptotic complexity; every valid analysis method, applied correctly, must agree on it. A disagreement between two independently-applied methods is a strong, practical signal to recheck your work — usually faster than staring at a single derivation looking for a subtle mistake.
   </div>
 </div>
     </main>

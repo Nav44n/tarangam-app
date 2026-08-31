@@ -352,7 +352,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -368,20 +368,37 @@
 <p><strong>Kahn's in-degree algorithm vs DFS finishing time algorithm and dependency resolution.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Topological Sorting in Directed Acyclic Graphs (DAGs)</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Think about getting dressed in the morning: you must put on socks before shoes, and underwear before trousers — but the order between "socks" and "underwear" doesn't matter at all, they're independent. This is a <strong>dependency problem</strong>: some tasks must happen before others, but not every pair of tasks has a required order between them. <strong>Topological sorting</strong> takes a set of tasks with "must come before" constraints (naturally represented as a <strong>Directed Acyclic Graph</strong>, or DAG — an edge $u\to v$ means "$u$ must be done before $v$") and produces <em>one valid linear ordering</em> of all tasks that respects every single constraint simultaneously — put socks before shoes, underwear before trousers, and arrange everything else however's convenient, as long as no constraint is violated.</p>
+<p>This isn't just a cute morning-routine puzzle — it's exactly the algorithm behind resolving software package dependencies (installing library A before the program that needs it), scheduling university courses (a prerequisite must be taken before the course that requires it), compiling code (compiling a module before anything that imports it), and spreadsheet formula evaluation (computing a cell before any formula that references it). There are two standard, equally valid ways to compute a topological order — one built on counting incoming dependencies (Kahn's algorithm), and one built cleverly on the DFS finishing times from the previous topics.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>Precondition: topological sort is only well-defined for a DAG.</strong> If the graph contains a cycle, no valid linear order can exist — a cycle means task $A$ depends (directly or transitively) on task $B$, which depends back on task $A$: an impossible, circular requirement (like "put on your shoes before your socks, and your socks before your shoes"). This is exactly why the previous topic's cycle-detection (via a DFS back edge) is often run as a sanity check before attempting a topological sort.</p>
+<p><strong>Method 1 — Kahn's Algorithm (in-degree / BFS-style).</strong>
+- Compute the <strong>in-degree</strong> of every vertex (the number of incoming edges — i.e., how many unfulfilled prerequisites it currently has).
+- Initialise a queue with all vertices whose in-degree is currently $0$ (tasks with no prerequisites — safe to do first).
+- Repeatedly: dequeue a vertex $u$, add it to the output order, and for each of $u$'s outgoing edges $u\to v$, decrement $v$'s in-degree by 1 (since $u$'s requirement on $v$ is now satisfied); if $v$'s in-degree drops to $0$, enqueue it (all of $v$'s prerequisites are now done).
+- Continue until the queue is empty. If the final output order contains <em>all</em> $V$ vertices, the sort succeeded (and the graph was indeed a DAG); if fewer than $V$ vertices were output, the graph contains a cycle (some vertices' in-degrees never dropped to 0, because they're stuck in a circular dependency), and no valid topological order exists.</p>
+<p><strong>Method 2 — DFS Finishing-Time Algorithm.</strong>
+- Run a standard DFS on the entire graph (using the "for each unvisited vertex" outer loop to cover disconnected pieces), recording each vertex's finishing time, exactly as in the previous DFS and Kosaraju topics.
+- The topological order is simply the vertices listed in <strong>decreasing order of finish time</strong> — the vertex that finishes <em>last</em> comes <em>first</em> in the topological order.
+- <strong>Why this works:</strong> whenever DFS explores an edge $u \to v$, one of two things happens — either $v$ is still WHITE (unvisited), in which case DFS recurses into $v$ and <em>must</em> finish exploring $v$ entirely before returning to finish $u$, guaranteeing <code>finish[v] &lt; finish[u]</code>; or $v$ is already visited, and (since the graph is acyclic, so $v$ cannot be a currently-GRAY ancestor — that would be a back edge, meaning a cycle) $v$ must already be BLACK, meaning it finished even earlier, so again <code>finish[v] &lt; finish[u]</code>. Either way, for <em>every</em> edge $u\to v$ in a DAG, <code>finish[v]</code> is always less than <code>finish[u]</code> — which is exactly the property needed for "sort by decreasing finish time" to respect every dependency constraint.</p>
+<p><strong>Non-uniqueness.</strong> In general, a DAG can have <em>multiple</em> valid topological orderings (exactly like how "socks, underwear, trousers, shoes" and "underwear, socks, trousers, shoes" are both valid morning routines) — both Kahn's algorithm and the DFS method are guaranteed to produce <em>some</em> valid ordering, but not necessarily the <em>same</em> one as each other, and that's perfectly fine; any output respecting all the dependency constraints is a correct answer.</p>
+<p><strong>Time complexity:</strong> both methods run in $O(V+E)$ — Kahn's algorithm does a constant amount of work per vertex (enqueue/dequeue) and per edge (decrementing in-degree, checked once), and the DFS method is simply one standard DFS traversal, already established as $O(V+E)$.</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A set of course prerequisites forms this DAG: $\text{MATH101} \to \text{MATH201}$, $\text{MATH101} \to \text{CS101}$, $\text{CS101} \to \text{CS201}$, $\text{MATH201} \to \text{CS201}$. Find a valid course-taking order using Kahn's algorithm.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Compute in-degrees: MATH101 = 0 (no prerequisites), MATH201 = 1 (needs MATH101), CS101 = 1 (needs MATH101), CS201 = 2 (needs both CS101 and MATH201).
+Initialise queue with all in-degree-0 vertices: <code>[MATH101]</code>.
+Dequeue MATH101 → output <code>[MATH101]</code>. Process its outgoing edges: decrement MATH201's in-degree to 0 (enqueue it); decrement CS101's in-degree to 0 (enqueue it). Queue: <code>[MATH201, CS101]</code>.
+Dequeue MATH201 → output <code>[MATH101, MATH201]</code>. Process its outgoing edge to CS201: decrement CS201's in-degree to 1 (not yet 0, don't enqueue). Queue: <code>[CS101]</code>.
+Dequeue CS101 → output <code>[MATH101, MATH201, CS101]</code>. Process its outgoing edge to CS201: decrement CS201's in-degree to 0 (now enqueue it). Queue: <code>[CS201]</code>.
+Dequeue CS201 → output <code>[MATH101, MATH201, CS101, CS201]</code>. Queue empty.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The output order — MATH101, MATH201, CS101, CS201 — includes all 4 vertices, confirming this is indeed a DAG with a valid topological order, and this specific order respects every prerequisite: MATH101 before both MATH201 and CS101; and CS201 only after <em>both</em> of its prerequisites (CS101 and MATH201) are satisfied. (Note: MATH201, CS101, MATH101, CS201 in a different relative order between MATH201/CS101 would also be valid, since they don't depend on each other — topological sort just needs to respect the <em>given</em> constraints, not impose extra ones.)</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -391,16 +408,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Topological Sorting in Directed Acyclic Graphs (DAGs)?</div>
+  <div class="quiz-prompt">Why is topological sorting only well-defined for Directed *Acyclic* Graphs (DAGs), and not for graphs containing cycles?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>Cyclic graphs always have too many vertices to sort</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A cycle implies a circular dependency (task A requires task B, which requires task A), which has no valid linear order — it's a logical impossibility, like requiring shoes before socks and socks before shoes simultaneously</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Topological sorting works fine on cyclic graphs too, just more slowly</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Cycles make the in-degree of every vertex equal</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Topological Sorting in Directed Acyclic Graphs (DAGs) in Design and Analysis of Algorithms.
+    <strong>Pedagogical Insight:</strong> If a cycle exists, at least one task in that cycle would need to come both before and after another task in the same cycle — a direct logical contradiction that no linear ordering can satisfy. This is exactly why Kahn's algorithm fails to output all vertices (some in-degrees never reach 0) when run on a graph containing a cycle.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">In Kahn's algorithm, if the final output list contains fewer than $V$ vertices once the queue becomes empty, what does this indicate?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>The graph has too few edges</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The graph contains at least one cycle, so no valid topological order exists</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The algorithm needs to be run a second time</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>All vertices were successfully sorted; this is the expected, normal outcome</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> If some vertices' in-degrees never drop to 0 (because they're stuck depending on each other in a cycle, so their prerequisites are never fully "satisfied" and removed), those vertices never get enqueued or added to the output — a clear, standard signal that the graph is not a DAG.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">In the DFS-based topological sort algorithm, why does sorting vertices by *decreasing* finish time (rather than increasing, or by discovery time) produce a valid topological order?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Discovery time and finish time are always identical, so it doesn't matter which is used</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>In a DAG, for every edge $u\to v$, DFS guarantees `finish[v] < finish[u]` (since $v$ must be fully explored, or already finished, before $u$'s own exploration completes) — so ordering by decreasing finish time always places $u$ before $v$, respecting every dependency edge</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Increasing finish time also works equally well, and both orderings are always identical</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Finish time has no relationship to the graph's edge structure</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> The core DFS property established in this topic's theory section — that every edge in a DAG satisfies `finish[v] < finish[u]` — is exactly what "decreasing finish time" exploits: listing vertices from largest finish time to smallest automatically places every "must come before" vertex ahead of everything it points to, which is the precise definition of a valid topological order.
   </div>
 </div>
     </main>

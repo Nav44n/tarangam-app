@@ -352,7 +352,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -368,20 +368,28 @@
 <p><strong>Primitive operations count, memory allocation overhead, and case sensitivity analysis.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Time &amp; Space Complexity: Best, Worst, and Average Cases</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Imagine you're searching for your friend's name in a stack of exam papers, sorted alphabetically, by flipping through one page at a time from the top. If your friend's name starts with "A," you'll find it almost immediately — a lucky, best-case scenario. If it starts with "Z," you'll have to flip through the <em>entire</em> stack — the worst case. On an average day, your friend's name could start with any letter, so on average you'll flip through about half the stack.</p>
+<p>This everyday intuition — "how long does it take <em>depending on which particular input I happen to get</em>" — is exactly what best-case, worst-case, and average-case analysis formalises. The same algorithm, run on different inputs of the <em>same size</em>, can take wildly different amounts of work. This section teaches you to precisely quantify that "amount of work" using <strong>primitive operations</strong> (basic steps the RAM model counts), and then to separately analyse the best, worst, and average scenario, because in real engineering, "worst case" is usually what you actually care about — you want a guarantee that even the unluckiest possible input won't make your program crawl.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>Primitive operations.</strong> These are the fixed-cost building blocks the RAM model counts: assignment, arithmetic operation, comparison, array/pointer access, and a single method call's overhead. Time complexity is defined as (a function proportional to) the <em>total number of primitive operations</em> executed, as a function of input size $n$.</p>
+<p><strong>Best case</strong> $T_{best}(n)$: the minimum number of operations over <em>all</em> possible inputs of size $n$ — i.e., the most favourable input. Example: searching an unsorted array where the target happens to be the very first element — found in 1 comparison, regardless of $n$.</p>
+<p><strong>Worst case</strong> $T_{worst}(n)$: the maximum number of operations over all possible inputs of size $n$ — the least favourable input. This is by far the most commonly reported and most useful measure in practice, because it gives a <em>guarantee</em>: "this algorithm will never take longer than this, no matter what input you throw at it." This matters enormously for safety-critical or time-sensitive systems (e.g., an airline booking system can't tolerate "usually fast, but occasionally very slow").</p>
+<p><strong>Average case</strong> $T_{avg}(n)$: the <em>expected</em> number of operations, averaged over all possible inputs of size $n$, typically assuming each input is equally likely (a specific probability distribution over inputs). This requires knowing (or assuming) how inputs are distributed, which makes it mathematically harder to derive than the worst case, and its usefulness depends on whether that assumed distribution actually matches real-world usage.</p>
+<p><strong>Space complexity</strong> counts, similarly, the total memory cells used as a function of $n$ — including memory for the input itself, <em>auxiliary</em> memory used by the algorithm (extra variables, temporary arrays, the recursion call stack for recursive algorithms), and any output storage. When people say an algorithm is "$O(1)$ space" or "in-place," they typically mean the <em>auxiliary</em> space (excluding the input/output, which must exist regardless) is constant.</p>
+<p><strong>Why worst case dominates in practice:</strong> average case requires an input-distribution assumption that may not hold for your actual use case, and best case gives no real guarantee at all (it only tells you what happens on lucky inputs). Worst-case analysis is distribution-free and gives an unconditional upper bound — which is why textbooks, job interviews, and system design almost always default to worst-case unless stated otherwise.</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Analyse Linear Search — scanning an array left to right, comparing each element to a target value, and stopping as soon as a match is found (or reaching the end if not found) — on an array of $n$ elements.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>Best case:</strong> the target is the very first element. The loop runs once, does 1 comparison, and exits. $T_{best}(n) = O(1)$ — constant, independent of $n$.
+<strong>Worst case:</strong> the target is the last element, or is not present in the array at all. The loop must run through all $n$ elements, doing $n$ comparisons before finishing. $T_{worst}(n) = O(n)$.
+<strong>Average case (assuming the target is present and equally likely at any position):</strong> on average, we expect to check about half the array before finding it — roughly $\frac{n+1}{2}$ comparisons, which is still $O(n)$ — the same growth rate as the worst case, just with a smaller constant factor.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Linear search's best case is $O(1)$, but both its worst case and average case are $O(n)$ — meaning that as $n$ grows large, linear search's <em>typical</em> and <em>worst-possible</em> performance both degrade linearly, even though on rare lucky inputs it can be instantaneous. This is exactly why we can't judge an algorithm's real-world suitability by its best case alone — a single lucky test run doesn't tell you what will happen on the input that actually matters.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -391,16 +399,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Time & Space Complexity: Best, Worst, and Average Cases?</div>
+  <div class="quiz-prompt">Why do engineers usually prioritise worst-case complexity over average-case complexity when choosing an algorithm for a critical system?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>Worst-case analysis is always numerically smaller than average-case</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Worst-case gives an unconditional guarantee that holds for every possible input, while average-case depends on an assumed input distribution that may not match reality</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Average-case complexity cannot be calculated mathematically</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Worst-case is easier to compute in all situations</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Time & Space Complexity: Best, Worst, and Average Cases in Design and Analysis of Algorithms.
+    <strong>Pedagogical Insight:</strong> Worst-case bounds are distribution-free — they hold no matter what the input looks like. Average-case analysis requires assuming a probability distribution over inputs (e.g., "every arrangement is equally likely"), and if real-world inputs don't follow that assumption, the average-case guarantee can be misleading. For anything safety- or time-critical, the unconditional worst-case guarantee is far more valuable.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">For linear search on an array of size $n$, what is the best-case time complexity?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>$O(n)$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$O(1)$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$O(\log n)$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$O(n^2)$</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> In the best case, the target element is the very first one checked, so the algorithm does exactly one comparison regardless of how large $n$ is — a constant amount of work, $O(1)$.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">"In-place" or "$O(1)$ auxiliary space" for an algorithm typically means:</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>The algorithm uses zero memory at all, including for the input</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The algorithm uses only a constant amount of *extra* memory beyond what's needed to store the input and output</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The algorithm can only run on machines with exactly 1 unit of RAM</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The algorithm never modifies the input array</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Space complexity discussions usually separate the space needed to hold the input/output (which any algorithm needs regardless) from the auxiliary space the algorithm additionally allocates while working (extra variables, temporary structures, recursion stack). "In-place" means this auxiliary part stays constant, not growing with $n$.
   </div>
 </div>
     </main>

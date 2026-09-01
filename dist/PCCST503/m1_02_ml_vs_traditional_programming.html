@@ -497,7 +497,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -510,19 +510,19 @@
   </div>
 </div>
 <h1 id="machine-learning-vs-traditional-programming">Machine Learning vs Traditional Programming</h1>
-<p><strong>Why hardcoded IF-ELSE rules fail in complex domains and how inductive learning replaces them.</strong></p>
+<p><strong>Why hardcoded IF-ELSE rules fail in complex domains, and how inductive learning replaces deductive rule-writing.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition-the-cake-recipe-paradigm">1. The Intuition: The Cake Recipe Paradigm</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: The Paradigm Shift</div><div class="callout-body"><ul>
-<li><strong>Traditional Software:</strong> $\text{Data} + \text{Rules (Code)} \implies \text{Output}$</li>
-<li>A human software engineer writes every single logical condition by hand. If input $A$ happens, do $B$.</li>
-<li><strong>Machine Learning:</strong> $\text{Data} + \text{Output} \implies \text{Rules (The Model)}$</li>
-<li>You provide raw observations and historical outcomes. The learning algorithm discovers the underlying statistical mapping $f: X \to Y$.</li>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: The Cake Recipe, Reversed</div><div class="callout-body"><p>Traditional programming is like following a recipe: you already know the ingredients (data) and the exact steps (rules/code), and you follow them mechanically to produce a cake (output). Machine Learning flips this around: you're handed a pile of ingredients <em>and</em> a finished cake, and asked to reverse-engineer the recipe by tasting many such cake-ingredient pairs until you can predict, for a <em>new</em> pile of ingredients, roughly what cake will come out.</p>
+<ul>
+<li><strong>Traditional Software:</strong> $\text{Data} + \text{Rules (Code)} \implies \text{Output}$ — a human engineer writes every logical condition by hand: "if input $A$ happens, do $B$."</li>
+<li><strong>Machine Learning:</strong> $\text{Data} + \text{Output} \implies \text{Rules (The Model)}$ — you provide raw observations and historical outcomes, and the learning algorithm discovers the underlying statistical mapping $f: X \to Y$ on its own.</li>
 </ul></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
-<h2 id="2-in-depth-comparison-table">2. In-Depth Comparison Table</h2>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p><strong>In-depth comparison:</strong></p>
 <table>
 <thead>
 <tr>
@@ -534,13 +534,13 @@
 <tbody>
 <tr>
 <td style="text-align: left;"><strong>Primary Input</strong></td>
-<td style="text-align: left;">Raw Data + Explicit Algorithm</td>
-<td style="text-align: left;">Input Features ($X$) + Ground Truth Labels ($Y$)</td>
+<td style="text-align: left;">Raw data + explicit algorithm</td>
+<td style="text-align: left;">Input features ($X$) + ground-truth labels ($Y$)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Generated Artifact</strong></td>
-<td style="text-align: left;">Program Execution Output</td>
-<td style="text-align: left;">Model Weights / Hypothesis $h_\theta(x)$</td>
+<td style="text-align: left;">Program execution output</td>
+<td style="text-align: left;">Model weights / hypothesis $h_\theta(x)$</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Logic Formulation</strong></td>
@@ -548,43 +548,41 @@
 <td style="text-align: left;">Inferred statistically via numerical optimization</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Edge Case Handling</strong></td>
+<td style="text-align: left;"><strong>Edge-Case Handling</strong></td>
 <td style="text-align: left;">Requires manual bug fixes and patch rules</td>
 <td style="text-align: left;">Improves automatically when retrained on new edge cases</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Ideal Problem Domain</strong></td>
-<td style="text-align: left;">Deterministic calculations (Taxes, Compilers, Banking)</td>
-<td style="text-align: left;">Fuzzy, high-dimensional patterns (Vision, Audio, NLP)</td>
+<td style="text-align: left;">Deterministic calculations (taxes, compilers, banking)</td>
+<td style="text-align: left;">Fuzzy, high-dimensional patterns (vision, audio, NLP)</td>
 </tr>
 </tbody>
 </table>
-<div class="callout callout-pitfall"><div class="callout-header">⚠️ Common Exam Trap: When NOT to use Machine Learning</div><div class="callout-body"><p>Never use Machine Learning when exact, deterministic business rules already exist! For example, calculating GST/VAT (e.g. $\text{Tax} = \text{Total} \times 0.18$) should <strong>always</strong> be traditional code.</p></div></div>
+<p><strong>The two pipelines, side by side</strong> — notice how "Rules" and "Output" swap positions between the two paradigms:</p>
+<pre><code class="language-mermaid">flowchart TB
+    subgraph Traditional[&quot;Traditional Programming&quot;]
+        direction LR
+        D1[Data] --&gt; R1[Rules / Code&lt;br/&gt;written by human]
+        R1 --&gt; O1[Output]
+    end
+    subgraph ML[&quot;Machine Learning&quot;]
+        direction LR
+        D2[Data] --&gt; LA[Learning Algorithm]
+        O2[Known Output / Labels] --&gt; LA
+        LA --&gt; R2[Rules&lt;br/&gt;the learned Model]
+    end
+</code></pre>
+<div class="callout callout-pitfall"><div class="callout-header">⚠️ Common Exam Trap: When NOT to Use Machine Learning</div><div class="callout-body"><p>Never use Machine Learning when exact, deterministic business rules already exist. For example, calculating GST/VAT (e.g. $\text{Tax} = \text{Total} \times 0.18$) should <strong>always</strong> be traditional code — introducing a statistical model adds uncertainty, latency, and maintenance cost to a problem that has a single, exact, legally-defined answer.</p></div></div>
 
 <hr />
-<p><a id="simulation"></a></p>
-<h2 id="3-visualizing-the-paradigm-shift">3. Visualizing the Paradigm Shift</h2>
-<div class="video-studio">
-  <div class="video-studio-header">
-    <span class="video-tag">🎬 60FPS MANIM SIMULATION &middot; Paradigm Shift Architecture</span>
-    <div class="video-speed-controls">
-      <button class="speed-btn" data-speed="0.75">0.75x</button>
-      <button class="speed-btn active" data-speed="1.0">1.0x</button>
-      <button class="speed-btn" data-speed="1.25">1.25x</button>
-      <button class="speed-btn" data-speed="1.5">1.5x</button>
-    </div>
-  </div>
-  <div class="video-frame-wrap">
-    <video controls preload="metadata">
-      <source src="../../assets/videos/m1_paradigms.mp4" type="video/mp4">
-      Your browser does not support embedded video.
-    </video>
-  </div>
-  <div class="video-studio-foot">
-    <p class="video-caption"><strong>Key Insight:</strong> Paradigm Shift Architecture</p>
-    <div class="video-observations"><strong>What to observe:</strong> Observe how 'Rules' and 'Output' swap places in the engineering pipeline.</div>
-  </div>
-</div>
+<p><a id="worked-example"></a></p>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A company wants to automatically decide whether to approve or reject loan applications. An engineer proposes two possible designs: Design A hardcodes 40 nested IF-ELSE rules based on income, credit score, and existing debt. Design B trains a classification model on 200,000 historical loan applications and their actual repayment outcomes. Decide which paradigm suits this problem, and why.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying the Comparison Framework</div><div class="step-content"><p>Loan default risk depends on a large number of interacting, non-obvious factors (income <em>combined with</em> debt-to-income ratio <em>combined with</em> regional economic conditions, etc.) — exactly the "fuzzy, high-dimensional pattern" row of the comparison table, not the "deterministic calculation" row. A hardcoded 40-rule system (Design A) would need constant manual patching every time a new edge case or fraud pattern emerges, and the engineer's 40 rules are almost certainly missing subtle statistical interactions a human wouldn't think to encode by hand.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Design B (the learned model) is the better fit: it lets the algorithm discover the statistical mapping $f: X \to Y$ from 200,000 real outcomes, automatically capturing interactions the human rule-writer would likely miss, and it can be improved simply by retraining on new data as repayment patterns shift — rather than requiring an engineer to rewrite rules by hand every time.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -603,7 +601,43 @@
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Banking interest formulas are exact legal equations. Using ML introduces statistical uncertainty, variance, and latency to a problem that requires 1 line of exact deterministic code.
+    <strong>Pedagogical Insight:</strong> Banking interest formulas are exact legal equations. Using ML introduces statistical uncertainty and variance to a problem that requires one line of exact, deterministic code — a clear case for the "Traditional Programming" side of the table.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Reversing the Pipeline</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Which statement correctly describes how Machine Learning "reverses" the traditional programming pipeline?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="true"><span>ML treats data and known outputs as inputs, and produces the rules (model) as output, whereas traditional programming treats data and rules as inputs and produces output</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>ML always runs faster than traditional programming for every task</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>ML requires no data whatsoever, unlike traditional programming</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Traditional programming and ML both require exactly the same inputs</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> In traditional programming: $\text{Data} + \text{Rules} \implies \text{Output}$. In Machine Learning, this is inverted: $\text{Data} + \text{Output} \implies \text{Rules}$ — the model itself is the "rules" the ML pipeline produces, rather than something a human writes in advance.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Edge-Case Handling</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">A traditional rule-based fraud detector keeps missing new fraud patterns as scammers change tactics. What is the core reason a Machine-Learning-based detector handles this better, according to the comparison framework?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Machine learning models never need to be updated once deployed</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A retrained ML model can automatically adapt its learned mapping when exposed to new labeled examples of the new fraud pattern, without an engineer manually writing a new rule</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Rule-based systems are always faster to update than ML systems</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>ML models eliminate the need for any historical data</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> The "Edge-Case Handling" row of the comparison table is precisely this distinction: traditional rule-based systems require a human to notice the new pattern and hand-write a patch rule, while an ML model can improve automatically simply by being retrained on data that now includes examples of the new pattern.
   </div>
 </div>
     </main>

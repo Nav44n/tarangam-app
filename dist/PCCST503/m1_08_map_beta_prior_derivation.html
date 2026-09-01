@@ -497,7 +497,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -509,27 +509,45 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="map-with-beta-priors-the-math-cold-start-problem">MAP with Beta Priors: The Math &amp; Cold-Start Problem</h1>
-<p><strong>Step-by-step derivation of conjugate Beta-Binomial MAP estimation.</strong></p>
+<h1 id="map-with-beta-priors-the-math-the-cold-start-problem">MAP with Beta Priors: The Math &amp; the Cold-Start Problem</h1>
+<p><strong>Step-by-step derivation of conjugate Beta-Binomial MAP estimation, resolving the extreme-estimate problem from the previous topic.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition-virtual-data-pseudo-counts">1. The Intuition: Virtual Data (Pseudo-Counts)</h2>
-<p>A <strong>Beta Distribution</strong> $\text{Beta}(\alpha, \beta)$ serves as the conjugate prior for Bernoulli trials. You can think of $\alpha - 1$ as "virtual prior heads" and $\beta - 1$ as "virtual prior tails".</p>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Virtual Data (Pseudo-Counts)</div><div class="callout-body"><p>A <strong>Beta Distribution</strong> $\text{Beta}(\alpha, \beta)$ is the natural choice of prior for a Bernoulli/Binomial parameter $p$, because it's a <strong>conjugate prior</strong> — combining it with Bernoulli data via Bayes' Theorem produces another Beta distribution as the posterior, keeping the math clean and closed-form.</p>
+<p>The most useful way to <em>think</em> about $\alpha$ and $\beta$: treat $\alpha - 1$ as "virtual prior heads" and $\beta - 1$ as "virtual prior tails" — imaginary observations baked into your prior belief before you ever collect real data. A strong prior belief that a coin is fair might be encoded as $\text{Beta}(50, 50)$ (lots of virtual balanced evidence); a weak, nearly-agnostic prior might be $\text{Beta}(2, 2)$ (barely any virtual evidence).</p></div></div>
+
 <hr />
 <p><a id="the-math"></a></p>
-<h2 id="2-mathematical-derivation">2. Mathematical Derivation</h2>
-<p>$$ P(p) \propto p^{\alpha - 1} (1-p)^{\beta - 1}, \quad L(p) \propto p^k (1-p)^{n-k} $$</p>
-<h3 id="step-1-posterior-formulation">Step 1: Posterior Formulation</h3>
-<p>$$ P(p \mid D) \propto p^{k + \alpha - 1} (1-p)^{n - k + \beta - 1} $$</p>
-<h3 id="step-2-mode-of-the-beta-posterior">Step 2: Mode of the Beta Posterior</h3>
-<p>Taking the log, differentiating with respect to $p$, and setting to 0 yields:</p>
-<p>$$ \hat{p}_{\text{MAP}} = \frac{k + \alpha - 1}{n + \alpha + \beta - 2} $$</p>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p><strong>Setup.</strong> The Beta prior density and the Bernoulli likelihood (for $k$ successes in $n$ trials):
+$$ P(p) \propto p^{\alpha - 1} (1-p)^{\beta - 1}, \qquad L(p) \propto p^k (1-p)^{n-k} $$</p>
+<p><strong>Step 1 — Posterior Formulation.</strong> By Bayes' Theorem, the posterior is proportional to prior $\times$ likelihood:
+$$ P(p \mid D) \propto p^{k + \alpha - 1} (1-p)^{n - k + \beta - 1} $$
+This is itself the kernel of another Beta distribution — $\text{Beta}(k+\alpha,\ n-k+\beta)$ — confirming conjugacy.</p>
+<p><strong>Step 2 — Mode of the Beta Posterior.</strong> Taking the log, differentiating with respect to $p$, and setting the result to zero (the same mechanical procedure as the MLE derivations earlier) yields the mode of this posterior Beta distribution:
+$$ \hat{p}_{\text{MAP}} = \frac{k + \alpha - 1}{n + \alpha + \beta - 2} $$</p>
+<p>Notice the "virtual counts" intuition made rigorous: the numerator adds $\alpha - 1$ virtual heads to the real $k$ heads, and the denominator adds $(\alpha - 1) + (\beta - 1)$ total virtual trials to the real $n$ trials.</p>
+<pre><code class="language-mermaid">flowchart LR
+    Pr[&quot;Prior: Beta(α, β)&lt;br/&gt;virtual counts (α-1) heads, (β-1) tails&quot;] --&gt; Post[&quot;Posterior ∝ p^(k+α-1)(1-p)^(n-k+β-1)&quot;]
+    D[&quot;Data: k heads in n trials&quot;] --&gt; Post
+    Post --&gt; Mode[&quot;Mode → p̂_MAP = (k+α-1) / (n+α+β-2)&quot;]
+</code></pre>
 <div class="callout callout-exam"><div class="callout-header">🎯 KTU Exam Focus: Concrete Example</div><div class="callout-body"><p>If you observe $k=3$ heads in $n=3$ tosses with a prior $\text{Beta}(5, 5)$:
-$$ \hat{p}_{\text{MAP}} = \frac{3 + 5 - 1}{3 + 5 + 5 - 2} = \frac{7}{11} \approx 0.636 $$
-Instead of an extreme $1.00$, MAP regularizes the estimate to a sensible $0.636$!</p></div></div>
+$$ \hat{p}<em _text_MLE="\text{MLE">{\text{MAP}} = \frac{3 + 5 - 1}{3 + 5 + 5 - 2} = \frac{7}{11} \approx 0.636 $$
+Instead of the extreme $\hat{p}</em> = 1.00$ from before, MAP regularizes the estimate down to a far more sensible $0.636$ — exactly the "cold-start" fix promised in the previous topic.}</p></div></div>
+
+<hr />
+<p><a id="worked-example"></a></p>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Revisit the e-commerce cold-start scenario: a new product gets $k=3$ five-star ratings out of $n=3$ total ratings. The platform's historical prior belief about positive-rating rates is modeled as $\text{Beta}(\alpha=7, \beta=3)$ (reflecting that products, on average, skew positive but rarely perfect). Compute $\hat{p}_{\text{MAP}}$.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying the MAP Formula</div><div class="step-content"><p>$$ \hat{p}_{\text{MAP}} = \frac{k + \alpha - 1}{n + \alpha + \beta - 2} = \frac{3 + 7 - 1}{3 + 7 + 3 - 2} = \frac{9}{11} \approx 0.818 $$</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The MAP estimate is $\hat{p}_{\text{MAP}} \approx 0.818$ (81.8%) — pulled down from the raw MLE estimate of $1.00$, but still fairly high, because the chosen prior $\text{Beta}(7,3)$ itself already reflects a belief that products tend to skew positive (its own implied mean is $\frac{\alpha}{\alpha+\beta} = 0.7$). As more real ratings arrive, per the asymptotic convergence property from the previous topic, this estimate will increasingly reflect the actual observed data rather than the prior.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
-<h2 id="3-active-recall-checkpoint">3. Active Recall Checkpoint</h2>
+<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Prior Parameters</span>
@@ -538,13 +556,49 @@ Instead of an extreme $1.00$, MAP regularizes the estimate to a sensible $0.636$
   <div class="quiz-prompt">If $\alpha = 1$ and $\beta = 1$ in a Beta prior (representing a flat uniform prior $U(0, 1)$), what does $\hat{p}_{\text{MAP}}$ equal?</div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>0.50</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>$\frac{k}{n}$ (Identical to MLE)</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$\frac{k}{n}$ (identical to MLE)</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>0.00</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>1.00</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Substituting $\alpha=1, \beta=1$ yields $\hat{p}_{\text{MAP}} = \frac{k+0}{n+0} = \frac{k}{n}$, proving that MLE is equivalent to MAP with a uniform, uninformative prior.
+    <strong>Pedagogical Insight:</strong> Substituting $\alpha=1, \beta=1$ yields $\hat{p}_{\text{MAP}} = \frac{k+0}{n+0} = \frac{k}{n}$, proving that MLE is a special case of MAP with a uniform, fully uninformative prior — consistent with the general "MAP collapses to MLE when the prior is flat" principle.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Virtual Counts Interpretation</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">A prior $\text{Beta}(\alpha=21, \beta=11)$ is used. How many "virtual prior heads" and "virtual prior tails" does this represent?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="true"><span>20 virtual heads and 10 virtual tails</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>21 virtual heads and 11 virtual tails</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>1 virtual head and 1 virtual tail</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>31 virtual total trials, split evenly</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Per the "virtual pseudo-count" interpretation, virtual heads $= \alpha - 1 = 20$ and virtual tails $= \beta - 1 = 10$; these get directly added to the real observed counts $k$ and $(n-k)$ in the MAP formula's numerator and denominator.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Effect of a Stronger Prior</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Two analysts use different priors for the same data ($k=3$ heads, $n=3$ trials): Analyst A uses $\text{Beta}(2,2)$ (weak prior), Analyst B uses $\text{Beta}(50,50)$ (very strong prior favoring fairness). Whose $\hat{p}_{\text{MAP}}$ will land closer to $0.5$?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Analyst A, because a weak prior always dominates</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Analyst B, because a much larger $\alpha+\beta$ contributes far more "virtual trials" relative to the tiny real sample of $n=3$, pulling the estimate strongly toward the prior's own mean of 0.5</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Both will produce identical results regardless of prior strength</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Neither prior has any effect on a MAP estimate</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> The denominator $n + \alpha + \beta - 2$ shows that a large $\alpha+\beta$ (Analyst B's $100$) heavily outweighs a small real sample ($n=3$), so the posterior mode sits very close to the prior's own mode near $0.5$. Analyst A's much smaller $\alpha+\beta=4$ lets the real data pull the estimate further toward the raw MLE value of $1.00$.
   </div>
 </div>
     </main>

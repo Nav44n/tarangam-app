@@ -497,7 +497,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -512,43 +512,65 @@
 <h1 id="gradient-descent-optimization-learning-rate-dynamics">Gradient Descent Optimization &amp; Learning Rate Dynamics</h1>
 <p><strong>The iterative calculus engine powering linear models, support vector machines, and deep neural networks.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition-walking-down-a-foggy-mountain">1. The Intuition: Walking Down a Foggy Mountain</h2>
-<p>You are blindfolded on a foggy mountain and must reach the valley floor. You feel the slope with your feet ($\nabla J(\theta)$) and take a step in the steepest downward direction.</p>
-<hr />
-<p><a id="the-math"></a></p>
-<h2 id="2-the-parameter-update-rule">2. The Parameter Update Rule</h2>
-<p>Simultaneously update all parameters for $j = 0, \dots, d$:</p>
-<p>$$ \theta_j := \theta_j - \alpha \frac{\partial J(\theta)}{\partial \theta_j} $$</p>
-<p>Where $\alpha &gt; 0$ is the <strong>Learning Rate</strong>.</p>
-<div class="callout callout-pitfall"><div class="callout-header">⚠️ Common Exam Trap: Learning Rate Dynamics</div><div class="callout-body"><ul>
-<li><strong>$\alpha$ too small:</strong> Extremely slow convergence; high computational cost.</li>
-<li><strong>$\alpha$ too large:</strong> Overshoots the minimum, oscillates wildly, and diverges to infinity.</li>
-</ul></div></div>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Walking Down a Foggy Mountain</div><div class="callout-body"><p>You are blindfolded on a foggy mountain and must reach the valley floor (the minimum of the cost function $J(\theta)$). You can't see the whole landscape, but you can feel the slope right under your feet with each step — the <strong>gradient</strong> $\nabla J(\theta)$. The obvious strategy: feel which direction is steepest <em>downhill</em>, take a step that way, then repeat. Take too tiny a step and you'll be on that mountain forever; take too huge a step and you might overshoot the valley entirely and end up further away than when you started.</p>
+<p>That is exactly Gradient Descent: an iterative algorithm that repeatedly nudges parameters $\theta$ in the direction that decreases the cost function the fastest, one small step at a time.</p></div></div>
 
 <hr />
-<p><a id="simulation"></a></p>
-<h2 id="3-visualizing-optimization">3. Visualizing Optimization</h2>
-<div class="video-studio">
-  <div class="video-studio-header">
-    <span class="video-tag">🎬 60FPS MANIM SIMULATION &middot; Gradient Descent Surface</span>
-    <div class="video-speed-controls">
-      <button class="speed-btn" data-speed="0.75">0.75x</button>
-      <button class="speed-btn active" data-speed="1.0">1.0x</button>
-      <button class="speed-btn" data-speed="1.25">1.25x</button>
-      <button class="speed-btn" data-speed="1.5">1.5x</button>
-    </div>
-  </div>
-  <div class="video-frame-wrap">
-    <video controls preload="metadata">
-      <source src="../../assets/videos/m2_gradient_descent.mp4" type="video/mp4">
-      Your browser does not support embedded video.
-    </video>
-  </div>
-  <div class="video-studio-foot">
-    <p class="video-caption"><strong>Key Insight:</strong> Gradient Descent Surface</p>
-    <div class="video-observations"><strong>What to observe:</strong> Watch parameter updates step down the parabolic cost bowl toward the global minimum.</div>
-  </div>
-</div>
+<p><a id="the-math"></a></p>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p><strong>The parameter update rule.</strong> Simultaneously update all parameters for $j = 0, \dots, d$:
+$$ \theta_j := \theta_j - \alpha \frac{\partial J(\theta)}{\partial \theta_j} $$
+where $\alpha &gt; 0$ is the <strong>learning rate</strong> — the size of each downhill step.</p>
+<div class="callout callout-pitfall"><div class="callout-header">⚠️ Common Exam Trap: Learning Rate Dynamics</div><div class="callout-body"><ul>
+<li><strong>$\alpha$ too small:</strong> Extremely slow convergence; correct direction, but wastes enormous computational cost getting there.</li>
+<li><strong>$\alpha$ too large:</strong> Overshoots the minimum, oscillates wildly, and can diverge to infinity instead of converging at all.</li>
+</ul></div></div>
+
+<p><strong>The iterative loop, visualized:</strong></p>
+<pre><code class="language-mermaid">flowchart TD
+    Init[&quot;Initialize θ&lt;br/&gt;(e.g. randomly, or at 0)&quot;] --&gt; Grad[&quot;Compute gradient&lt;br/&gt;∇J(θ)&quot;]
+    Grad --&gt; Update[&quot;Update: θ := θ − α∇J(θ)&quot;]
+    Update --&gt; Check{&quot;Converged?&lt;br/&gt;(gradient ≈ 0, or&lt;br/&gt;max iterations reached)&quot;}
+    Check --&gt;|No| Grad
+    Check --&gt;|Yes| Done[&quot;θ* — final learned parameters&quot;]
+</code></pre>
+<p><strong>Variants by how much data each update uses:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Variant</th>
+<th style="text-align: left;">Data used per update</th>
+<th style="text-align: left;">Trade-off</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Batch Gradient Descent</strong></td>
+<td style="text-align: left;">Entire dataset</td>
+<td style="text-align: left;">Stable, accurate gradient; slow per step on large datasets</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Stochastic Gradient Descent (SGD)</strong></td>
+<td style="text-align: left;">1 random example</td>
+<td style="text-align: left;">Fast, noisy updates; can escape shallow local minima</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Mini-Batch Gradient Descent</strong></td>
+<td style="text-align: left;">Small batch (e.g. 32–256)</td>
+<td style="text-align: left;">The practical middle ground used by most real systems</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><a id="worked-example"></a></p>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A 1-parameter cost function is $J(\theta) = (\theta - 4)^2$, so $\frac{dJ}{d\theta} = 2(\theta - 4)$. Starting at $\theta_0 = 0$ with learning rate $\alpha = 0.1$, compute $\theta$ after 2 gradient descent update steps.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying the Update Rule Twice</div><div class="step-content"><p><strong>Step 1:</strong> $\frac{dJ}{d\theta}\Big|<em _theta="0.8">{\theta=0} = 2(0-4) = -8$. Update: $\theta_1 = 0 - 0.1 \times (-8) = 0 + 0.8 = 0.8$.
+<strong>Step 2:</strong> $\frac{dJ}{d\theta}\Big|</em> = 2(0.8-4) = -6.4$. Update: $\theta_2 = 0.8 - 0.1 \times (-6.4) = 0.8 + 0.64 = 1.44$.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>After two update steps, $\theta$ has moved from $0 \to 0.8 \to 1.44$, steadily climbing toward the true minimum at $\theta=4$ (where the derivative is exactly zero). Notice each step is getting smaller as $\theta$ approaches 4 (the step sizes were $0.8$, then $0.64$) — this is expected, since the gradient magnitude itself shrinks as you near the minimum, naturally slowing the descent as it converges.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -567,7 +589,43 @@
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> At the minimum of a smooth convex function, the tangent slope is completely flat, meaning $\nabla J(\theta) = 0$.
+    <strong>Pedagogical Insight:</strong> At the minimum of a smooth convex function, the tangent slope is completely flat, meaning $\nabla J(\theta) = 0$ — this is precisely the "Converged?" check in the update loop above.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Diagnosing Divergence</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">During training, an engineer observes the cost function $J(\theta)$ *increasing* wildly across successive iterations instead of decreasing. What is the most likely cause, and what's the fix?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>The dataset has too many training examples</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The learning rate $\alpha$ is too large, causing the update to overshoot the minimum repeatedly; the fix is to reduce $\alpha$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The gradient was computed incorrectly and should always be discarded</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The cost function itself is broken and needs to be replaced entirely</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> An oscillating or exploding cost curve is the textbook symptom of too large a learning rate — each step overshoots the minimum by an increasing margin. Reducing $\alpha$ (or switching to an adaptive-learning-rate optimizer) is the standard remedy.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Batch vs Stochastic Trade-off</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What is the primary practical trade-off between Batch Gradient Descent and Stochastic Gradient Descent (SGD)?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="true"><span>Batch GD computes a stable, accurate gradient using the full dataset but is slow per update on large datasets; SGD updates quickly using single examples but with noisier, less stable gradient estimates</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>SGD always converges to a worse final solution than Batch GD in every case</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Batch GD cannot be used for convex cost functions</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>There is no meaningful difference between the two variants</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Batch GD's gradient, averaged over the whole dataset, points in a very reliable direction each step but requires a full pass over potentially millions of examples per update. SGD trades that stability for speed by updating on just one example at a time, introducing noise that can sometimes even help escape shallow local minima, at the cost of a "jumpier" convergence path.
   </div>
 </div>
     </main>

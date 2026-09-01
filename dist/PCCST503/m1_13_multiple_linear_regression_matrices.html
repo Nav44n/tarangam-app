@@ -497,7 +497,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -510,48 +510,48 @@
   </div>
 </div>
 <h1 id="multiple-linear-regression-matrix-design-formulation">Multiple Linear Regression: Matrix Design Formulation</h1>
-<p><strong>Extending linear models to multidimensional hyperplanes using vectorized matrix equations.</strong></p>
-<p><a id="the-math"></a></p>
-<h2 id="1-matrix-vectorization">1. Matrix Vectorization</h2>
-<p>For $m$ samples and $d$ features:</p>
-<p>$$ X = \begin{bmatrix} 1 &amp; x_1^{(1)} &amp; \dots &amp; x_d^{(1)} \ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \ 1 &amp; x_1^{(m)} &amp; \dots &amp; x_d^{(m)} \end{bmatrix} \in \mathbb{R}^{m \times (d+1)}, \quad Y = \begin{bmatrix} y^{(1)} \ \vdots \ y^{(m)} \end{bmatrix} \in \mathbb{R}^m, \quad \theta = \begin{bmatrix} \theta_0 \ \vdots \ \theta_d \end{bmatrix} \in \mathbb{R}^{d+1} $$</p>
-<h3 id="vectorized-prediction-cost-function">Vectorized Prediction &amp; Cost Function:</h3>
-<p>$$ \hat{Y} = X\theta $$
-$$ J(\theta) = \frac{1}{2m} (X\theta - Y)^T (X\theta - Y) $$</p>
+<p><strong>Extending linear models from a single feature to multidimensional hyperplanes, using vectorized matrix equations.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: From a Line to a Hyperplane</div><div class="callout-body"><p>Simple linear regression (previous topic) fits a straight line through 2D data using one feature $x$. Real-world problems rarely have just one predictive feature — a house's price depends on square footage, number of bedrooms, location score, age, and more, simultaneously. With $d$ features, the "line of best fit" generalizes into a <strong>hyperplane</strong> slicing through $(d+1)$-dimensional space, and writing out $\theta_0 + \theta_1 x_1 + \theta_2 x_2 + \dots + \theta_d x_d$ by hand for every one of $m$ training examples gets unwieldy fast.</p>
+<p>The fix is to stop writing individual equations altogether and instead express the <em>entire</em> dataset and model as matrices — turning $m \times d$ scalar equations into a handful of clean matrix operations that both humans and computers (via optimized linear-algebra libraries) can handle efficiently.</p></div></div>
+
 <hr />
-<p><a id="simulation"></a></p>
-<h2 id="2-visualizing-multi-variable-regression">2. Visualizing Multi-Variable Regression</h2>
-<div class="video-studio">
-  <div class="video-studio-header">
-    <span class="video-tag">🎬 60FPS MANIM SIMULATION &middot; 3D Hyperplane Fitting</span>
-    <div class="video-speed-controls">
-      <button class="speed-btn" data-speed="0.75">0.75x</button>
-      <button class="speed-btn active" data-speed="1.0">1.0x</button>
-      <button class="speed-btn" data-speed="1.25">1.25x</button>
-      <button class="speed-btn" data-speed="1.5">1.5x</button>
-    </div>
-  </div>
-  <div class="video-frame-wrap">
-    <video controls preload="metadata">
-      <source src="../../assets/videos/m1_08_multiple_regression.mp4" type="video/mp4">
-      Your browser does not support embedded video.
-    </video>
-  </div>
-  <div class="video-studio-foot">
-    <p class="video-caption"><strong>Key Insight:</strong> 3D Hyperplane Fitting</p>
-    <div class="video-observations"><strong>What to observe:</strong> Watch a 2D plane adjust pitch and roll in 3D feature space to fit data point clusters.</div>
-  </div>
-</div>
+<p><a id="the-math"></a></p>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p><strong>Matrix vectorization.</strong> For $m$ samples and $d$ features, define the <strong>design matrix</strong> $X$ (with a column of 1s prepended for the bias/intercept term), target vector $Y$, and parameter vector $\theta$:</p>
+<p>$$ X = \begin{bmatrix} 1 &amp; x_1^{(1)} &amp; \dots &amp; x_d^{(1)} \ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \ 1 &amp; x_1^{(m)} &amp; \dots &amp; x_d^{(m)} \end{bmatrix} \in \mathbb{R}^{m \times (d+1)}, \quad Y = \begin{bmatrix} y^{(1)} \ \vdots \ y^{(m)} \end{bmatrix} \in \mathbb{R}^m, \quad \theta = \begin{bmatrix} \theta_0 \ \vdots \ \theta_d \end{bmatrix} \in \mathbb{R}^{d+1} $$</p>
+<p><strong>Vectorized prediction &amp; cost function</strong> — one matrix equation replaces $m$ separate scalar equations:
+$$ \hat{Y} = X\theta $$
+$$ J(\theta) = \frac{1}{2m} (X\theta - Y)^T (X\theta - Y) $$</p>
+<pre><code class="language-mermaid">flowchart LR
+    Raw[&quot;Raw dataset:&lt;br/&gt;m rows × d features&quot;] --&gt; Aug[&quot;Prepend column of 1s&lt;br/&gt;(bias term)&quot;]
+    Aug --&gt; X[&quot;Design Matrix X&lt;br/&gt;(m × (d+1))&quot;]
+    X --&gt; Pred[&quot;Ŷ = Xθ&lt;br/&gt;(vectorized prediction)&quot;]
+    Pred --&gt; Cost[&quot;J(θ) = (1/2m)(Xθ−Y)ᵀ(Xθ−Y)&quot;]
+</code></pre>
+<div class="callout callout-formula"><div class="callout-header">📐 KTU Formula Vault: Why Vectorize?</div><div class="callout-body"><p>Besides notational cleanliness, vectorized operations map directly onto highly optimized linear-algebra routines (BLAS/LAPACK, GPU matrix multiplication) — computing $X\theta$ as one matrix-vector product is dramatically faster in practice than looping over $m$ examples one at a time in code.</p></div></div>
+
+<hr />
+<p><a id="worked-example"></a></p>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A dataset has $m=3$ houses, each described by $d=2$ features (size in 100s of sq ft, number of bedrooms): House 1: $(size=15, beds=3)$; House 2: $(size=12, beds=2)$; House 3: $(size=20, beds=4)$. Construct the design matrix $X$ and state its exact dimensions.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Building the Design Matrix</div><div class="step-content"><p>Prepend a column of 1s for the bias term $\theta_0$, then add each feature as its own column:
+$$ X = \begin{bmatrix} 1 &amp; 15 &amp; 3 \ 1 &amp; 12 &amp; 2 \ 1 &amp; 20 &amp; 4 \end{bmatrix} $$
+This matrix has $m=3$ rows (one per house) and $d+1 = 3$ columns (bias + 2 features).</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$X \in \mathbb{R}^{3 \times 3}$ in this specific case (since $d+1$ happened to equal $m$ here, purely coincidentally). Predictions for all 3 houses at once are then given by the single matrix-vector product $\hat{Y} = X\theta$ — for example, with some fitted $\theta = [\theta_0, \theta_1, \theta_2]^T$, House 1's predicted price is exactly $\theta_0 + 15\theta_1 + 3\theta_2$, computed automatically as the first entry of $X\theta$.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
-<h2 id="3-active-recall-checkpoint">3. Active Recall Checkpoint</h2>
+<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Design Matrix Dimensions</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">If you have 500 training examples with 8 input features, what are the exact matrix dimensions of the Design Matrix $X$ including the bias intercept column?</div>
+  <div class="quiz-prompt">If you have 500 training examples with 8 input features, what are the exact matrix dimensions of the Design Matrix $X$, including the bias intercept column?</div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>$500 \times 8$</span></button>
 <button class="quiz-option-btn" data-correct="true"><span>$500 \times 9$</span></button>
@@ -561,6 +561,42 @@ $$ J(\theta) = \frac{1}{2m} (X\theta - Y)^T (X\theta - Y) $$</p>
   </div>
   <div class="quiz-explanation">
     <strong>Pedagogical Insight:</strong> Adding the initial column of $1$s for bias $\theta_0$ makes the dimensions $m \times (d+1) = 500 \times (8+1) = 500 \times 9$.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Purpose of the Bias Column</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Why does the Design Matrix $X$ include a prepended column of all 1s, rather than just the raw $d$ feature columns?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="true"><span>It lets the intercept term $\theta_0$ be handled by the same uniform matrix multiplication $X\theta$, instead of needing a separate additive term in the equation</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It normalizes all features to the same scale</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It is only needed when $d = 1$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It converts the regression problem into a classification problem</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Without the 1s column, the model would need to be written as $\hat y = \theta_0 + X'\theta_{1:d}$ with $\theta_0$ handled separately. By prepending a column of constant 1s to $X$, the single clean matrix product $X\theta$ automatically reproduces $\theta_0 \times 1 + \theta_1 x_1 + \dots$, unifying the bias term into the same vectorized operation.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Vectorized Cost Function</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">In $J(\theta) = \frac{1}{2m}(X\theta - Y)^T(X\theta - Y)$, what scalar-equation quantity does $(X\theta - Y)$ represent?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="true"><span>The vector of residuals (prediction minus actual) for every one of the $m$ training examples, all at once</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The final scalar cost value $J(\theta)$ itself</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The gradient of the cost function</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The learning rate used in optimization</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> $X\theta$ produces the vector of all $m$ predictions $\hat Y$; subtracting $Y$ gives the vector of $m$ residuals $(\hat y^{(i)} - y^{(i)})$. The subsequent transpose-multiply, $(\cdot)^T(\cdot)$, sums the squares of all those residuals in one operation — exactly matching the scalar sum-of-squared-errors form of MSE from the simple linear regression topic, just written compactly.
   </div>
 </div>
     </main>

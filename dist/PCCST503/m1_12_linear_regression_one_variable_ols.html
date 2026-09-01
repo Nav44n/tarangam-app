@@ -497,7 +497,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -510,26 +510,45 @@
   </div>
 </div>
 <h1 id="simple-linear-regression-analytical-ordinary-least-squares">Simple Linear Regression: Analytical Ordinary Least Squares</h1>
-<p><strong>Deriving the closed-form line of best fit using single-variable calculus.</strong></p>
+<p><strong>Deriving the closed-form line of best fit using single-variable calculus — no iteration required.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Drawing the "Best" Line Through a Scatterplot</div><div class="callout-body"><p>If you plot points on a scatter graph and are asked to draw the single straight line that best represents the trend, your eye is intuitively trying to minimize how far the line sits from every point, on average. Ordinary Least Squares (OLS) formalizes that intuition mathematically: it finds the exact line $h_\theta(x) = \theta_0 + \theta_1 x$ that minimizes the <em>sum of squared vertical distances</em> between the line and each data point — and unlike Gradient Descent's iterative foghill-walking (previous topic), this particular problem has a clean, one-shot <strong>closed-form</strong> algebraic solution, because the MSE cost surface for a straight line is a simple, perfectly smooth bowl.</p></div></div>
+
+<hr />
 <p><a id="the-math"></a></p>
-<h2 id="1-mathematical-formulation">1. Mathematical Formulation</h2>
-<p>$$ h_\theta(x) = \theta_0 + \theta_1 x $$</p>
-<p>Minimizing MSE cost $J(\theta_0, \theta_1) = \frac{1}{2m}\sum ((\theta_0 + \theta_1 x^{(i)}) - y^{(i)})^2$ yields the closed-form solutions:</p>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p><strong>Model:</strong> $ h_\theta(x) = \theta_0 + \theta_1 x $</p>
+<p>Minimizing the MSE cost $J(\theta_0, \theta_1) = \frac{1}{2m}\sum_{i=1}^m \left((\theta_0 + \theta_1 x^{(i)}) - y^{(i)}\right)^2$ — by taking partial derivatives with respect to $\theta_0$ and $\theta_1$ and setting both to zero, exactly as in the MLE derivations earlier in this module — yields these closed-form solutions:</p>
 <p>$$ \theta_1 = \frac{\sum_{i=1}^m (x^{(i)} - \bar{x})(y^{(i)} - \bar{y})}{\sum_{i=1}^m (x^{(i)} - \bar{x})^2} = \frac{\text{Cov}(x, y)}{\text{Var}(x)} $$</p>
 <p>$$ \theta_0 = \bar{y} - \theta_1 \bar{x} $$</p>
+<pre><code class="language-mermaid">flowchart LR
+    Data[&quot;Data points&lt;br/&gt;(x⁽ⁱ⁾, y⁽ⁱ⁾)&quot;] --&gt; Means[&quot;Compute x̄, ȳ&quot;]
+    Means --&gt; CovVar[&quot;Compute Cov(x,y) and Var(x)&quot;]
+    CovVar --&gt; Slope[&quot;θ₁ = Cov(x,y) / Var(x)&quot;]
+    Slope --&gt; Intercept[&quot;θ₀ = ȳ − θ₁x̄&quot;]
+    Intercept --&gt; Line[&quot;Fitted line ŷ = θ₀ + θ₁x&quot;]
+</code></pre>
+<p>The slope $\theta_1$ has a clean interpretation: it's the ratio of how $x$ and $y$ co-vary to how much $x$ alone varies — essentially "how many units does $y$ move, on average, for every 1-unit move in $x$."</p>
 <hr />
 <p><a id="worked-example"></a></p>
-<h2 id="2-stepped-numerical-example">2. Stepped Numerical Example</h2>
-<p>Given 3 points: $(1, 2), (2, 4), (3, 5)$.
-1. $\bar{x} = 2.0, \bar{y} = 3.667$.
-2. $\text{Cov}(x, y) = (-1)(-1.667) + (0)(0.333) + (1)(1.333) = 1.667 + 1.333 = 3.0$.
-3. $\text{Var}(x) = (-1)^2 + 0^2 + 1^2 = 2.0$.
-4. $\theta_1 = \frac{3.0}{2.0} = 1.50$.
-5. $\theta_0 = 3.667 - (1.50 \times 2.0) = 0.667$.
-<strong>Final Line:</strong> $\hat{y} = 0.667 + 1.50x$.</p>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Given 3 data points: $(1, 2), (2, 4), (3, 5)$. Fit the OLS regression line $\hat{y} = \theta_0 + \theta_1 x$.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying the Closed-Form Formulas</div><div class="step-content"><ol>
+<li>Means: $\bar{x} = 2.0,\ \bar{y} = 3.667$.</li>
+<li>Deviations and their products: $(x-\bar x, y-\bar y)$ pairs are $(-1, -1.667), (0, 0.333), (1, 1.333)$.
+   $\text{Cov}(x,y)$ numerator sum $= (-1)(-1.667) + (0)(0.333) + (1)(1.333) = 1.667 + 0 + 1.333 = 3.0$.</li>
+<li>$\text{Var}(x)$ numerator sum $= (-1)^2 + 0^2 + 1^2 = 1 + 0 + 1 = 2.0$.</li>
+<li>$\theta_1 = \frac{3.0}{2.0} = 1.50$.</li>
+<li>$\theta_0 = 3.667 - (1.50 \times 2.0) = 3.667 - 3.0 = 0.667$.</li>
+</ol></div></div>
+
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p><strong>Final Line:</strong> $\hat{y} = 0.667 + 1.50x$. This line predicts, for instance, $\hat{y}(4) = 0.667 + 1.50(4) = 6.667$ for a new point at $x=4$ — and by construction, it is the <em>unique</em> straight line that minimizes total squared vertical error across the 3 given points; no other slope-intercept pair produces a lower MSE on this data.</p></div></div>
+
 <hr />
 <p><a id="self-check"></a></p>
-<h2 id="3-active-recall-checkpoint">3. Active Recall Checkpoint</h2>
+<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Slope Interpretation</span>
@@ -544,7 +563,43 @@
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> The slope $\theta_1 = 3.2$ is the rate of change: for every $+1$ unit added to $x$, the predicted $\hat{y}$ increases by $3.2$ units.
+    <strong>Pedagogical Insight:</strong> The slope $\theta_1 = 3.2$ is the rate of change: for every $+1$ unit added to $x$, the predicted $\hat{y}$ increases by $3.2$ units. The value $10$ (the intercept $\theta_0$) is what answers "predicted $y$ when $x=0$," not the slope.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Closed-Form vs Iterative</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Why does simple linear regression admit a direct closed-form solution for $\theta_0, \theta_1$, rather than requiring an iterative method like Gradient Descent?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="true"><span>The MSE cost function for a straight line is a smooth, convex quadratic bowl, so setting its derivatives to zero and solving algebraically gives the exact minimum directly, without needing repeated stepwise updates</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Linear regression cannot actually be solved with Gradient Descent at all</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Closed-form solutions only exist for classification problems, never regression</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The formulas for $\theta_0$ and $\theta_1$ were chosen arbitrarily, with no connection to minimizing MSE</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Because $J(\theta_0,\theta_1)$ is quadratic in both parameters, its partial derivatives are linear, so setting them to zero yields a simple linear system with an exact algebraic solution — no need for the iterative, step-by-step approach that more complex, non-linear cost functions typically require.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Zero Correlation Case</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">If $\text{Cov}(x, y) = 0$ for a dataset (x and y are completely uncorrelated), what does OLS predict for $\theta_1$, and what does the resulting fitted line look like?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="true"><span>$\theta_1 = 0$, so the fitted line is a flat horizontal line at $\hat{y} = \bar{y}$, regardless of $x$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$\theta_1$ is undefined and OLS cannot be computed</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$\theta_1 = 1$, producing a perfect diagonal line</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$\theta_0$ becomes negative infinity</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> With $\text{Cov}(x,y)=0$, the slope formula gives $\theta_1 = 0/\text{Var}(x) = 0$, and then $\theta_0 = \bar y - 0\times\bar x = \bar y$. The "best fit line" degenerates to a flat line at the mean of $y$ — correctly reflecting that $x$ carries no linear predictive information about $y$ in this case.
   </div>
 </div>
     </main>

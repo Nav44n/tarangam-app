@@ -497,7 +497,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -510,25 +510,45 @@
   </div>
 </div>
 <h1 id="maximum-a-posteriori-map-bayesian-parameter-estimation">Maximum A Posteriori (MAP): Bayesian Parameter Estimation</h1>
-<p><strong>Overcoming the small-data overfitting flaw of MLE by incorporating prior knowledge.</strong></p>
+<p><strong>Overcoming MLE's small-data overfitting flaw by incorporating prior knowledge via Bayes' Theorem.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition-why-mle-fails-on-3-coin-flips">1. The Intuition: Why MLE Fails on 3 Coin Flips</h2>
-<p>If you flip a normal coin 3 times and get 3 Heads, pure MLE asserts $\hat{p} = 1.00$. This is absurd because you have a lifetime of prior experience knowing coins are fair.</p>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Bayes' Theorem Framework</div><div class="callout-body"><p>$$ P(\theta \mid D) = \frac{P(D \mid \theta) P(\theta)}{P(D)} $$
-- <strong>Posterior:</strong> $P(\theta \mid D)$ (Our belief about $\theta$ after seeing data $D$).
-- <strong>Likelihood:</strong> $P(D \mid \theta)$ (The MLE objective).
-- <strong>Prior:</strong> $P(\theta)$ (Our background knowledge before seeing data).</p></div></div>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Why MLE Fails on 3 Coin Flips</div><div class="callout-body"><p>If you flip a normal coin 3 times and happen to get 3 Heads, pure MLE (from the previous two topics) asserts $\hat{p} = 1.00$ — "this coin <em>always</em> lands heads." This is absurd, because you walk into the experiment with a lifetime of prior experience telling you coins are almost always close to fair. MLE has no way to incorporate that prior belief — it only ever looks at the data in front of it, no matter how small the sample.</p>
+<p>MAP fixes this by combining the evidence (likelihood) with prior knowledge, using <strong>Bayes' Theorem</strong>:
+$$ P(\theta \mid D) = \frac{P(D \mid \theta)\, P(\theta)}{P(D)} $$
+- <strong>Posterior</strong> $P(\theta \mid D)$: our updated belief about $\theta$ <em>after</em> seeing data $D$.
+- <strong>Likelihood</strong> $P(D \mid \theta)$: the MLE objective from before — how probable the data is, given $\theta$.
+- <strong>Prior</strong> $P(\theta)$: our background knowledge about $\theta$ <em>before</em> seeing any data.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
-<h2 id="2-the-map-objective">2. The MAP Objective</h2>
-<p>$$ \hat{\theta}<em>{\text{MAP}} = \arg\max</em>\theta P(\theta \mid D) = \arg\max_\theta \left[ \ln P(D \mid \theta) + \ln P(\theta) \right] $$</p>
-<div class="callout callout-formula"><div class="callout-header">📐 KTU Formula Vault: Asymptotic Convergence</div><div class="callout-body"><p>As dataset size $N \to \infty$, the likelihood $\ln P(D|\theta)$ grows linearly with $N$ and completely overwhelms the fixed prior $\ln P(\theta)$. Thus:
-$$ \lim_{N \to \infty} \hat{\theta}<em _text_MLE="\text{MLE">{\text{MAP}} = \hat{\theta}</em> $$}</p></div></div>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p><strong>The MAP objective.</strong> Since $P(D)$ doesn't depend on $\theta$, maximizing the posterior is equivalent to maximizing the numerator; taking logs turns the product into a sum, exactly as with MLE:
+$$ \hat{\theta}<em>{\text{MAP}} = \arg\max</em>\theta P(\theta \mid D) = \arg\max_\theta \left[ \ln P(D \mid \theta) + \ln P(\theta) \right] $$</p>
+<p>Notice this is literally <strong>"MLE's objective, plus a regularizing term for the prior."</strong> When the prior is completely flat/uninformative, $\ln P(\theta)$ contributes nothing, and MAP collapses exactly to MLE.</p>
+<pre><code class="language-mermaid">flowchart LR
+    L[&quot;Likelihood P(D|θ)&lt;br/&gt;(the evidence)&quot;] --&gt; S[&quot;+&quot;]
+    Pr[&quot;Prior P(θ)&lt;br/&gt;(background belief)&quot;] --&gt; S
+    S --&gt; Post[&quot;log-Posterior&lt;br/&gt;ln P(D|θ) + ln P(θ)&quot;]
+    Post --&gt; M[&quot;argmax over θ&quot;]
+    M --&gt; Out[&quot;θ̂_MAP&quot;]
+</code></pre>
+<div class="callout callout-formula"><div class="callout-header">📐 KTU Formula Vault: Asymptotic Convergence</div><div class="callout-body"><p>As dataset size $N \to \infty$, the likelihood term $\ln P(D\mid\theta)$ grows linearly with $N$ and eventually completely overwhelms the fixed-size prior term $\ln P(\theta)$. Thus:
+$$ \lim_{N \to \infty} \hat{\theta}<em _text_MLE="\text{MLE">{\text{MAP}} = \hat{\theta}</em> $$
+In other words: }<strong>priors matter most when data is scarce, and matter less and less as data accumulates</strong> — which is exactly the sensible behavior a Bayesian estimator should have.</p></div></div>
+
+<hr />
+<p><a id="worked-example"></a></p>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A brand-new e-commerce product receives its first $n=3$ customer ratings, and all 3 happen to be 5-star ("positive"). Pure MLE would estimate $\hat{p}_{\text{MLE}} = 3/3 = 1.00$ (100% chance of a positive rating). Explain, conceptually, why a MAP estimate — incorporating a prior belief that most products get a mix of positive and negative reviews — would instead pull this estimate down toward something more moderate, without yet performing the full numeric derivation (covered in the next topic).</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying the Bayesian Reasoning]</div><div class="step-content"><p>The prior $P(\theta)$ encodes the platform's general historical experience — e.g., "across all products, the typical positive-rating rate hovers around 60–70%, rarely near 100% even for genuinely good products." Bayes' Theorem combines this prior belief with the (very thin) new evidence of 3 reviews. Because the prior carries real informational weight and the likelihood is based on only 3 data points, the posterior — and therefore $\hat{\theta}_{\text{MAP}}$ — sits <em>between</em> the prior's expectation and the raw MLE estimate of 1.00, rather than jumping straight to the extreme.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Conceptually, MAP acts as a "regularizer against overconfidence from small samples": it refuses to fully trust an extreme conclusion (100% positive) drawn from only 3 observations, and instead blends that thin evidence with accumulated prior knowledge to produce a more defensible estimate. The exact numeric mechanics of this blending — using a Beta prior — are derived precisely in the next topic.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
-<h2 id="3-active-recall-checkpoint">3. Active Recall Checkpoint</h2>
+<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Large Data Limit</span>
@@ -543,7 +563,43 @@ $$ \lim_{N \to \infty} \hat{\theta}<em _text_MLE="\text{MLE">{\text{MAP}} = \hat
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> With infinite data, empirical observations overwhelm any prior belief, making Bayesian MAP converge to Frequentist MLE.
+    <strong>Pedagogical Insight:</strong> With infinite data, empirical observations overwhelm any fixed-size prior belief, making Bayesian MAP converge to Frequentist MLE — exactly the asymptotic convergence result shown above.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Identifying the Three Bayesian Terms</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">In the equation $P(\theta \mid D) = \frac{P(D \mid \theta) P(\theta)}{P(D)}$, which term represents the MLE objective, exactly, and which term represents pre-existing background belief?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="true"><span>$P(D \mid \theta)$ is the MLE (likelihood) objective; $P(\theta)$ is the prior, representing background belief</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$P(\theta \mid D)$ is the MLE objective; $P(D)$ is the prior</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$P(D)$ is the MLE objective; $P(\theta \mid D)$ is the prior</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>All four terms represent the same underlying quantity</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> $P(D \mid \theta)$ — "how probable is the observed data, given a candidate $\theta$" — is exactly the likelihood function that MLE alone maximizes. $P(\theta)$ is the separate prior term that MAP additionally incorporates, and $P(\theta \mid D)$ (the posterior) is what MAP ultimately maximizes.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: When Priors Matter Most</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">In which scenario does incorporating a prior via MAP make the *largest* practical difference compared to plain MLE?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="true"><span>A brand-new product with only 3 customer ratings so far</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>A well-established product with 50,000 customer ratings collected over five years</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>A scenario where the likelihood function is undefined</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>MAP and MLE always produce identical results regardless of sample size</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Per the asymptotic convergence formula, the prior's relative influence shrinks as $N$ grows. With only 3 data points, the likelihood term is weak and easily swamped, so the prior term $\ln P(\theta)$ has outsized influence — precisely the small-data regime where MAP's regularizing effect against overconfidence matters most.
   </div>
 </div>
     </main>

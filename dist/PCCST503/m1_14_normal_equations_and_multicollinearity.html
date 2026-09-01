@@ -497,7 +497,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -510,24 +510,45 @@
   </div>
 </div>
 <h1 id="the-normal-equation-matrix-inversion-singularities">The Normal Equation &amp; Matrix Inversion Singularities</h1>
-<p><strong>Solving multiple linear regression in a single analytical step and diagnosing multicollinearity.</strong></p>
+<p><strong>Solving multiple linear regression in a single analytical step, and diagnosing when multicollinearity breaks that shortcut.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Skipping the Foghill Walk Entirely</div><div class="callout-body"><p>Just as simple linear regression had a direct closed-form solution instead of needing Gradient Descent's iterative descent, <em>multiple</em> linear regression also has an exact one-shot formula — the <strong>Normal Equation</strong>. Instead of walking downhill step by step, you solve directly for the exact point where the cost surface is perfectly flat in every direction at once.</p>
+<p>But this shortcut has a catch: it requires inverting a matrix, and matrix inversion isn't always possible. If two features carry <em>redundant</em> information (like a house's size measured in both square feet and square meters), the matrix inversion step breaks down entirely — a problem this topic diagnoses and fixes.</p></div></div>
+
+<hr />
 <p><a id="the-math"></a></p>
-<h2 id="1-derivation-of-the-normal-equation">1. Derivation of the Normal Equation</h2>
-<p>Expanding the vectorized cost function:
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p><strong>Derivation.</strong> Expanding the vectorized cost function from the previous topic:
 $$ J(\theta) = \frac{1}{2m} \left( \theta^T X^T X \theta - 2 Y^T X \theta + Y^T Y \right) $$</p>
-<p>Taking the matrix gradient with respect to $\theta$ and setting to 0:
+<p>Taking the matrix gradient with respect to $\theta$ and setting it to zero (the multivariate analogue of the single-variable derivative-equals-zero trick used throughout this module):
 $$ \nabla_\theta J(\theta) = X^T X \theta - X^T Y = 0 \implies \theta^* = (X^T X)^{-1} X^T Y $$</p>
+<p>This single equation directly gives the exact optimal $\theta^*$ — no iterations, no learning rate to tune.</p>
+<pre><code class="language-mermaid">flowchart TD
+    XY[&quot;Design matrix X, targets Y&quot;] --&gt; XtX[&quot;Compute XᵀX&quot;]
+    XtX --&gt; Check{&quot;Is XᵀX invertible?&quot;}
+    Check --&gt;|Yes| Solve[&quot;θ* = (XᵀX)⁻¹ XᵀY&quot;]
+    Check --&gt;|No — singular| Problem[&quot;Multicollinearity or m &lt; d&quot;]
+    Problem --&gt; Fix1[&quot;Drop redundant features&quot;]
+    Problem --&gt; Fix2[&quot;Ridge Regularization:&lt;br/&gt;θ* = (XᵀX + λI)⁻¹ XᵀY&quot;]
+</code></pre>
+<div class="callout callout-pitfall"><div class="callout-header">⚠️ Common Exam Trap: When is $(X^TX)$ Singular (Non-Invertible)?</div><div class="callout-body"><p>$(X^TX)$ cannot be inverted if:
+1. <strong>Linearly Dependent Features (Multicollinearity):</strong> e.g. $x_1 = $ size in ft² and $x_2 = $ size in m² — one is just a constant multiple of the other, carrying zero additional information.
+2. <strong>Too Few Samples ($m &lt; d$):</strong> more features than training examples, leaving the system underdetermined.</p>
+<p><em>Remedy:</em> drop redundant/derived features, or apply Ridge Regularization: $\theta^* = (X^TX + \lambda I)^{-1} X^T Y$, where adding $\lambda I$ guarantees invertibility even when $X^TX$ alone is singular.</p></div></div>
+
 <hr />
 <p><a id="worked-example"></a></p>
-<h2 id="2-non-invertibility-multicollinearity">2. Non-Invertibility &amp; Multicollinearity</h2>
-<div class="callout callout-pitfall"><div class="callout-header">⚠️ Common Exam Trap: When is $(X^TX)$ Singular (Non-Invertible)?</div><div class="callout-body"><p>$(X^TX)$ cannot be inverted if:
-1. <strong>Linearly Dependent Features (Multicollinearity):</strong> E.g. $x_1 = \text{size in } \text{ft}^2$ and $x_2 = \text{size in } \text{m}^2$.
-2. <strong>Too Few Samples ($m &lt; d$):</strong> More features than training examples.
-<em>Remedy:</em> Drop redundant features or apply Ridge Regularization $(X^TX + \lambda I)^{-1}$.</p></div></div>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A dataset has 3 features: $x_1$ = house size in ft², $x_2$ = house size in m² (exactly $x_1 / 10.764$), and $x_3$ = number of bedrooms. An engineer attempts to solve $\theta^* = (X^TX)^{-1}X^TY$ using all 3 features and it fails with a "singular matrix" error. Diagnose the cause and propose two valid fixes.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying the Diagnostic Framework</div><div class="step-content"><p>Because $x_2$ is an exact linear function of $x_1$ ($x_2 = x_1/10.764$), the two columns of $X$ corresponding to $x_1$ and $x_2$ are linearly dependent — this is precisely the multicollinearity condition described above, which makes $X^TX$ singular (non-invertible), so $(X^TX)^{-1}$ simply does not exist.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p><strong>Fix 1 (preferred here):</strong> drop one of the two redundant size columns (e.g. keep $x_1$, discard $x_2$) — since they carry identical information, no predictive power is lost, and $X^TX$ becomes invertible again. <strong>Fix 2 (general-purpose):</strong> apply Ridge Regularization, using $\theta^* = (X^TX + \lambda I)^{-1}X^TY$ for some small $\lambda &gt; 0$, which guarantees invertibility regardless of collinearity, at the cost of introducing a small amount of bias into the parameter estimates.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
-<h2 id="3-active-recall-checkpoint">3. Active Recall Checkpoint</h2>
+<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Normal Equation Scaling</span>
@@ -542,7 +563,43 @@ $$ \nabla_\theta J(\theta) = X^T X \theta - X^T Y = 0 \implies \theta^* = (X^T X
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Inverting a $(d+1) \times (d+1)$ matrix $(X^TX)$ scales as $O(d^3)$, making it computationally prohibitive when $d > 10,000$.
+    <strong>Pedagogical Insight:</strong> Inverting a $(d+1) \times (d+1)$ matrix $(X^TX)$ scales as $O(d^3)$, making it computationally prohibitive when $d$ is very large (e.g. $d > 10{,}000$) — in that regime, iterative Gradient Descent (which scales more gently with $d$) becomes the more practical choice.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Root Cause of Singularity</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">A dataset has $m=50$ training examples but $d=80$ features. Why will the Normal Equation fail here even if no two features are literally redundant?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>$X^TX$ is always invertible regardless of $m$ and $d$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>With more features than examples ($d > m$), the system is underdetermined, and $X^TX$ is guaranteed to be singular regardless of whether individual features are collinear</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The Normal Equation only works when $d=1$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>This situation instead causes the learning rate $\alpha$ to become negative</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> When $d > m$, there simply isn't enough independent information in the data to uniquely pin down all $d+1$ parameters — mathematically, $X^TX$ (a $(d+1)\times(d+1)$ matrix built from only $m$ rows of data) cannot have full rank in this regime, making it singular regardless of any feature redundancy.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Ridge Regularization's Role</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">How does adding $\lambda I$ inside the Normal Equation, $\theta^* = (X^TX + \lambda I)^{-1}X^TY$, fix the singularity problem?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="true"><span>Adding $\lambda I$ (for $\lambda > 0$) shifts every eigenvalue of $X^TX$ up by $\lambda$, guaranteeing the resulting matrix has no zero eigenvalues and is therefore always invertible</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It removes the redundant features from the dataset automatically</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It converts the regression problem into a classification problem</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It has no mathematical effect and is purely a coding convention</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> $X^TX$ is symmetric and positive semi-definite, meaning its eigenvalues are all $\ge 0$; a singular matrix has at least one eigenvalue equal to exactly 0. Adding $\lambda I$ shifts every eigenvalue up by $\lambda$, so as long as $\lambda > 0$, every eigenvalue becomes strictly positive, guaranteeing invertibility — this is the core mathematical trick behind Ridge Regression.
   </div>
 </div>
     </main>

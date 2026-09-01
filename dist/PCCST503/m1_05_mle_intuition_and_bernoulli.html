@@ -497,7 +497,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 4 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -509,45 +509,97 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="maximum-likelihood-estimation-mle-bernoulli-derivation">Maximum Likelihood Estimation (MLE): Bernoulli Derivation</h1>
-<p><strong>How a computer finds the single model parameter that makes observed data the most statistically probable.</strong></p>
+<h1 id="maximum-likelihood-estimation-mle-the-bernoulli-derivation">Maximum Likelihood Estimation (MLE): The Bernoulli Derivation</h1>
+<p><strong>How a computer finds the single model parameter that makes the observed data the most statistically probable.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition-the-biased-coin-detective">1. The Intuition: The Biased Coin Detective</h2>
-<p>Suppose you flip a coin $n = 10$ times, observing $k = 7$ Heads and $3$ Tails. What is the most mathematically probable value for the true probability of heads $p$?</p>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: The MLE Principle</div><div class="callout-body"><p>MLE asks: <em>"Among all possible values of $p \in [0, 1]$, which specific $p$ maximizes the mathematical likelihood of getting our exact observed dataset?"</em></p></div></div>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: The Biased-Coin Detective</div><div class="callout-body"><p>Suppose you flip a coin $n = 10$ times, observing $k = 7$ Heads and $3$ Tails. You don't know the coin's true probability of heads, $p$ — but you have to guess it from this one batch of evidence, like a detective reconstructing a crime from the clues left behind.</p>
+<p>MLE asks a very specific question: <em>"Among all possible values of $p \in [0, 1]$, which specific $p$ maximizes the mathematical likelihood of getting our exact observed dataset?"</em> It doesn't ask what's "fair" or "typical" — it asks what value of $p$ makes the evidence you actually collected look the least surprising.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
-<h2 id="2-step-by-step-calculus-derivation">2. Step-by-Step Calculus Derivation</h2>
-<h3 id="step-1-likelihood-function-lp">Step 1: Likelihood Function $L(p)$</h3>
-<p>Assuming independent and identically distributed (i.i.d.) tosses:
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p><strong>Step-by-step calculus derivation</strong> for a Bernoulli (coin-flip) process:</p>
+<p><strong>Step 1 — Likelihood Function $L(p)$.</strong> Assuming independent and identically distributed (i.i.d.) tosses:
 $$ L(p) = \prod_{i=1}^n P(x_i \mid p) = p^k (1-p)^{n-k} $$</p>
-<h3 id="step-2-the-log-likelihood-trick-ellp">Step 2: The Log-Likelihood Trick $\ell(p)$</h3>
-<p>$$ \ell(p) = \ln L(p) = k \ln(p) + (n-k) \ln(1-p) $$</p>
-<h3 id="step-3-first-derivative-with-respect-to-p">Step 3: First Derivative with respect to $p$</h3>
-<p>$$ \frac{d}{dp}\ell(p) = \frac{k}{p} - \frac{n-k}{1-p} $$</p>
-<h3 id="step-4-first-order-condition-fracdelldp-0">Step 4: First-Order Condition $\frac{d\ell}{dp} = 0$</h3>
-<p>$$ \frac{k}{p} = \frac{n-k}{1-p} \implies k(1-p) = p(n-k) \implies k - kp = np - kp \implies \hat{p}_{\text{MLE}} = \frac{k}{n} $$</p>
-<div class="callout callout-formula"><div class="callout-header">📐 KTU Formula Vault: Summary</div><div class="callout-body"><p>For any Bernoulli trial, the Maximum Likelihood Estimator is simply the sample proportion $\frac{k}{n}$ (e.g. $\frac{7}{10} = 0.70$).</p></div></div>
+<p><strong>Step 2 — The Log-Likelihood Trick $\ell(p)$.</strong> Products of many small probabilities underflow numerically and are hard to differentiate, so we take the logarithm (which is monotonic, so it doesn't move the maximizer):
+$$ \ell(p) = \ln L(p) = k \ln(p) + (n-k) \ln(1-p) $$</p>
+<p><strong>Step 3 — First Derivative with respect to $p$:</strong>
+$$ \frac{d}{dp}\ell(p) = \frac{k}{p} - \frac{n-k}{1-p} $$</p>
+<p><strong>Step 4 — First-Order Condition $\frac{d\ell}{dp} = 0$:</strong>
+$$ \frac{k}{p} = \frac{n-k}{1-p} \implies k(1-p) = p(n-k) \implies k - kp = np - kp \implies \hat{p}_{\text{MLE}} = \frac{k}{n} $$</p>
+<pre><code class="language-mermaid">flowchart LR
+    A[Observed data:&lt;br/&gt;k heads in n flips] --&gt; B[Likelihood L(p)&lt;br/&gt;= p^k(1-p)^n-k]
+    B --&gt; C[Log-Likelihood&lt;br/&gt;ℓ(p) = k ln p + (n-k) ln(1-p)]
+    C --&gt; D[&quot;Set dℓ/dp = 0&quot;]
+    D --&gt; E[&quot;p̂_MLE = k / n&quot;]
+</code></pre>
+<div class="callout callout-formula"><div class="callout-header">📐 KTU Formula Vault: Summary</div><div class="callout-body"><p>For any Bernoulli trial, the Maximum Likelihood Estimator is simply the sample proportion $\frac{k}{n}$ (e.g. $\frac{7}{10} = 0.70$) — a satisfyingly intuitive result for such a formal-looking derivation.</p></div></div>
+
+<hr />
+<p><a id="worked-example"></a></p>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>An email spam filter observes $n = 500$ historical emails from a particular sender, of which $k = 45$ turned out to be spam. Estimate $\hat{p}_{\text{MLE}}$, the probability that a <em>future</em> email from this sender is spam.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying the MLE Formula</div><div class="step-content"><p>Using the derived closed-form result directly (no need to re-derive the calculus each time):
+$$ \hat{p}_{\text{MLE}} = \frac{k}{n} = \frac{45}{500} = 0.09 $$</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The Maximum Likelihood Estimate is $\hat{p}_{\text{MLE}} = 0.09$ (9%) — this is the value of $p$ that makes the observed 45-out-of-500 spam rate the single most probable outcome, among all possible values of $p$. Note that with $n=500$ (a reasonably large sample), this estimate is fairly trustworthy; the next topic covers what happens — and why MLE can misbehave — when $n$ is very small.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
-<h2 id="3-active-recall-checkpoint">3. Active Recall Checkpoint</h2>
+<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Log Transformation</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">Why do machine learning algorithms optimize $\ln L(\theta)$ instead of $L(\theta)$?</div>
+  <div class="quiz-prompt">Why do machine learning algorithms optimize $\ln L(\theta)$ instead of $L(\theta)$ directly?</div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>The logarithm alters the location of the optimal parameter</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>It converts numerically unstable products into stable sums while preserving the exact maximum</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It converts numerically unstable products into stable sums while preserving the exact location of the maximum</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>It eliminates the need to compute derivatives</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It turns non-convex functions into concave functions</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It turns non-convex functions into concave functions in every case</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Because $\ln(x)$ is strictly monotonically increasing, $\arg\max L(\theta) = \arg\max \ln L(\theta)$. It prevents underflow errors from multiplying tiny probabilities.
+    <strong>Pedagogical Insight:</strong> Because $\ln(x)$ is strictly monotonically increasing, $\arg\max L(\theta) = \arg\max \ln L(\theta)$ — the log never moves *where* the maximum occurs. It also prevents numerical underflow, since multiplying many small probabilities together can produce numbers too tiny for a computer to represent accurately, while summing their logs does not.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: MLE Computation</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">A factory samples $n = 200$ manufactured bolts and finds $k = 12$ defective. What is $\hat{p}_{\text{MLE}}$ for the probability that a randomly manufactured bolt is defective?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>$0.12$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$0.06$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$0.94$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$12.0$</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Applying $\hat{p}_{\text{MLE}} = k/n = 12/200 = 0.06$ (6%) — directly using the closed-form Bernoulli MLE result derived above.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: First-Order Condition</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">In the derivation of $\hat{p}_{\text{MLE}}$, what is the purpose of setting $\frac{d\ell}{dp} = 0$?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>To normalize the probability distribution so it sums to 1</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>To find the critical point where the log-likelihood function is at a maximum (its slope is flat), which for this concave function is the global maximizer</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>To guarantee the likelihood function equals exactly 1</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>To convert the Bernoulli distribution into a Gaussian distribution</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Setting the first derivative to zero locates a critical point of $\ell(p)$. Because the Bernoulli log-likelihood is concave in $p$ over $(0,1)$, this critical point is guaranteed to be the global maximum — precisely the $p$ value the likelihood-maximization principle is searching for.
   </div>
 </div>
     </main>

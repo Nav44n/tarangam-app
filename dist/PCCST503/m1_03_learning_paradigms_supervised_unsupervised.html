@@ -497,7 +497,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -510,28 +510,47 @@
   </div>
 </div>
 <h1 id="learning-paradigms-supervised-vs-unsupervised">Learning Paradigms: Supervised vs Unsupervised</h1>
-<p><strong>Comparing learning with an answer key against discovering latent geometric structures.</strong></p>
+<p><strong>Comparing learning with an answer key against discovering latent structure in unlabeled data.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition-flashcards-vs-lego-sorting">1. The Intuition: Flashcards vs Lego Sorting</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Two Core Styles of Learning</div><div class="callout-body"><ul>
-<li><strong>Supervised Learning (The Flashcard):</strong> You are shown an image ($x$) and told its true label ($y$). You guess, check the answer key, and adjust your weights.</li>
-<li><strong>Unsupervised Learning (Lego Sorting):</strong> You are given 10,000 unsorted Lego pieces with zero labels. You naturally group them into piles based on inherent color, geometry, and size.</li>
-</ul></div></div>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Flashcards vs Lego Sorting</div><div class="callout-body"><ul>
+<li><strong>Supervised Learning (the flashcard):</strong> You are shown an image ($x$) and told its true label ($y$) — "this is a cat." You guess, check the answer key, and adjust your internal weights based on how wrong you were. Repeat thousands of times.</li>
+<li><strong>Unsupervised Learning (Lego sorting):</strong> You are handed 10,000 unsorted Lego pieces with zero labels — nobody tells you the "correct" categories. You naturally group them into piles based on inherent color, geometry, and size, discovering structure that was never explicitly told to you.</li>
+</ul>
+<p>The dividing line between the two paradigms is simple and absolute: <strong>does the training data include a target label $y$ or not?</strong></p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
-<h2 id="2-mathematical-formalization">2. Mathematical Formalization</h2>
-<h3 id="1-supervised-learning">1. Supervised Learning</h3>
-<p>Given dataset $\mathcal{D} = {(x^{(i)}, y^{(i)})}_{i=1}^m$:
-- <strong>Regression:</strong> $y \in \mathbb{R}$ (Continuous prediction, e.g. Stock Prices, House Valuations).
-- <strong>Classification:</strong> $y \in {0, 1}$ or ${1, \dots, K}$ (Discrete category, e.g. Cancer Diagnosis, Spam Detection).</p>
-<h3 id="2-unsupervised-learning">2. Unsupervised Learning</h3>
-<p>Given dataset $\mathcal{D} = {x^{(i)}}_{i=1}^m$ with no target labels $y$:
-- <strong>Clustering:</strong> Discovering natural group assignments $c^{(i)} \in {1, \dots, K}$ (K-Means, Hierarchical).
-- <strong>Dimensionality Reduction:</strong> Compressing high-dimensional $x \in \mathbb{R}^D$ to $z \in \mathbb{R}^d$ ($d \ll D$) while preserving maximum variance (PCA).</p>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p><strong>1. Supervised Learning.</strong> Given dataset $\mathcal{D} = {(x^{(i)}, y^{(i)})}_{i=1}^m$, where every example carries a known label:
+- <strong>Regression:</strong> $y \in \mathbb{R}$ (continuous prediction, e.g. stock prices, house valuations).
+- <strong>Classification:</strong> $y \in {0, 1}$ or ${1, \dots, K}$ (discrete category, e.g. cancer diagnosis, spam detection).</p>
+<p><strong>2. Unsupervised Learning.</strong> Given dataset $\mathcal{D} = {x^{(i)}}_{i=1}^m$ with <strong>no</strong> target labels $y$:
+- <strong>Clustering:</strong> discovering natural group assignments $c^{(i)} \in {1, \dots, K}$ (e.g. K-Means, Hierarchical Clustering).
+- <strong>Dimensionality Reduction:</strong> compressing high-dimensional $x \in \mathbb{R}^D$ down to $z \in \mathbb{R}^d$ (with $d \ll D$) while preserving as much variance/structure as possible (e.g. PCA).</p>
+<p><strong>Choosing a paradigm — the decision starts with what your data actually contains:</strong></p>
+<pre><code class="language-mermaid">flowchart TD
+    A[Raw Dataset] --&gt; B{Does every example&lt;br/&gt;have a known label y?}
+    B --&gt;|Yes| C[Supervised Learning]
+    C --&gt; C1[y continuous → Regression]
+    C --&gt; C2[y discrete/categorical → Classification]
+    B --&gt;|No| D[Unsupervised Learning]
+    D --&gt; D1[Group similar points → Clustering]
+    D --&gt; D2[Compress dimensions → Dimensionality Reduction]
+</code></pre>
+<hr />
+<p><a id="worked-example"></a></p>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>An airline has two separate datasets. Dataset A: 50,000 past flights, each tagged with whether the flight was "Delayed" or "On-Time." Dataset B: passenger baggage weight and travel-frequency records for 200,000 passengers, with no predefined category tags at all. For each dataset, decide which learning paradigm applies and what specific technique fits.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying the Decision Framework</div><div class="step-content"><p><strong>Dataset A</strong> has a known target label attached to every example (Delayed / On-Time) — this is Supervised Learning, and since the label is a discrete category with two possible values, it's specifically a <strong>binary classification</strong> problem.
+<strong>Dataset B</strong> has no predefined tags at all — passengers are not pre-labeled into any traveler "type." This is Unsupervised Learning; since the goal is to discover natural passenger groupings from the raw features, it's specifically a <strong>clustering</strong> problem (e.g., K-Means could be used to identify 4 distinct traveler personas).</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Dataset A trains a supervised classifier that predicts Delayed/On-Time for a <em>new</em> flight, evaluated against the known ground-truth labels it was trained on. Dataset B trains an unsupervised clustering algorithm that groups <em>existing</em> passengers into personas with no ground truth to check against — its success is judged by how coherent and useful the discovered clusters are (e.g., cluster cohesion metrics), not by matching a predefined answer key, because no such answer key exists.</p></div></div>
+
 <hr />
 <p><a id="self-check"></a></p>
-<h2 id="3-active-recall-checkpoint">3. Active Recall Checkpoint</h2>
+<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Paradigm Selection</span>
@@ -546,7 +565,43 @@
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Because there are no predefined class labels or target outputs $y$, the model must uncover hidden cluster structures on its own.
+    <strong>Pedagogical Insight:</strong> Because there are no predefined class labels or target outputs $y$, the model must uncover hidden cluster structures on its own — the defining trait of unsupervised clustering.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Regression vs Classification</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">A supervised model is trained to predict a house's exact resale price in rupees. Which supervised sub-type is this, and why?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="true"><span>Regression, because the target $y$ is a continuous real-valued number</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Classification, because houses can be grouped into price "categories"</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Clustering, because similar houses are grouped together</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Dimensionality Reduction, because many features describe each house</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> The target variable — exact resale price — takes continuous real values ($y \in \mathbb{R}$), which is precisely the defining criterion for regression, as opposed to classification's discrete category labels.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Dimensionality Reduction Purpose</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">A dataset has 500 highly correlated numerical features per image. Before clustering the images, an engineer first applies PCA to reduce this to 20 dimensions. What unsupervised task does this PCA step represent, and what is it trying to preserve?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Classification; it tries to preserve the class boundaries</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Dimensionality Reduction; it tries to preserve as much of the original variance/structure as possible while using far fewer dimensions</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Regression; it tries to preserve the continuous target value</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Reinforcement Learning; it tries to preserve the cumulative reward</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> PCA is a classic dimensionality-reduction technique: it has no labels to work with (unsupervised), and its explicit mathematical objective is compressing $x \in \mathbb{R}^D$ into $z \in \mathbb{R}^d$ ($d \ll D$) while retaining as much of the data's variance as possible, making downstream tasks like clustering faster and less noisy.
   </div>
 </div>
     </main>

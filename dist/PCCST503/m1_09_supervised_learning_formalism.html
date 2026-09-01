@@ -497,7 +497,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -510,26 +510,68 @@
   </div>
 </div>
 <h1 id="supervised-learning-formalism-dataset-splitting">Supervised Learning Formalism &amp; Dataset Splitting</h1>
-<p><strong>The rigorous mathematical notation of feature spaces, hypothesis functions, and generalization splits.</strong></p>
+<p><strong>The rigorous mathematical notation of feature spaces and hypothesis functions, and why datasets are split into three separate parts.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Studying for an Exam, Correctly</div><div class="callout-body"><p>Imagine a student who only ever practices using the exact same 10 questions the teacher will later ask on the final exam. They'll score 100% — but that tells you nothing about whether they actually <em>understand</em> the subject, only that they memorized 10 answers. A fair evaluation requires practice questions (to learn from), some check-in quizzes along the way (to tune study strategy), and a genuinely unseen final exam (to measure true understanding).</p>
+<p>This is exactly why supervised learning splits its data into three separate, non-overlapping parts — Training, Validation, and Test — each with a distinct job, so that the final reported performance actually reflects how the model will behave on <em>new</em>, never-before-seen data, not how well it memorized what it already saw.</p></div></div>
+
+<hr />
 <p><a id="the-math"></a></p>
-<h2 id="1-mathematical-notation">1. Mathematical Notation</h2>
-<p>Let training dataset $\mathcal{D} = {(x^{(1)}, y^{(1)}), \dots, (x^{(m)}, y^{(m)})}$:
-- $m$: Number of training examples.
-- $x^{(i)} \in \mathbb{R}^d$: $d$-dimensional feature vector.
-- $y^{(i)}$: Ground truth label.
-- $h_\theta(x)$: Candidate hypothesis function parameterized by $\theta$.</p>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p><strong>Formal notation.</strong> Let training dataset $\mathcal{D} = {(x^{(1)}, y^{(1)}), \dots, (x^{(m)}, y^{(m)})}$, where:
+- $m$: number of training examples.
+- $x^{(i)} \in \mathbb{R}^d$: the $d$-dimensional feature vector for example $i$.
+- $y^{(i)}$: the ground-truth label for example $i$.
+- $h_\theta(x)$: a candidate <strong>hypothesis function</strong>, parameterized by $\theta$, that the learning algorithm searches over to best approximate the true underlying relationship between $x$ and $y$.</p>
+<p><strong>The 3-way dataset split</strong> — and its role in a proper ML workflow:</p>
+<pre><code class="language-mermaid">flowchart TD
+    D[Full Labeled Dataset D] --&gt; Tr[&quot;Train Set (~70%)&quot;]
+    D --&gt; Va[&quot;Validation Set (~15%)&quot;]
+    D --&gt; Te[&quot;Test Set (~15%), locked away&quot;]
+    Tr --&gt;|fits θ via optimizer| Model[Candidate Model h_θ]
+    Va --&gt;|tunes hyperparameters,&lt;br/&gt;model selection| Model
+    Model --&gt;|evaluated exactly once,&lt;br/&gt;at the very end| Te
+    Te --&gt; Report[Reported generalization performance]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Split</th>
+<th style="text-align: left;">Typical Size</th>
+<th style="text-align: left;">Used For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Train Set</strong></td>
+<td style="text-align: left;">~70%</td>
+<td style="text-align: left;">The optimizer (e.g. Gradient Descent) directly updates model parameters $\theta$ to fit this data</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Validation Set</strong></td>
+<td style="text-align: left;">~15%</td>
+<td style="text-align: left;">Selecting model complexity/hyperparameters (e.g. polynomial degree, regularization strength $\lambda$), without touching the test set</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Test Set</strong></td>
+<td style="text-align: left;">~15%</td>
+<td style="text-align: left;">Locked away until the very end, used exactly once for unbiased evaluation of true generalization on unseen data</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <p><a id="worked-example"></a></p>
-<h2 id="2-the-3-way-dataset-split">2. The 3-Way Dataset Split</h2>
-<div class="step-card"><div class="step-badge">Train Set (70%)</div><div class="step-title">Optimization</div><div class="step-content"><p>Used by the optimizer (e.g. Gradient Descent) to update model parameters $\theta$.</p></div></div>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A team has 10,000 labeled images to train a classifier. They try three different model complexities (a shallow model, a medium model, a very deep model), and want to both pick the best one and report an honest final accuracy figure. Design the correct data-splitting workflow.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Validation Set (15%)</div><div class="step-title">Hyperparameter Tuning</div><div class="step-content"><p>Used to select model complexity (e.g. polynomial degree, regularization strength $\lambda$).</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying the 3-Way Split</div><div class="step-content"><p>Split the 10,000 images into, say, 7,000 Train / 1,500 Validation / 1,500 Test. Train all three model complexities on the <em>same</em> 7,000-image Train set. Evaluate all three trained models on the Validation set, and pick whichever model complexity scores best there. Do <strong>not</strong> look at the Test set at all during this selection process.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Test Set (15%)</div><div class="step-title">Unbiased Evaluation</div><div class="step-content"><p>Locked until the very end to evaluate true generalization on unseen data.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Only after the single best model has been chosen using the Validation set is it finally evaluated — exactly once — on the untouched 1,500-image Test set, and that number is what gets reported as the model's expected real-world accuracy. If the team had instead used the Test set to pick among the three complexities, their reported accuracy would be optimistically biased, since the "test" would have effectively become part of the model-selection process rather than a truly unseen check.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
-<h2 id="3-active-recall-checkpoint">3. Active Recall Checkpoint</h2>
+<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Data Leakage Prevention</span>
@@ -544,7 +586,43 @@
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Testing on training data measures memorization rather than generalization. An unbiased test set evaluates performance on unseen distributions.
+    <strong>Pedagogical Insight:</strong> Testing on training data measures memorization rather than generalization. An unbiased test set must remain completely unseen during training to honestly evaluate performance on new, unseen distributions.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Role of the Validation Set</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What is the specific role of the Validation set that neither the Train set nor the Test set can properly fill?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>It directly updates the model's weights $\theta$ via gradient descent</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It provides an evaluation signal for choosing between different models/hyperparameters, without contaminating the final, untouched Test set</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It is used only once, at the very end of the project</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It contains exactly the same examples as the Training set</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> The Validation set exists precisely so that model-selection decisions (which hyperparameters, which architecture) can be made using *some* held-out feedback — without ever touching the Test set, which must remain fully untouched until the single final evaluation.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Feature Vector Notation</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">In the notation $x^{(i)} \in \mathbb{R}^d$, what does the superscript $(i)$ specifically index, and what does $d$ represent?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="true"><span>$(i)$ indexes which training example (which row of the dataset) this is; $d$ is the number of features describing each example</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$(i)$ is the label value; $d$ is the number of training examples</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$(i)$ and $d$ both refer to the number of classes in a classification problem</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$(i)$ indexes the hypothesis function; $d$ indexes the training epoch</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> The parenthetical superscript $(i)$ is standard ML notation for "the $i$-th training example" (distinguishing it from a mathematical exponent), while $d$ is the dimensionality of the feature space — how many numerical attributes describe each single example.
   </div>
 </div>
     </main>

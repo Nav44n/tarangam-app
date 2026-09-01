@@ -497,7 +497,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -509,31 +509,142 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="module-1-practice-lab-the-complete-numerical-vault">Module 1 Practice Lab: The Complete Numerical Vault</h1>
-<p><strong>Step-by-step master numerical solutions for all Module 1 examination categories.</strong></p>
-<hr />
-<h2 id="category-1-maximum-likelihood-estimation-mle">Category 1: Maximum Likelihood Estimation (MLE)</h2>
-<p><strong>Problem:</strong> In $n = 20$ semiconductor chips, $k = 6$ are defective. Calculate $\hat{p}_{\text{MLE}}$.</p>
-<div class="step-card"><div class="step-badge">Solution</div><div class="step-title">Step-by-Step</div><div class="step-content"><ol>
-<li>$L(p) = p^6 (1-p)^{14} \implies \ell(p) = 6\ln(p) + 14\ln(1-p)$.</li>
-<li>$\frac{d\ell}{dp} = \frac{6}{p} - \frac{14}{1-p} = 0 \implies 6(1-p) = 14p$.</li>
-<li>$6 = 20p \implies \hat{p} = \frac{6}{20} = 0.30 \quad (30\%)$.</li>
-</ol></div></div>
+<h1 id="module-1-practice-lab-mle-map-regression-the-complete-numerical-vault">Module 1 Practice Lab: MLE, MAP &amp; Regression — The Complete Numerical Vault</h1>
+<p><strong>Step-by-step master numerical solutions spanning every major examination category from Module 1: estimation, optimization, and regression.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Why a Consolidated Numerical Lab?</div><div class="callout-body"><p>Module 1 built up a chain of ideas: estimate a parameter from data (MLE), regularize that estimate with prior belief (MAP), define what "wrong" even means (Loss/Cost), find the minimum of that cost either iteratively (Gradient Descent) or in one shot (OLS / Normal Equation). Exams rarely test these ideas in isolation — they mix and match them into multi-part numerical problems. This lab drills the exact same closed-form formulas derived across the module, applied to fresh numbers, so the mechanics become automatic under time pressure.</p></div></div>
 
 <hr />
-<h2 id="category-2-maximum-a-posteriori-map">Category 2: Maximum A Posteriori (MAP)</h2>
-<p><strong>Problem:</strong> An e-commerce item gets $k=2$ 5-star reviews out of $n=2$ total ratings. Prior is $\text{Beta}(\alpha=4, \beta=4)$.</p>
-<div class="step-card"><div class="step-badge">Solution</div><div class="step-title">Step-by-Step</div><div class="step-content"><p>$$ \hat{p}_{\text{MAP}} = \frac{k + \alpha - 1}{n + \alpha + \beta - 2} = \frac{2 + 4 - 1}{2 + 4 + 4 - 2} = \frac{5}{8} = 0.625 \quad (62.5\%) $$</p></div></div>
+<p><a id="the-math"></a></p>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p><strong>The full Module 1 formula cheat-sheet:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Category</th>
+<th style="text-align: left;">Formula</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">MLE (Bernoulli)</td>
+<td style="text-align: left;">$\hat p_{\text{MLE}} = k/n$</td>
+</tr>
+<tr>
+<td style="text-align: left;">MLE (Gaussian mean/variance)</td>
+<td style="text-align: left;">$\hat\mu = \frac{1}{m}\sum x_i,\quad \hat\sigma^2 = \frac{1}{m}\sum(x_i-\hat\mu)^2$</td>
+</tr>
+<tr>
+<td style="text-align: left;">MAP (Beta-Binomial)</td>
+<td style="text-align: left;">$\hat p_{\text{MAP}} = \dfrac{k+\alpha-1}{n+\alpha+\beta-2}$</td>
+</tr>
+<tr>
+<td style="text-align: left;">Gradient Descent update</td>
+<td style="text-align: left;">$\theta_j := \theta_j - \alpha \dfrac{\partial J(\theta)}{\partial \theta_j}$</td>
+</tr>
+<tr>
+<td style="text-align: left;">Simple OLS slope/intercept</td>
+<td style="text-align: left;">$\theta_1 = \dfrac{\text{Cov}(x,y)}{\text{Var}(x)},\quad \theta_0 = \bar y - \theta_1\bar x$</td>
+</tr>
+<tr>
+<td style="text-align: left;">Normal Equation</td>
+<td style="text-align: left;">$\theta^* = (X^TX)^{-1}X^TY$</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;Raw Data&quot;] --&gt; B{&quot;Need a point&lt;br/&gt;estimate of a&lt;br/&gt;parameter?&quot;}
+    B --&gt;|Yes, no prior| MLE[&quot;MLE: p̂ = k/n&quot;]
+    B --&gt;|Yes, with prior| MAP[&quot;MAP: Beta-Binomial formula&quot;]
+    A --&gt; C{&quot;Fitting a&lt;br/&gt;regression line?&quot;}
+    C --&gt;|1 feature, closed-form| OLS[&quot;Simple OLS formulas&quot;]
+    C --&gt;|Many features, closed-form| NE[&quot;Normal Equation&quot;]
+    C --&gt;|Iterative| GD[&quot;Gradient Descent loop&quot;]
+</code></pre>
+<hr />
+<p><a id="worked-example"></a></p>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Category 1: Maximum Likelihood Estimation</div><div class="step-title">MLE</div><div class="step-content"><p><strong>Problem:</strong> Among $n = 20$ semiconductor chips, $k = 6$ are defective. Calculate $\hat{p}_{\text{MLE}}$.
+1. $L(p) = p^6 (1-p)^{14} \implies \ell(p) = 6\ln(p) + 14\ln(1-p)$.
+2. $\frac{d\ell}{dp} = \frac{6}{p} - \frac{14}{1-p} = 0 \implies 6(1-p) = 14p$.
+3. $6 = 20p \implies \hat{p} = \frac{6}{20} = 0.30$ (30%).</p></div></div>
+
+<div class="step-card"><div class="step-badge">Category 2: Maximum A Posteriori</div><div class="step-title">MAP</div><div class="step-content"><p><strong>Problem:</strong> An e-commerce item gets $k=2$ five-star reviews out of $n=2$ total ratings. Prior is $\text{Beta}(\alpha=4, \beta=4)$.
+$$ \hat{p}_{\text{MAP}} = \frac{k + \alpha - 1}{n + \alpha + \beta - 2} = \frac{2 + 4 - 1}{2 + 4 + 4 - 2} = \frac{5}{8} = 0.625 \ (62.5\%) $$</p></div></div>
+
+<div class="step-card"><div class="step-badge">Category 3: Gradient Descent</div><div class="step-title">Two Manual Update Steps</div><div class="step-content"><p><strong>Problem:</strong> $J(\theta) = (\theta-6)^2$, so $\frac{dJ}{d\theta}=2(\theta-6)$. Start at $\theta_0=1$, $\alpha=0.2$. Find $\theta_2$.
+1. $\theta_0=1$: gradient $=2(1-6)=-10$. $\theta_1 = 1 - 0.2(-10) = 1+2 = 3$.
+2. $\theta_1=3$: gradient $=2(3-6)=-6$. $\theta_2 = 3 - 0.2(-6) = 3+1.2 = 4.2$.
+<strong>Result:</strong> $\theta$ moves $1 \to 3 \to 4.2$, converging toward the true minimum at $\theta=6$.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Category 4: Ordinary Least Squares</div><div class="step-title">OLS Line Fit</div><div class="step-content"><p><strong>Problem:</strong> Fit a line for points $(1, 2), (2, 4), (3, 5), (4, 4), (5, 5)$.
+1. $\bar{x} = 3.0, \bar{y} = 4.0$.
+2. $\sum (x-\bar{x})(y-\bar{y}) = 6.0, \quad \sum (x-\bar{x})^2 = 10.0$.
+3. $\theta_1 = \frac{6.0}{10.0} = 0.60, \quad \theta_0 = 4.0 - (0.60 \times 3.0) = 2.20$.
+<strong>Fitted Line:</strong> $\hat{y} = 2.20 + 0.60x$.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Category 5: Loss Function Comparison</div><div class="step-title">MSE vs MAE</div><div class="step-content"><p><strong>Problem:</strong> True values $y={5,5,5,5}$, predictions $\hat y={6,4,6,20}$ (last one a severe outlier). Compute MSE and MAE.
+Residuals: $1,-1,1,15$.
+$\text{MAE} = \frac{1+1+1+15}{4} = 4.5$. $\text{MSE (raw sum/4)} = \frac{1+1+1+225}{4} = 57.0$.
+<strong>Result:</strong> The one outlier residual of $15$ dominates MSE (225 out of 228 total, ~98.7%) far more than it dominates MAE (15 out of 18 total, ~83%), confirming MSE's outlier sensitivity.</p></div></div>
 
 <hr />
-<h2 id="category-3-ordinary-least-squares-ols">Category 3: Ordinary Least Squares (OLS)</h2>
-<p><strong>Problem:</strong> Fit a line for points $(1, 2), (2, 4), (3, 5), (4, 4), (5, 5)$.</p>
-<div class="step-card"><div class="step-badge">Solution</div><div class="step-title">Step-by-Step</div><div class="step-content"><ol>
-<li>$\bar{x} = 3.0, \bar{y} = 4.0$.</li>
-<li>$\sum (x-\bar{x})(y-\bar{y}) = 6.0, \quad \sum (x-\bar{x})^2 = 10.0$.</li>
-<li>$\theta_1 = \frac{6.0}{10.0} = 0.60, \quad \theta_0 = 4.0 - (0.60 \times 3.0) = 2.20$.
-<strong>Fitted Line:</strong> $\hat{y} = 2.20 + 0.60x$.</li>
-</ol></div></div>
+<p><a id="self-check"></a></p>
+<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q1: Cross-Category Recall</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">A dataset of $n=50$ website visits shows $k=8$ conversions, with no prior belief specified (i.e., assume a flat/uniform prior). What single formula gives the best point estimate of the true conversion probability, and what is its value?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="true"><span>MLE, $\hat p = k/n = 8/50 = 0.16$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>MAP with $\text{Beta}(1,1)$ gives a different numeric answer than MLE</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Gradient Descent must be run iteratively to find this value</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The Normal Equation, since this is a regression problem</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> With no informative prior stated, plain MLE applies directly: $\hat p = k/n = 8/50 = 0.16$. (Note: MAP with a flat $\text{Beta}(1,1)$ prior would in fact produce the exact same numeric answer, since MAP collapses to MLE under a uniform prior — but MLE is the direct, simplest tool for this exact question.)
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Gradient Descent Step Direction</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">For $J(\theta) = (\theta - 6)^2$ starting at $\theta_0 = 1$ with $\alpha=0.2$, why does the first update move $\theta$ in the *positive* direction (from 1 toward 3, not away from it)?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="true"><span>The gradient at $\theta_0=1$ is negative ($-10$), and subtracting a negative quantity ($-\alpha \times -10 = +2$) increases $\theta$, correctly moving it toward the minimum at $\theta=6$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Gradient descent always moves parameters toward zero regardless of the cost function</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The learning rate being positive forces $\theta$ to always decrease</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>This specific direction is a coincidence with no underlying mathematical reason</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> The update rule $\theta := \theta - \alpha \cdot \text{gradient}$ always moves *against* the gradient's sign. Since the gradient at $\theta_0=1$ is negative (the function is decreasing as $\theta$ increases toward 6), subtracting a negative number increases $\theta$ — correctly walking toward the minimum, exactly as the "foghill" intuition predicts.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Choosing OLS vs Normal Equation</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">For a dataset with only 1 feature (simple linear regression), is there any mathematical difference between using the "simple OLS" slope/intercept formulas and using the general Normal Equation $\theta^* = (X^TX)^{-1}X^TY$?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="true"><span>No — the simple OLS formulas are just the closed-form solution of the Normal Equation specialized to the $d=1$ case; both yield identical $\theta_0, \theta_1$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Yes — the Normal Equation only works for $d \ge 2$ features</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Yes — simple OLS ignores the intercept term entirely</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Yes — the Normal Equation requires Gradient Descent as a sub-step</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> The simple OLS slope/intercept formulas are a specific, simplified algebraic derivation of exactly the same underlying optimization problem the general Normal Equation solves — for $d=1$, both approaches produce numerically identical results, since they're solving the identical minimization problem via the same "set the derivative to zero" logic.
+  </div>
+</div>
     </main>
 
     <footer class="pagefoot" id="pagefoot">

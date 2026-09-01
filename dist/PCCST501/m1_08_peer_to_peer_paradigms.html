@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -395,23 +395,118 @@
   </div>
 </div>
 <h1 id="peer-to-peer-p2p-architecture">Peer-to-Peer (P2P) Architecture</h1>
-<p><strong>Client-server vs P2P scalability mathematical comparison, self-scalability, and file distribution time.</strong></p>
+<p><strong>Client-Server vs. P2P scalability — a mathematical comparison of minimum distribution time, and why P2P "self-scales."</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Peer-to-Peer (P2P) Architecture</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model: One Cashier vs. A Bucket Brigade</div><div class="callout-body"><p>Imagine one cashier trying to hand a copy of a large file to $N$ customers, one at a time, at a fixed upload speed. As $N$ grows, the line only gets longer — the cashier is a <strong>fixed-capacity bottleneck</strong>. This is Client-Server distribution: the server's upload bandwidth is shared among however many clients show up, so more clients strictly means slower service for everyone.</p>
+<p>Now imagine a bucket brigade instead: the moment the first customer receives even a partial copy of the file, they immediately start handing pieces of <em>their</em> copy to other waiting customers — who, in turn, do the same for others. Every new person who arrives doesn't just take a bucket; they also grab an empty bucket and start passing water forward. This is P2P distribution: every peer that finishes downloading a piece becomes an <em>additional</em> source of upload capacity for everyone else. The system's total capacity grows automatically as demand grows — this property is called <strong>self-scalability</strong>, and it's the single biggest structural advantage P2P has over Client-Server for large-scale file distribution.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<h3 id="21-setup-and-notation">2.1 Setup and Notation</h3>
+<p>Consider a file of size $F$ bits being distributed by a single origin server to $N$ peers.</p>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$F$</td>
+<td>File size (bits)</td>
+</tr>
+<tr>
+<td>$u_s$</td>
+<td>Server's upload rate</td>
+</tr>
+<tr>
+<td>$u_i$</td>
+<td>Upload rate of peer $i$</td>
+</tr>
+<tr>
+<td>$d_{min}$</td>
+<td>The <em>slowest</em> peer's download rate</td>
+</tr>
+<tr>
+<td>$N$</td>
+<td>Number of peers requesting the file</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-minimum-distribution-time-client-server">2.2 Minimum Distribution Time — Client-Server</h3>
+<p>The server must personally push a full copy of the file to <em>every</em> one of the $N$ peers, using its own single upload link — it cannot rely on peers helping each other:</p>
+<p>$$D_{CS} \geq \max\left(\frac{NF}{u_s},\ \frac{F}{d_{min}}\right)$$</p>
+<ul>
+<li>$\frac{NF}{u_s}$ — the server's own upload link must push $N$ full copies of the file sequentially/in-aggregate; more peers ($N$) makes this term <strong>grow linearly</strong>.</li>
+<li>$\frac{F}{d_{min}}$ — even in a fantasy world with infinite server bandwidth, the slowest peer's own download link still bounds how fast <em>it</em> alone can finish.</li>
+</ul>
+<h3 id="23-minimum-distribution-time-p2p">2.3 Minimum Distribution Time — P2P</h3>
+<p>In P2P, the server only needs to push the file out <strong>once</strong> in aggregate — and every peer that receives <em>any</em> data immediately starts re-uploading it to others:</p>
+<p>$$D_{P2P} \geq \max\left(\frac{F}{u_s},\ \frac{F}{d_{min}},\ \frac{F}{u_s + \sum_{i=1}^{N} u_i}\right)$$</p>
+<ul>
+<li>$\frac{F}{u_s}$ — the server needs only to push one full copy out overall, not $N$ copies.</li>
+<li>$\frac{F}{d_{min}}$ — the slowest peer's download link is still a hard floor, same as before.</li>
+<li>$\frac{F}{u_s + \sum u_i}$ — the <em>total combined upload capacity of the server plus all peers</em> is the aggregate resource sharing the work; as $N$ grows, this term <strong>shrinks</strong>, because more peers means more total upload capacity available.</li>
+</ul>
+<pre><code class="language-mermaid">flowchart TB
+    subgraph CS[&quot;Client-Server: Server does ALL the uploading&quot;]
+        SV[&quot;Server&lt;br/&gt;upload rate u_s&quot;] --&gt;|&quot;full copy&quot;| P1[Peer 1]
+        SV --&gt;|&quot;full copy&quot;| P2[Peer 2]
+        SV --&gt;|&quot;full copy&quot;| P3[Peer 3]
+        SV --&gt;|&quot;full copy&quot;| P4[Peer 4]
+    end
+</code></pre>
+<pre><code class="language-mermaid">flowchart TB
+    subgraph P2PArch[&quot;P2P: Peers re-upload to each other as they receive data&quot;]
+        SV2[&quot;Server&lt;br/&gt;upload rate u_s&quot;] --&gt;|&quot;pushes file once&quot;| PA[Peer A]
+        PA --&gt;|&quot;re-uploads piece&quot;| PB[Peer B]
+        PA --&gt;|&quot;re-uploads piece&quot;| PC[Peer C]
+        PB --&gt;|&quot;re-uploads piece&quot;| PD[Peer D]
+        PC --&gt;|&quot;re-uploads piece&quot;| PD
+    end
+</code></pre>
+<h3 id="24-the-key-structural-difference">2.4 The Key Structural Difference</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Client-Server</th>
+<th>P2P</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Server's total upload work</td>
+<td>Grows <strong>linearly</strong> with $N$ (must serve every peer directly)</td>
+<td><strong>Constant</strong> — pushes roughly one copy out overall</td>
+</tr>
+<tr>
+<td>Effect of adding more peers</td>
+<td>Strictly <strong>worse</strong> — more contention for the same fixed server bandwidth</td>
+<td>Can be <strong>better</strong> — new peers add upload capacity as well as demand</td>
+</tr>
+<tr>
+<td>Scalability</td>
+<td>Bottlenecked by server capacity</td>
+<td>Self-scaling, bounded mainly by the slowest peer's download rate</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A file of size $F = 15$ Gbits is to be distributed from one server to $N = 10$ peers. The server's upload rate is $u_s = 30$ Mbps. Each peer has a download rate of $d_i = 2$ Mbps and an upload rate of $u_i = 1$ Mbps. Compute the minimum distribution time under both Client-Server and P2P.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying the Formulas</div><div class="step-content"><p><strong>Client-Server:</strong>
+$$D_{CS} \geq \max\left(\frac{NF}{u_s}, \frac{F}{d_{min}}\right) = \max\left(\frac{10 \times 15000}{30}, \frac{15000}{2}\right) = \max(5000, 7500) = 7500 \text{ seconds}$$</p>
+<p><strong>P2P:</strong>
+Total peer upload capacity: $\sum u_i = 10 \times 1 = 10$ Mbps.
+$$D_{P2P} \geq \max\left(\frac{F}{u_s}, \frac{F}{d_{min}}, \frac{F}{u_s + \sum u_i}\right) = \max\left(\frac{15000}{30}, \frac{15000}{2}, \frac{15000}{30+10}\right) = \max(500, 7500, 375) = 7500 \text{ seconds}$$</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>In this particular example, both architectures bottom out at the <strong>same</strong> 7500 seconds — because the <em>slowest peer's own download rate</em> ($F/d_{min} = 7500$s) dominates both formulas, and no amount of extra server or peer upload capacity can push a peer's download faster than its own access link allows. This is an important nuance: P2P's advantage over Client-Server only shows up when the <em>server</em> (not the slowest peer) is the bottleneck — i.e., when $N$ is large enough that $\frac{NF}{u_s}$ would otherwise dominate. Try re-running the math with $N = 1000$ peers instead of 10, and you'll see $D_{CS}$ grow far past $D_{P2P}$, since the server term scales linearly with $N$ in Client-Server but stays roughly constant in P2P.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -421,16 +516,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Peer-to-Peer (P2P) Architecture?</div>
+  <div class="quiz-prompt">Why does the Client-Server minimum distribution time $D_{CS} \geq \frac{NF}{u_s}$ grow linearly with $N$?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>Because larger $N$ means the file itself grows larger</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Because the server must push a full copy of the file to every one of the $N$ peers using only its own single upload link, so its total workload scales directly with the number of peers</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Because peers slow down the server's CPU as more of them connect</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Because $N$ has no effect on this term at all</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Peer-to-Peer (P2P) Architecture in Computer Networks.
+    <strong>Pedagogical Insight:</strong> In Client-Server, only the server uploads — peers never help each other. The server's fixed upload capacity $u_s$ must be divided among (or sequentially serve) all $N$ peers' full copies, so total time is proportional to $N$.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What is the core reason P2P distribution is described as "self-scaling"?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Servers automatically add more bandwidth as peer count grows</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Each new peer contributes its own upload capacity to the pool ($\sum u_i$ grows), which can offset the additional demand that same peer creates</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>P2P networks never have a slowest-peer bottleneck</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>P2P eliminates the need for a server entirely in all cases</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Every peer that finishes receiving even part of the file becomes an additional uploader for others. This means the aggregate upload capacity term $u_s + \sum u_i$ tends to grow alongside $N$, in stark contrast to Client-Server where only $u_s$ (fixed) does all the uploading work.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">In the P2P minimum distribution time formula, what does the term $\frac{F}{d_{min}}$ represent, and why does it appear in the Client-Server formula too?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>It represents the server's total upload capacity, appearing in both formulas because both architectures use the same server</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It represents the unavoidable time for the single slowest peer to download the file over its own access link — a hard floor that applies regardless of how fast the source(s) of the data are</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It only applies to Client-Server, never to P2P</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It measures how long the control connection stays open</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> No matter how much aggregate upload capacity exists in the network (server alone, or server + peers), a peer still cannot receive data faster than its *own* download link allows. This makes $F/d_{min}$ a fundamental lower bound present in both architectures' formulas.
   </div>
 </div>
     </main>

@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -394,24 +394,74 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="hands-on-linux-kernel-routing-table-caches-ip-command">Hands-on: Linux Kernel Routing Table, Caches &amp; ip Command</h1>
-<p><strong>Kernel FIB (Forwarding Information Base), routing cache structures, and configuring routes via 'ip route add'.</strong></p>
+<h1 id="the-linux-kernel-routing-table-the-ip-command">The Linux Kernel Routing Table &amp; the <code>ip</code> Command</h1>
+<p><strong>Reading a real routing table, the longest-prefix-match forwarding rule, and hands-on practice with <code>ip route</code>, <code>ip addr</code>, and related commands.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Hands-on: Linux Kernel Routing Table, Caches &amp; ip Command</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Every device that runs Linux — including, quietly, a huge fraction of the internet's actual routers, plus your own laptop if it dual-boots or runs Linux — maintains its own local <strong>routing table</strong>: a small, structured list of rules answering the exact "forwarding" question from earlier in this module: "given a packet destined for IP address X, which network interface (and which next-hop gateway) should it be sent out through?" This isn't an abstract textbook concept — it's a real, inspectable, editable data structure sitting on every Linux machine right now, and the <code>ip</code> command (specifically <code>ip route</code>, part of the modern <code>iproute2</code> toolset) is exactly how you view and manipulate it directly.</p>
+<p>Understanding this table hands-on closes the loop on everything theoretical covered so far in this module: subnetting decided <em>how</em> address blocks get divided, routing algorithms decided <em>what the best paths are</em>, and this routing table is <em>where that decision actually lives</em>, consulted by the kernel for literally every single outgoing packet your machine ever sends.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>Anatomy of a Linux routing table entry.</strong> Run <code>ip route show</code> (or the shorter <code>ip r</code>) on any Linux machine, and you'll see output resembling:</p>
+<pre><code>default via 192.168.1.1 dev eth0
+192.168.1.0/24 dev eth0 proto kernel scope link src 192.168.1.42
+10.0.0.0/8 via 192.168.1.254 dev eth0 metric 100
+</code></pre>
+<p>Reading each entry:
+- <strong>Destination network</strong> (e.g. <code>192.168.1.0/24</code>, or the special keyword <code>default</code> meaning "everything not matched by any more specific rule" — this is the catch-all default route, typically pointing to your internet gateway).
+- <strong><code>via &lt;gateway IP&gt;</code></strong> — the next-hop router's IP address to forward through (omitted for directly-connected networks, where the destination is reachable without going through any intermediate router).
+- <strong><code>dev &lt;interface&gt;</code></strong> — which local network interface (e.g. <code>eth0</code>, <code>wlan0</code>) to send the packet out on.
+- <strong><code>metric &lt;number&gt;</code></strong> — a cost value used to choose between multiple matching routes to the same destination, if more than one exists (lower metric preferred).</p>
+<p><strong>The Longest Prefix Match rule — the single most important forwarding principle.</strong> When a packet needs to be forwarded, and <em>multiple</em> routing table entries technically match its destination address (because entries with different prefix lengths can overlap — e.g. both a broad <code>10.0.0.0/8</code> route and a more specific <code>10.0.5.0/24</code> route might both technically cover a destination like <code>10.0.5.20</code>), the kernel always selects the entry with the <strong>longest matching prefix</strong> (the most specific match) — not the shortest, and not simply the first one listed. This makes intuitive sense: a more specific route represents more precise, deliberately-configured knowledge about that particular sub-range, and should always take priority over a broader, more general rule that merely happens to also cover it.</p>
+<p><strong>Key practical <code>ip</code> command reference:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ip addr show</code> (or <code>ip a</code>)</td>
+<td>List all network interfaces and their assigned IP addresses</td>
+</tr>
+<tr>
+<td><code>ip route show</code> (or <code>ip r</code>)</td>
+<td>Display the current routing table</td>
+</tr>
+<tr>
+<td><code>ip route add &lt;network&gt;/&lt;prefix&gt; via &lt;gateway&gt; dev &lt;iface&gt;</code></td>
+<td>Add a new static route</td>
+</tr>
+<tr>
+<td><code>ip route del &lt;network&gt;/&lt;prefix&gt;</code></td>
+<td>Remove a route</td>
+</tr>
+<tr>
+<td><code>ip route get &lt;destination-IP&gt;</code></td>
+<td>Ask the kernel to show exactly which route it <em>would</em> use for a specific destination — extremely useful for debugging</td>
+</tr>
+<tr>
+<td><code>ip neigh show</code> (or <code>ip n</code>)</td>
+<td>Show the ARP cache (IP-to-MAC mappings, from the earlier ARP topic)</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A Linux machine's routing table contains these three entries: <code>10.0.0.0/8 via 192.168.1.1 dev eth0</code>, <code>10.0.5.0/24 via 192.168.1.2 dev eth0</code>, and <code>10.0.5.128/25 via 192.168.1.3 dev eth0</code>. Determine which entry the kernel will actually use to forward a packet destined for <code>10.0.5.200</code>.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Check each entry against the destination <code>10.0.5.200</code> and identify which ones actually match, and how specifically:
+Entry 1, <code>10.0.0.0/8</code> (covers <code>10.0.0.0</code>–<code>10.255.255.255</code>): matches, since <code>10.0.5.200</code> falls within this broad range — prefix length 8.
+Entry 2, <code>10.0.5.0/24</code> (covers <code>10.0.5.0</code>–<code>10.0.5.255</code>): matches, since <code>10.0.5.200</code> falls within this narrower range — prefix length 24.
+Entry 3, <code>10.0.5.128/25</code> (covers <code>10.0.5.128</code>–<code>10.0.5.255</code>): matches, since <code>10.0.5.200</code> falls within this even narrower range — prefix length 25.
+All three entries technically match the destination — apply the Longest Prefix Match rule: compare prefix lengths 8, 24, and 25, and select the <strong>longest</strong>, which is 25.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The kernel selects <strong>Entry 3</strong> (<code>10.0.5.128/25 via 192.168.1.3</code>) — the most specific matching route — and forwards the packet via gateway <code>192.168.1.3</code>, even though two broader routes also technically covered this destination. This is exactly why network administrators can safely add increasingly specific routes for particular sub-ranges (like carving out a special path for one specific /25 subnet) without needing to worry about broader, pre-existing routes accidentally taking priority — the Longest Prefix Match rule guarantees the most specific, deliberately-added rule always wins.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -421,16 +471,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Hands-on: Linux Kernel Routing Table, Caches & ip Command?</div>
+  <div class="quiz-prompt">If a packet's destination address matches both a `/16` route and a `/24` route in the routing table, which one does the Linux kernel actually use to forward the packet?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>The `/16` route, because it was likely added first</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The `/24` route, because Longest Prefix Match always selects the most specific (longest prefix) matching entry, regardless of the order routes were added in</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Both routes are used simultaneously, splitting the traffic</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Neither route is used; the packet is dropped due to ambiguity</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Hands-on: Linux Kernel Routing Table, Caches & ip Command in Computer Networks.
+    <strong>Pedagogical Insight:</strong> The Longest Prefix Match rule is unconditional: whenever multiple routing table entries match a destination, the kernel always selects the one with the longest (most specific) prefix — here, `/24` is more specific than `/16`, so it wins regardless of table ordering or which was configured first.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What does the special `default` route (shown as `default via <gateway> dev <iface>` in `ip route show` output) represent, and what is its effective prefix length for Longest-Prefix-Match purposes?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>It matches only traffic destined for the local machine itself</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It is a catch-all route matching *any* destination not covered by a more specific entry — effectively equivalent to `0.0.0.0/0`, the shortest possible prefix (0 bits), meaning it is always the *last* choice whenever any more specific route also matches</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It always has the highest priority, overriding all other routes</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It is only used for IPv6 traffic</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> `default` represents the broadest possible match (prefix length 0 — matching literally any address), which is precisely why it only gets used as a last resort: any more specific route (any longer prefix) that also matches a given destination will always be preferred over it, per Longest Prefix Match — the default route only "wins" when nothing more specific applies.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Which `ip` command would you use to directly ask the kernel exactly which route it would select for a specific destination IP address, without manually working through Longest Prefix Match by hand?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>`ip addr show`</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>`ip route get <destination-IP>`</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>`ip neigh show`</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>`ip route del`</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> `ip route get <destination-IP>` is specifically designed for this exact debugging task — it directly queries the kernel's own routing logic and reports back which specific route entry (and therefore which gateway/interface) would actually be selected for that destination, saving you from having to manually trace through Longest Prefix Match by hand across potentially many table entries.
   </div>
 </div>
     </main>

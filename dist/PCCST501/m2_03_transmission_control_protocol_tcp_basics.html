@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -398,20 +398,106 @@
 <p><strong>TCP segment format, sequence/ACK numbers, 3-way handshake, 4-way teardown, and TIME_WAIT state.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Transmission Control Protocol (TCP): Header &amp; Connection Management</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>If UDP is a postcard, TCP is a formal phone call. Before either side says anything meaningful, there's a brief ritual to establish that both parties are actually there and ready to listen — "Hello, can you hear me?" / "Yes, I can hear you, can you hear me?" / "Yes, let's begin." Only after this three-step check does the actual conversation happen. And when the conversation ends, there's a polite closing ritual too — each side explicitly says "I'm done talking" and waits for the other to acknowledge, rather than just hanging up mid-sentence.</p>
+<p>This is exactly TCP's <strong>3-way handshake</strong> (connection setup) and <strong>4-way teardown</strong> (connection close). TCP is <strong>connection-oriented</strong>: before any data flows, both sides exchange a small number of special control segments to agree on initial sequence numbers and confirm both ends are ready — turning what IP provides (individual, independent, unordered packets) into what the application experiences (a reliable, ordered, continuous byte stream, as if it were a dedicated wire directly connecting the two processes).</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>The TCP header (20 bytes minimum, before options):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Size</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source port / Destination port</td>
+<td>2 + 2 bytes</td>
+<td>Identify sending/receiving process (same role as in UDP)</td>
+</tr>
+<tr>
+<td>Sequence number</td>
+<td>4 bytes</td>
+<td>Byte-stream position of the <em>first</em> data byte in this segment</td>
+</tr>
+<tr>
+<td>Acknowledgment number</td>
+<td>4 bytes</td>
+<td>The <em>next</em> byte the receiver expects (i.e., "I've received everything up to, but not including, this byte")</td>
+</tr>
+<tr>
+<td>Header length</td>
+<td>4 bits</td>
+<td>Length of the TCP header (accounting for variable-length options)</td>
+</tr>
+<tr>
+<td>Flags (control bits)</td>
+<td>6+ bits</td>
+<td>SYN, ACK, FIN, RST, PSH, URG — signal special segment purposes</td>
+</tr>
+<tr>
+<td>Window size</td>
+<td>2 bytes</td>
+<td>Receiver's current available buffer space, for flow control</td>
+</tr>
+<tr>
+<td>Checksum</td>
+<td>2 bytes</td>
+<td>Error detection (mandatory in TCP, unlike UDP's optional checksum)</td>
+</tr>
+<tr>
+<td>Urgent pointer, Options</td>
+<td>variable</td>
+<td>Rarely-used urgent data marker; options like Maximum Segment Size (MSS), window scaling</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sequence and acknowledgment numbers — the core of TCP's reliability.</strong> TCP treats the data being sent as one continuous stream of bytes, and every byte has an implicit position number in that stream. The <strong>sequence number</strong> in a segment's header marks the stream-position of its <em>first</em> data byte. The <strong>acknowledgment number</strong> sent back tells the sender "I have correctly received everything up through byte (ACK number − 1); please send byte number (ACK number) next." This is what allows a receiver to detect gaps (missing data) and what allows a sender to know exactly what still needs (re)sending.</p>
+<p><strong>The 3-Way Handshake (connection establishment):</strong></p>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant C as Client
+    participant S as Server
+    C-&gt;&gt;S: SYN, seq = x
+    Note right of S: Server allocates&lt;br/&gt;buffers, sets state
+    S-&gt;&gt;C: SYN, ACK, seq = y, ack = x+1
+    Note left of C: Client confirms&lt;br/&gt;server is ready
+    C-&gt;&gt;S: ACK, seq = x+1, ack = y+1
+    Note over C,S: Connection ESTABLISHED —&lt;br/&gt;data transfer can begin
+</code></pre>
+<ol>
+<li><strong>SYN:</strong> the client sends a segment with the SYN flag set and an initial (often randomly chosen) sequence number $x$ — "I'd like to connect; my starting sequence number is $x$."</li>
+<li><strong>SYN-ACK:</strong> the server responds with <em>both</em> SYN and ACK flags set: it acknowledges the client's SYN (<code>ack = x+1</code>) and announces its <em>own</em> initial sequence number $y$ — "Got it, and here's my own starting sequence number too."</li>
+<li><strong>ACK:</strong> the client acknowledges the server's SYN (<code>ack = y+1</code>) — "Confirmed, let's begin." The connection is now open in both directions.</li>
+</ol>
+<p>Why three steps, not two? A simple two-way handshake (SYN, then ACK) cannot let <em>both</em> sides confirm <em>their own</em> initial sequence number was received correctly by the other — the third step is what lets the server also receive confirmation that its SYN-ACK actually reached the client, fully establishing mutual, bidirectional readiness.</p>
+<p><strong>The 4-Way Teardown (connection close):</strong></p>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant C as Client
+    participant S as Server
+    C-&gt;&gt;S: FIN
+    Note right of S: Server ACKs, but may still&lt;br/&gt;have data left to send
+    S-&gt;&gt;C: ACK
+    Note over S: Server finishes sending&lt;br/&gt;remaining data
+    S-&gt;&gt;C: FIN
+    C-&gt;&gt;S: ACK
+    Note over C: Client enters TIME_WAIT&lt;br/&gt;before fully closing
+</code></pre>
+<p>Because TCP connections are <strong>full-duplex</strong> (independent data streams flow in both directions), each direction must be closed <em>independently</em> — the client saying "I'm done sending" (FIN) doesn't mean the server is also done sending its own remaining data, so each side sends its own FIN and receives its own ACK, giving four total messages (though the middle ACK and FIN are sometimes combined/piggybacked in practice).</p>
+<p><strong>The TIME_WAIT state.</strong> After sending the final ACK, the side that initiated the close (typically the client) enters TIME_WAIT and waits for a period (conventionally twice the Maximum Segment Lifetime, "2MSL") before fully releasing the connection's resources. This wait serves two purposes: it ensures the final ACK is not lost (if the other side didn't receive it and retransmits its FIN, the waiting side can resend the ACK), and it prevents stray, delayed packets from an old connection being mistakenly accepted as part of a brand-new connection that happens to reuse the same port numbers soon after.</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A client initiates a TCP connection with initial sequence number $x = 1000$. The server responds with its own initial sequence number $y = 5000$. Trace the exact sequence and acknowledgment numbers exchanged during the full 3-way handshake.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>Segment 1 (Client → Server):</strong> SYN flag set, <code>seq = 1000</code> (no ACK yet, since the client hasn't received anything from the server).
+<strong>Segment 2 (Server → Client):</strong> SYN and ACK flags set, <code>seq = 5000</code> (server's own initial sequence number), <code>ack = 1001</code> (acknowledging the client's SYN — even though SYN carries no actual data payload, it consumes one sequence number, so the server expects the client's <em>next</em> byte to start at 1001).
+<strong>Segment 3 (Client → Server):</strong> ACK flag set, <code>seq = 1001</code> (client's next byte, following its own SYN), <code>ack = 5001</code> (acknowledging the server's SYN, which likewise consumed one sequence number).</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>After these three segments, both sides agree: the client's data stream starts at byte 1001, and the server's data stream starts at byte 5001 — and both sides have confirmation the other received their SYN correctly. The connection moves to the ESTABLISHED state, and either side may now begin sending actual application data, with subsequent sequence numbers continuing to climb from these agreed starting points as real data bytes are sent.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -421,16 +507,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Transmission Control Protocol (TCP): Header & Connection Management?</div>
+  <div class="quiz-prompt">Why does TCP connection establishment require three segments (a 3-way handshake) rather than just two?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>TCP always sends redundant messages for no functional reason</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A third message is needed so that *both* sides — not just the client — receive confirmation that their own initial sequence number was successfully received by the other party, fully establishing mutual, bidirectional readiness</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The third message carries the actual application data</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Two-way handshakes are impossible due to network hardware limitations</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Transmission Control Protocol (TCP): Header & Connection Management in Computer Networks.
+    <strong>Pedagogical Insight:</strong> With only SYN then ACK, the server would know the client received its SYN-ACK, but the client would have no way to be sure the server got its final acknowledgment. The third segment closes this gap, letting both sides independently confirm the connection is genuinely ready before any real data is sent.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Why does TCP connection teardown involve four segments rather than two?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Redundancy for error correction purposes only</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Because TCP connections are full-duplex, and each direction (client-to-server, server-to-client) must be closed independently, since one side finishing its sending doesn't mean the other side has finished sending its own data</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Four segments are needed to compute the final checksum</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>TCP always requires exactly four segments for any operation</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> A TCP connection carries two independent data streams (one each direction). When one side sends FIN, it means "I have no more data to send," but the other side might still have data left to transmit — so each side sends its own FIN when *it* is truly done, and each FIN gets its own ACK, totaling four messages for a full close (though these are sometimes combined in practice).
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What is the purpose of the TIME_WAIT state after a TCP connection closes?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>It has no real purpose and exists only for legacy compatibility</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It ensures the final ACK isn't lost (allowing retransmission of a lost FIN to be handled correctly) and prevents stray delayed packets from an old connection from being mistaken for a new one that reuses the same port numbers</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It permanently reserves the port so it can never be reused</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It actively retransmits application data during this period</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> TIME_WAIT is a safety-net waiting period: if the final ACK didn't arrive, the peer's retransmitted FIN can still be met with another ACK during this window, and any old, delayed packets still wandering the network from this now-closed connection will be recognized as stale rather than confused with a brand-new connection that happens to reuse the same port numbers soon afterward.
   </div>
 </div>
     </main>

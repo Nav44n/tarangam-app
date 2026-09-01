@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -394,73 +394,172 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<hr />
-<p>id: m1_04_world_wide_web_and_http
-title: "The Web and HTTP"
-sidebar_label: "1.4 Web &amp; HTTP"
-description: "Deep dive into the Hypertext Transfer Protocol (HTTP), persistent vs non-persistent connections, and cookies."</p>
-<hr />
 <h1 id="the-world-wide-web-and-http">The World Wide Web and HTTP</h1>
-<p>The World Wide Web transformed the Internet from an academic tool into a global mainstream phenomenon. The Web operates on a strict Client-Server paradigm, and its central communication protocol is <strong>HTTP</strong> (Hypertext Transfer Protocol).</p>
+<p><strong>HTTP request/response structure, non-persistent vs. persistent connections, statelessness, and cookies.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model: The Amnesiac Waiter</div><div class="callout-body"><p>Picture a waiter with total amnesia — every time you order, they treat you as a brand-new customer, with zero memory of anything you ordered a minute ago. This is exactly how <strong>HTTP</strong> behaves: it is <strong>stateless</strong>. Every request is handled in complete isolation from every previous one, even from the same browser, even seconds apart.</p>
+<p>Now imagine fetching a webpage that has text plus ten embedded images. Should the waiter make a brand-new trip to the kitchen (open a brand-new connection) for <em>every single item</em>, or should they keep one open channel and bring everything back over it? Early HTTP (1.0) did the former — <strong>non-persistent</strong>, closing and reopening a TCP connection per object, wasting time on repeated handshakes. Modern HTTP (1.1) does the latter — <strong>persistent</strong>, reusing one open connection for many objects in a row.</p>
+<p>But if the waiter forgets everything, how does a shopping cart or login session survive? The restaurant hands you a <strong>cookie</strong> — a small claim-check with a unique ID — the moment you first sit down. Every time you order again, you show that claim-check, and the amnesiac waiter looks up your ID in a notebook to instantly recall your entire history, without ever "remembering" anything on their own.</p></div></div>
+
 <hr />
-<h2 id="1-web-terminology-basics">1. Web Terminology Basics</h2>
+<p><a id="the-math"></a></p>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<h3 id="21-web-terminology">2.1 Web Terminology</h3>
 <ul>
-<li><strong>Web Page:</strong> A document, usually containing base HTML and several referenced objects (like images, CSS files, JavaScript).</li>
-<li><strong>Object:</strong> Simply a file (e.g., an HTML file, a JPEG image, a video clip).</li>
-<li><strong>URL (Uniform Resource Locator):</strong> The address of the object, consisting of a hostname (<code>www.example.com</code>) and a path name (<code>/images/pic.jpg</code>).</li>
+<li><strong>Web Page:</strong> a document, typically HTML, referencing several other <strong>objects</strong> (images, CSS, JS files).</li>
+<li><strong>Object:</strong> any single file — an HTML file, a JPEG, a video clip.</li>
+<li><strong>URL:</strong> the address of an object — a hostname (<code>www.example.com</code>) plus a path (<code>/images/pic.jpg</code>).</li>
 </ul>
+<h3 id="22-http-fundamentals">2.2 HTTP Fundamentals</h3>
+<ul>
+<li><strong>Transport:</strong> HTTP always runs over <strong>TCP</strong>, never UDP, to guarantee reliable, in-order delivery.</li>
+<li><strong>Statelessness:</strong> the server retains <strong>no memory</strong> of past requests. Identical requests seconds apart are treated as entirely new.</li>
+</ul>
+<h3 id="23-non-persistent-vs-persistent-connections">2.3 Non-Persistent vs. Persistent Connections</h3>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant B as Browser
+    participant W as Web Server
+    rect rgb(40,40,60)
+    Note over B,W: Non-Persistent HTTP (HTTP/1.0)
+    B-&gt;&gt;W: Open TCP connection
+    B-&gt;&gt;W: GET index.html
+    W-&gt;&gt;B: index.html
+    Note over B,W: Connection closes
+    B-&gt;&gt;W: Open NEW TCP connection
+    B-&gt;&gt;W: GET image1.jpg
+    W-&gt;&gt;B: image1.jpg
+    Note over B,W: Connection closes (repeat per object!)
+    end
+</code></pre>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant B as Browser
+    participant W as Web Server
+    rect rgb(40,60,40)
+    Note over B,W: Persistent HTTP (HTTP/1.1)
+    B-&gt;&gt;W: Open TCP connection (once)
+    B-&gt;&gt;W: GET index.html
+    W-&gt;&gt;B: index.html
+    B-&gt;&gt;W: GET image1.jpg
+    W-&gt;&gt;B: image1.jpg
+    B-&gt;&gt;W: GET image2.jpg
+    W-&gt;&gt;B: image2.jpg
+    Note over B,W: Same connection reused for all objects
+    end
+</code></pre>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Non-Persistent (HTTP/1.0)</th>
+<th>Persistent (HTTP/1.1)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connections needed</td>
+<td>One per object</td>
+<td>One, reused for many objects</td>
+</tr>
+<tr>
+<td>Overhead</td>
+<td>High — repeated TCP handshakes</td>
+<td>Low — handshake paid once</td>
+</tr>
+<tr>
+<td>Latency</td>
+<td>Higher</td>
+<td>Lower</td>
+</tr>
+</tbody>
+</table>
+<h3 id="24-http-message-structure">2.4 HTTP Message Structure</h3>
+<p><strong>Request Message:</strong>
+* <strong>Request Line:</strong> method (<code>GET</code>, <code>POST</code>, <code>HEAD</code>, <code>PUT</code>, <code>DELETE</code>) + URL path + version, e.g. <code>GET /index.html HTTP/1.1</code>
+* <strong>Header Lines:</strong> <code>Host:</code>, <code>User-Agent:</code>, <code>Accept-Language:</code>, etc.
+* <strong>Entity Body:</strong> used mainly by <code>POST</code> to carry form data/payloads.</p>
+<p><strong>Response Message:</strong>
+* <strong>Status Line:</strong> version + status code + status message, e.g. <code>HTTP/1.1 200 OK</code> or <code>HTTP/1.1 404 Not Found</code>
+* <strong>Header Lines:</strong> <code>Date:</code>, <code>Server:</code>, <code>Content-Length:</code>, <code>Content-Type:</code>
+* <strong>Data (Body):</strong> the actual requested object.</p>
+<h3 id="25-cookies-faking-statefulness-on-top-of-a-stateless-protocol">2.5 Cookies: Faking Statefulness on Top of a Stateless Protocol</h3>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant Br as Browser
+    participant Sv as Server
+    Br-&gt;&gt;Sv: First-ever request (no cookie)
+    Sv-&gt;&gt;Sv: Create unique ID (e.g. 1678), save in DB
+    Sv-&gt;&gt;Br: Response + Set-cookie: 1678
+    Note over Br: Browser stores cookie locally
+    Br-&gt;&gt;Sv: Next request + Cookie: 1678
+    Sv-&gt;&gt;Sv: Look up 1678 in DB → retrieve state
+    Sv-&gt;&gt;Br: Personalized response
+</code></pre>
 <hr />
-<h2 id="2-http-overview">2. HTTP Overview</h2>
-<p>HTTP is implemented in two programs: a client program (your web browser) and a server program (e.g., Apache, Nginx). It defines how web clients request web pages from web servers and how servers transfer them to clients.</p>
-<ul>
-<li><strong>Transport Protocol:</strong> HTTP uses <strong>TCP</strong> as its underlying transport protocol to ensure reliable delivery. It does not use UDP.</li>
-<li><strong>Statelessness:</strong> HTTP is a <strong>stateless</strong> protocol. The server maintains absolutely no information about past client requests. If you request a page and then request the exact same page 2 seconds later, the server treats it as a completely new request.</li>
-</ul>
+<p><a id="worked-example"></a></p>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>An HTML page references 5 embedded images. Compute the total number of TCP connections required to fully load this page under (a) Non-Persistent HTTP and (b) Persistent HTTP.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Counting Connections</div><div class="step-content"><p><strong>Non-Persistent:</strong> the HTML file itself requires 1 connection. Each of the 5 images then requires its <em>own</em> new connection (opened and closed individually) = 5 more connections. Total = 1 + 5 = <strong>6 separate TCP connections</strong>.
+<strong>Persistent:</strong> a single TCP connection is opened once, and the HTML file plus all 5 images are transferred sequentially over that same connection before it closes. Total = <strong>1 TCP connection</strong>.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Non-Persistent HTTP needs 6× as many TCP connections as Persistent HTTP for this page — each extra connection costs a full TCP three-way handshake's worth of round-trip latency. This is precisely why HTTP/1.1's persistent connections became the default: dramatically less overhead for pages with many embedded objects, which describes nearly every modern web page.</p></div></div>
+
 <hr />
-<h2 id="3-non-persistent-vs-persistent-connections">3. Non-Persistent vs. Persistent Connections</h2>
-<p>How does a client pull down a webpage that contains an HTML file and 10 referenced JPEG images?</p>
-<h3 id="non-persistent-http-http10">Non-Persistent HTTP (HTTP/1.0)</h3>
-<ul>
-<li>A brand new TCP connection must be opened and closed for every single object.</li>
-<li><strong>Drawback:</strong> High overhead. Fetching an HTML file and 10 images requires opening and closing 11 separate TCP connections, causing significant latency due to the repeated TCP Three-Way Handshake setup time.</li>
-</ul>
-<h3 id="persistent-http-http11">Persistent HTTP (HTTP/1.1)</h3>
-<ul>
-<li>The server leaves the TCP connection open after sending a response.</li>
-<li>Subsequent requests and responses between the same client and server can be sent over that same open connection.</li>
-<li>Drastically reduces latency and CPU overhead on the server.</li>
-</ul>
-<hr />
-<h2 id="4-http-request-and-response-messages">4. HTTP Request and Response Messages</h2>
-<p>When your browser communicates with a server, it exchanges plain-text HTTP messages.</p>
-<h3 id="http-request-message">HTTP Request Message</h3>
-<ul>
-<li><strong>Request Line:</strong> Contains the method (<code>GET</code>, <code>POST</code>, <code>HEAD</code>, <code>PUT</code>, <code>DELETE</code>), the URL path, and the HTTP version (e.g., <code>GET /index.html HTTP/1.1</code>).</li>
-<li><strong>Header Lines:</strong> Metadata such as <code>Host:</code>, <code>User-Agent:</code> (client browser type), and <code>Accept-Language:</code>.</li>
-<li><strong>Entity Body:</strong> Used primarily in <code>POST</code> requests when submitting form data or payloads to the server.</li>
-</ul>
-<h3 id="http-response-message">HTTP Response Message</h3>
-<ul>
-<li><strong>Status Line:</strong> Contains the protocol version, a status code, and a status message (e.g., <code>HTTP/1.1 200 OK</code> or <code>HTTP/1.1 404 Not Found</code>).</li>
-<li><strong>Header Lines:</strong> Metadata such as <code>Date:</code>, <code>Server:</code>, <code>Content-Length:</code>, and <code>Content-Type:</code>.</li>
-<li><strong>Data (Body):</strong> The actual requested object payload (the HTML file, image data, etc.).</li>
-</ul>
-<hr />
-<h2 id="5-cookies-maintaining-state">5. Cookies: Maintaining State</h2>
-<p>Because HTTP is stateless, websites use <strong>Cookies</strong> to keep track of sessions, authentication, and shopping carts:</p>
-<ol>
-<li><strong>Initial Visit:</strong> You visit a website (e.g., Amazon) for the first time.</li>
-<li><strong>Identification:</strong> The server creates a unique identification number (e.g., <code>1678</code>) and saves it in a backend database.</li>
-<li><strong>Cookie Assignment:</strong> The server responds with an HTTP header: <code>Set-cookie: 1678</code>.</li>
-<li><strong>Client Storage:</strong> Your browser saves this cookie locally.</li>
-<li><strong>Session Continuity:</strong> On your next request to Amazon, your browser automatically includes the header: <code>Cookie: 1678</code>. The server reads the ID, looks it up in the database, and retrieves your state.</li>
-</ol>
-<hr />
-<h2 id="6-active-recall-quiz">6. Active Recall Quiz</h2>
-<ul>
-<li><strong>Question 1:</strong> Why is HTTP referred to as a "stateless" protocol?</li>
-<li><strong>Question 2:</strong> An HTML page contains text and 5 image references. How many total TCP connections are established to fetch this entire page in Non-Persistent HTTP vs. Persistent HTTP?</li>
-</ul>
+<p><a id="self-check"></a></p>
+<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q1: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Why is HTTP referred to as a "stateless" protocol?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Because it does not use TCP as its transport protocol</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Because the server retains no information about any previous client requests, treating every request as entirely new</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Because HTTP messages cannot contain any headers</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Because HTTP can only transfer static HTML files</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Statelessness means the server has no built-in memory of past interactions — two identical requests from the same client are handled completely independently, with no server-side history unless something external (like a cookie) supplies that context.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">An HTML page contains text and 5 image references. How many total TCP connections are established to fetch the entire page under Non-Persistent HTTP vs. Persistent HTTP?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>1 connection in both cases</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>6 connections under Non-Persistent HTTP (1 per object); 1 connection under Persistent HTTP (reused for all objects)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>5 connections under Non-Persistent HTTP; 6 under Persistent HTTP</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Persistent HTTP always requires more connections than Non-Persistent HTTP</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Non-Persistent HTTP opens and closes a fresh TCP connection for every single object (the HTML file plus each of the 5 images = 6 total), while Persistent HTTP keeps one TCP connection open and reuses it to fetch every object sequentially.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What role does the `Set-cookie` header play in maintaining state?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>It permanently changes the HTTP protocol from stateless to stateful</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It gives the browser a unique identifier to store and resend on future requests, letting the server look up prior state associated with that ID</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It forces the browser to close its TCP connection</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It encrypts all future requests from that browser</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> `Set-cookie` doesn't change HTTP's fundamentally stateless nature — it works *around* it. The server issues a unique ID, the browser stores and automatically resends it, and the server uses that ID as a lookup key into its own database to reconstruct "memory" of that specific client.
+  </div>
+</div>
     </main>
 
     <footer class="pagefoot" id="pagefoot">

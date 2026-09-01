@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -394,24 +394,107 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="hands-on-elementary-udp-sockets-in-clinux">Hands-on: Elementary UDP Sockets in C/Linux</h1>
-<p><strong>sendto(), recvfrom(), connected UDP sockets, and datagram truncation.</strong></p>
+<h1 id="socket-programming-elementary-udp-client-server">Socket Programming: Elementary UDP (Client-Server)</h1>
+<p><strong>The simpler socket API call sequence for UDP: socket, bind, sendto/recvfrom — no connection, no accept, and a complete working example.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Hands-on: Elementary UDP Sockets in C/Linux</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Recall the phone-call analogy from the TCP socket programming topic — TCP required a whole ritual of dialing, ringing, and answering (<code>connect()</code>/<code>accept()</code>) before either side could say a word. UDP sockets skip this ritual entirely, matching UDP's connectionless nature at the transport layer: it's less like a phone call and more like shouting a message across a room addressed to a specific person — no need to first establish that they're listening, you just say it, include their name, and hope they heard it.</p>
+<p>Concretely, this means a UDP program has a noticeably <em>shorter</em>, simpler call sequence than TCP: there's no <code>listen()</code>, no <code>accept()</code>, and critically, every single message must explicitly carry its own destination address (via <code>sendto()</code>, rather than a plain <code>send()</code> on an already-"connected" socket) since there's no persistent connection remembering who you're talking to between messages.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>UDP vs TCP socket API — a direct comparison:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>TCP</th>
+<th>UDP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create socket</td>
+<td><code>socket(AF_INET, SOCK_STREAM)</code></td>
+<td><code>socket(AF_INET, SOCK_DGRAM)</code></td>
+</tr>
+<tr>
+<td>Server: bind to address</td>
+<td><code>bind()</code></td>
+<td><code>bind()</code></td>
+</tr>
+<tr>
+<td>Server: mark ready for connections</td>
+<td><code>listen()</code></td>
+<td><em>(not needed — no connections to listen for)</em></td>
+</tr>
+<tr>
+<td>Server: accept a specific client</td>
+<td><code>accept()</code> (blocks, returns new socket)</td>
+<td><em>(not needed — no per-client socket)</em></td>
+</tr>
+<tr>
+<td>Client: establish connection</td>
+<td><code>connect()</code> (triggers 3-way handshake)</td>
+<td><em>(not needed, or optional purely as a local convenience)</em></td>
+</tr>
+<tr>
+<td>Send data</td>
+<td><code>send()</code> (destination implied by the connection)</td>
+<td><code>sendto()</code> (destination address given <strong>explicitly</strong>, every single call)</td>
+</tr>
+<tr>
+<td>Receive data</td>
+<td><code>recv()</code></td>
+<td><code>recvfrom()</code> (also returns the <strong>sender's</strong> address, since there's no fixed "the other end")</td>
+</tr>
+<tr>
+<td>Close</td>
+<td><code>close()</code></td>
+<td><code>close()</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>A complete, minimal working example (Python):</strong></p>
+<pre><code class="language-python"># --- udp_server.py ---
+import socket
+
+HOST, PORT = &quot;0.0.0.0&quot;, 5001
+
+server_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # SOCK_DGRAM, not SOCK_STREAM
+server_sock.bind((HOST, PORT))
+print(f&quot;UDP server listening on {HOST}:{PORT}&quot;)
+
+while True:
+    data, client_addr = server_sock.recvfrom(1024)   # blocks until a datagram arrives;
+                                                        # returns both the data AND who sent it
+    print(f&quot;Received {data.decode()!r} from {client_addr}&quot;)
+    server_sock.sendto(b&quot;Echo: &quot; + data, client_addr) # must specify destination explicitly
+</code></pre>
+<pre><code class="language-python"># --- udp_client.py ---
+import socket
+
+SERVER_ADDR = (&quot;127.0.0.1&quot;, 5001)
+
+client_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+client_sock.sendto(b&quot;Hello, UDP server!&quot;, SERVER_ADDR)   # no connect() needed first
+data, server_addr = client_sock.recvfrom(1024)
+print(f&quot;Received {data.decode()!r} from {server_addr}&quot;)
+client_sock.close()
+</code></pre>
+<p><strong>A crucial practical consequence: no delivery guarantee at the socket-API level either.</strong> Because UDP itself provides no reliability, the socket API faithfully reflects this — <code>sendto()</code> returning successfully only means the datagram was successfully handed to the local operating system's network stack for transmission, <strong>not</strong> that it was actually received by the destination. If reliable delivery is needed over UDP (some real-time applications do want <em>some</em> reliability, just not TCP's specific flavour of it), the application itself must implement its own acknowledgment and retransmission scheme — the socket API gives no help here, unlike TCP's <code>send()</code>/<code>recv()</code>, which benefit invisibly from all the reliability machinery covered earlier in this module.</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Trace the sequence of events when <code>udp_client.py</code> sends a message to <code>udp_server.py</code>, contrasting explicitly with how the equivalent TCP example (from the earlier socket programming topic) would differ at each step.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><code>udp_server.py</code> calls <code>socket()</code> then <code>bind()</code> — and that's it; it immediately calls <code>recvfrom()</code>, blocking. (Contrast: the TCP server additionally needed <code>listen()</code> and a blocking <code>accept()</code> before it could even begin exchanging data.)
+<code>udp_client.py</code> calls <code>socket()</code>, then immediately <code>sendto(data, SERVER_ADDR)</code> — no handshake occurs at all; the datagram is simply handed to the network stack and sent. (Contrast: the TCP client's <code>connect()</code> call would have first triggered a full 3-way handshake before any data could be sent.)
+The server's <code>recvfrom()</code> unblocks upon the datagram's arrival, returning both the data and the client's address (which the server needed explicitly, since — unlike TCP's dedicated per-client socket from <code>accept()</code> — a single UDP socket receives datagrams from <em>any</em> sender, and must be told who each one came from).
+The server replies using <code>sendto(reply, client_addr)</code>, explicitly targeting the address it just learned — there is no implicit "reply to whoever I'm connected to," because UDP sockets aren't connected to anyone in particular.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The entire UDP exchange completes in far fewer steps and zero round-trips of pure connection-setup overhead, directly reflecting UDP's connectionless design. But this example also silently glosses over a real risk: if this UDP datagram had been lost in transit, neither <code>sendto()</code> nor anything else in this code would ever notice or report it — the client would simply hang forever in <code>recvfrom()</code>, waiting for a reply that's never coming, with no built-in timeout or retry. A production UDP application (like DNS, which this module covers elsewhere) must handle this itself, typically with an application-level timeout and retry loop around <code>recvfrom()</code>.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -421,16 +504,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Hands-on: Elementary UDP Sockets in C/Linux?</div>
+  <div class="quiz-prompt">Which two socket API calls that are essential for a TCP server (`listen()` and `accept()`) are unnecessary for a UDP server, and why?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>`bind()` and `socket()`, because UDP does not use addresses</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>`listen()` and `accept()`, because UDP is connectionless — there is no notion of "waiting for and accepting an incoming connection request," since every datagram simply arrives on the bound socket directly, addressed to whoever sent it</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>`socket()` and `close()`, because UDP sockets never need to be closed</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>None — UDP requires the exact same calls as TCP</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Hands-on: Elementary UDP Sockets in C/Linux in Computer Networks.
+    <strong>Pedagogical Insight:</strong> `listen()` and `accept()` exist specifically to manage the process of establishing individual TCP connections (each getting a dedicated socket). Since UDP has no concept of a "connection" to establish or accept, a single bound UDP socket can immediately receive datagrams from any sender, with no equivalent setup step required.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Why does a UDP server need to use `recvfrom()` instead of a plain `recv()`, unlike a TCP server (post-accept()) which can use plain `recv()`?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>`recvfrom()` is simply a faster version of `recv()` with no functional difference</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A UDP socket can receive datagrams from many different, unconnected senders, so the server needs `recvfrom()`'s extra return value — the sender's address — to know who to reply to; a TCP server's per-client socket (from accept()) is already dedicated to one specific, known peer, so a plain `recv()` suffices</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>`recv()` does not exist for network sockets at all</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>`recvfrom()` is required only when using IPv6</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Because a single UDP socket isn't tied to any one specific peer, incoming datagrams could be from anyone — `recvfrom()`'s job is specifically to also report exactly who sent each datagram, information the server needs in order to send a reply back to the correct address using `sendto()`.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">If a UDP datagram sent via `sendto()` is silently lost somewhere in the network, what does the sending application observe?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>`sendto()` returns an explicit error indicating the loss</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Nothing — `sendto()` only confirms the datagram was successfully handed off to the local network stack for transmission; it provides no confirmation of actual delivery, and the application receives no automatic notification if the datagram never arrives</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The operating system automatically retransmits the datagram</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The connection is automatically closed</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> UDP provides no delivery guarantee, and the socket API for UDP faithfully reflects this: `sendto()` succeeding only means the local machine successfully queued the datagram for sending, not that it reached its destination. Any detection of loss and any retransmission logic must be built by the application itself, if the application needs that guarantee.
   </div>
 </div>
     </main>

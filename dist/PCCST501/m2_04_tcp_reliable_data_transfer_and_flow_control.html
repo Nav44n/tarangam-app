@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -395,23 +395,42 @@
   </div>
 </div>
 <h1 id="tcp-reliable-data-transfer-flow-control">TCP Reliable Data Transfer &amp; Flow Control</h1>
-<p><strong>Sliding window protocol, cumulative ACKs, fast retransmit, adaptive RTT estimation, and receive window (rwnd).</strong></p>
+<p><strong>Sliding window protocol, cumulative ACKs, timeout/retransmission, fast retransmit, and the receiver's advertised window.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>TCP Reliable Data Transfer &amp; Flow Control</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Picture a teacher handing out worksheets to a long line of students, one at a time, but only being allowed to hand out a <em>limited stack</em> before checking that the students at the front have actually received and are keeping up — if the teacher just kept piling worksheets on the first student's desk without checking, papers would pile up, fall on the floor, or overwhelm them. So the teacher hands out a manageable batch, waits for confirmation ("got it, ready for more") from the front of the line, and then slides the "currently allowed to send" batch forward.</p>
+<p>This is <strong>TCP's sliding window</strong> in a nutshell — a mechanism that lets a sender transmit <em>multiple</em> segments before waiting for each individual acknowledgment (much more efficient than "send one, wait, send one, wait"), while still respecting a limit (the <strong>window size</strong>) on how much unacknowledged data can be "in flight" at once. <strong>Flow control</strong> is specifically about respecting the <em>receiver's</em> stated capacity — the receiver tells the sender, via the advertised window size in every ACK, exactly how much more data its buffer can currently hold, and the sender must never send more than that, so a fast sender never floods a slow receiver's buffer.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>Cumulative acknowledgments.</strong> TCP uses <strong>cumulative ACKs</strong>: an ACK with number $N$ means "I have correctly received every byte up through $N-1$, in order, with no gaps" — it does <em>not</em> separately acknowledge each individual segment. If segments arrive out of order, TCP (in its basic form) simply re-sends the ACK for the last <em>in-order</em> byte received so far (a "duplicate ACK"), rather than acknowledging the out-of-order data directly.</p>
+<p><strong>The sliding window mechanism:</strong></p>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph SentWindow[&quot;Sender's view of the byte stream&quot;]
+        direction LR
+        A[&quot;Sent &amp;amp; ACKed&lt;br/&gt;(already confirmed)&quot;] --&gt; B[&quot;Sent, not yet ACKed&lt;br/&gt;('in flight')&quot;]
+        B --&gt; C[&quot;Allowed to send now&lt;br/&gt;(within window)&quot;]
+        C --&gt; D[&quot;Cannot send yet&lt;br/&gt;(outside window)&quot;]
+    end
+</code></pre>
+<p>The window "slides" forward across the byte stream as ACKs arrive: whenever new data is acknowledged, the left edge of the window advances by that many bytes, which frees up an equal amount of room at the right edge for new, previously-not-yet-allowed bytes to be sent.</p>
+<p><strong>Timeout and retransmission.</strong> For every segment sent, the sender starts a retransmission timer. If an ACK for that segment doesn't arrive before the timer expires (the RTO, Retransmission Timeout, typically computed adaptively from measured round-trip times), the sender assumes the segment (or its ACK) was lost, and retransmits it.</p>
+<p><strong>Fast Retransmit — a faster alternative to waiting for a timeout.</strong> If the sender receives <strong>three duplicate ACKs</strong> in a row (the same ACK number repeated three extra times), this is a strong signal that a specific segment was lost — because the receiver keeps getting <em>later</em> segments (each triggering another duplicate ACK for the same missing byte position) but never gets the one it's actually waiting for. Rather than waiting for the (often much longer) timeout to expire, TCP immediately retransmits the apparently-missing segment — this "fast retransmit" significantly reduces the delay caused by an isolated lost segment.</p>
+<p><strong>Flow control via the advertised (receive) window.</strong> Every ACK segment includes a <code>window size</code> field, computed by the receiver as:
+$$\text{rwnd} = \text{RcvBuffer} - (\text{LastByteRcvd} - \text{LastByteRead})$$
+i.e., total receive buffer size, minus however much data is currently sitting in the buffer waiting to be read by the application. The sender is required to never have more than <code>rwnd</code> bytes of unacknowledged data outstanding at once — this directly throttles a fast sender to match a slow receiving application's actual consumption rate, entirely independent of any network congestion concerns (which is a <em>separate</em> mechanism, congestion control, covered in the next topic).</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A sender has a window size of 3000 bytes and sends three 1000-byte segments back to back: Segment 1 (bytes 1–1000), Segment 2 (bytes 1001–2000), Segment 3 (bytes 2001–3000). Segment 2 is lost in transit, but Segments 1 and 3 arrive successfully. Trace what ACKs the receiver sends, and how the sender recovers.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Segment 1 arrives: receiver has everything up through byte 1000, sends ACK with <code>ack=1001</code>.
+Segment 2 (bytes 1001–2000) is lost — never arrives.
+Segment 3 (bytes 2001–3000) arrives, but there's a <em>gap</em> (bytes 1001–2000 are still missing) — the receiver cannot advance its cumulative ACK past the gap, so it re-sends <code>ack=1001</code> again (a duplicate ACK), signalling "I still only have everything through byte 1000."
+If the sender had sent more segments after Segment 3 (say, Segments 4 and 5), each would similarly trigger another duplicate <code>ack=1001</code>, since the gap still isn't filled. Once the sender has received <strong>three duplicate ACKs</strong> for <code>ack=1001</code>, Fast Retransmit triggers: the sender immediately retransmits Segment 2, without waiting for its timer to expire.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Once the retransmitted Segment 2 arrives successfully, the receiver now has a complete, gap-free stream through at least byte 3000 (having already buffered Segment 3 earlier, even though it couldn't acknowledge it yet), so it sends a cumulative ACK jumping straight to <code>ack=3001</code> — acknowledging <em>everything</em> through byte 3000 in one message, not needing a separate ACK for Segment 3 individually. This illustrates two TCP hallmarks working together: cumulative ACKs (one ACK can confirm multiple segments at once) and Fast Retransmit (recovering from a single lost segment quickly, without the delay of a full timeout).</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -421,16 +440,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of TCP Reliable Data Transfer & Flow Control?</div>
+  <div class="quiz-prompt">What does a TCP cumulative acknowledgment with `ack=5001` actually confirm?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>Only that byte 5001 specifically was received</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>That every byte up through byte 5000 has been received correctly and in order, with no gaps, and the sender should send byte 5001 next</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>That the connection is about to close</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>That exactly 5001 segments have been sent so far</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to TCP Reliable Data Transfer & Flow Control in Computer Networks.
+    <strong>Pedagogical Insight:</strong> TCP's cumulative acknowledgment scheme means an ACK number represents the *next expected byte*, implicitly confirming that everything before it has arrived correctly and in order — a single ACK can therefore confirm many bytes (potentially across several segments) at once, rather than acknowledging each segment individually.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What condition triggers TCP's Fast Retransmit mechanism?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>A single duplicate ACK</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Three duplicate ACKs received in a row for the same sequence number</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The connection's window size reaching zero</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The receiver sending a FIN segment</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Three duplicate ACKs (the original ACK plus three exact repeats) is used as a strong, standard signal of a lost segment — it indicates the receiver keeps getting later data but is still missing something specific, prompting the sender to retransmit immediately, without waiting for the (typically much slower) retransmission timeout.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">The "advertised window" (rwnd) that a TCP receiver sends back to the sender is used for:</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Congestion control, preventing network-wide overload</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Flow control, preventing the sender from overwhelming this specific receiver's available buffer space</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Determining the initial sequence number</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Selecting which port number to use</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> The advertised window reflects how much free space is currently available in the receiver's own buffer, and directly limits how much unacknowledged data the sender may have in flight — this is flow control, a receiver-capacity concern, distinct from congestion control (a network-capacity concern), which is covered in the next topic.
   </div>
 </div>
     </main>

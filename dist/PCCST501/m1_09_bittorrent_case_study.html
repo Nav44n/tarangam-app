@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -395,23 +395,95 @@
   </div>
 </div>
 <h1 id="p2p-case-study-the-bittorrent-protocol">P2P Case Study: The BitTorrent Protocol</h1>
-<p><strong>Torrents, trackers, swarms, pieces, rarest-first piece selection, and tit-for-tat choking algorithms.</strong></p>
+<p><strong>Torrents, trackers, swarms, file pieces, rarest-first piece selection, and tit-for-tat choking algorithms.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>P2P Case Study: The BitTorrent Protocol</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model: A Thousand-Piece Jigsaw Puzzle, Shared</div><div class="callout-body"><p>Imagine a huge jigsaw puzzle where no single person has all the pieces, but every person in the room has <em>some</em> pieces, and everyone wants a complete copy. The smart strategy isn't to wait patiently for one generous person to hand you piece after piece — it's to <strong>trade</strong>: "I'll give you a piece you're missing if you give me one I'm missing." The people who trade most generously with you get prioritized for future trades; the people who never share anything get frozen out.</p>
+<p>This is exactly BitTorrent's philosophy. A large file is chopped into many small <strong>pieces</strong>. A <strong>swarm</strong> of peers who each have different subsets of pieces trade with each other directly, guided by two clever rules: <strong>rarest-first</strong> (prioritize trading for pieces almost nobody has yet, so they don't disappear from the swarm if their only holder leaves) and <strong>tit-for-tat</strong> (prioritize uploading to peers who are also uploading generously to you, discouraging freeloaders). A central helper called the <strong>tracker</strong> doesn't hold any file data at all — it just plays matchmaker, telling newcomers who else is in the swarm.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<h3 id="21-core-vocabulary">2.1 Core Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Torrent file (.torrent)</strong></td>
+<td>Metadata file: piece hashes (for verifying integrity), file size, and the tracker's address — contains no actual file content</td>
+</tr>
+<tr>
+<td><strong>Tracker</strong></td>
+<td>A server that maintains the list of peers currently participating in a given torrent's swarm and introduces newcomers to existing peers</td>
+</tr>
+<tr>
+<td><strong>Swarm</strong></td>
+<td>The complete set of peers (seeders + leechers) currently exchanging pieces of one specific file</td>
+</tr>
+<tr>
+<td><strong>Seeder</strong></td>
+<td>A peer who already has the <strong>complete</strong> file and continues uploading pieces to others, without downloading</td>
+</tr>
+<tr>
+<td><strong>Leecher</strong></td>
+<td>A peer who has only a <strong>partial</strong> copy and is actively both downloading missing pieces and uploading pieces it already has</td>
+</tr>
+<tr>
+<td><strong>Piece</strong></td>
+<td>A fixed-size chunk (commonly 256 KB–4 MB) that the whole file is divided into, each independently verifiable via a hash</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-joining-a-swarm">2.2 Joining a Swarm</h3>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant N as New Peer
+    participant T as Tracker
+    participant P1 as Existing Peer 1
+    participant P2 as Existing Peer 2
+    N-&gt;&gt;T: &quot;I want to join this torrent's swarm&quot;
+    T-&gt;&gt;N: Here's a list of peers currently in the swarm
+    N-&gt;&gt;P1: &quot;Which pieces do you have?&quot;
+    P1-&gt;&gt;N: Bitfield of available pieces
+    N-&gt;&gt;P2: &quot;Which pieces do you have?&quot;
+    P2-&gt;&gt;N: Bitfield of available pieces
+    N-&gt;&gt;P1: Request piece #47 (rarest-first choice)
+    P1-&gt;&gt;N: Sends piece #47
+    N-&gt;&gt;P2: Now has piece #47 too — can offer it to others
+</code></pre>
+<h3 id="23-rarest-first-piece-selection">2.3 Rarest-First Piece Selection</h3>
+<p>Rather than downloading pieces sequentially (piece 1, then 2, then 3, ...), a BitTorrent client requests whichever pieces are <strong>least common</strong> across the swarm first.</p>
+<ul>
+<li><strong>Why it matters:</strong> if a piece exists on only one seeder and that seeder disconnects before anyone else obtains it, that piece is <strong>lost forever</strong>, making the whole file undownloadable for everyone. Prioritizing rare pieces spreads them across more peers quickly, protecting the swarm's overall health.</li>
+<li><strong>Side benefit:</strong> it also naturally diversifies which pieces each peer holds, which means peers have more unique pieces to <em>trade</em> with each other — directly enabling more parallel, simultaneous exchanges rather than everyone bottlenecking on the same popular pieces.</li>
+</ul>
+<h3 id="24-tit-for-tat-and-choking">2.4 Tit-for-Tat and Choking</h3>
+<p>Each peer only uploads to a limited number of other peers at once — everyone else is <strong>choked</strong> (temporarily refused uploads):</p>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph MyPeer[&quot;Your BitTorrent Client&quot;]
+        direction TB
+        E[&quot;Evaluate upload rates&lt;br/&gt;received FROM each peer&lt;br/&gt;(every ~10 seconds)&quot;]
+        E --&gt; TOP[&quot;Unchoke the ~4 peers&lt;br/&gt;currently uploading to YOU fastest&lt;br/&gt;(reciprocal 'tit-for-tat')&quot;]
+        E --&gt; OC[&quot;Choke everyone else&lt;br/&gt;(refuse to upload to them)&quot;]
+        TOP --&gt; OFC[&quot;Optimistic Unchoke:&lt;br/&gt;periodically unchoke ONE random&lt;br/&gt;peer anyway, to discover&lt;br/&gt;new good trading partners&quot;]
+    end
+</code></pre>
+<ul>
+<li><strong>Tit-for-Tat:</strong> a peer prioritizes uploading to the handful of peers who are <em>currently</em> uploading to it the fastest — directly rewarding reciprocity and discouraging freeloaders who only download without contributing.</li>
+<li><strong>Optimistic Unchoke:</strong> periodically, a peer unchokes one <em>random</em> other peer regardless of past behavior. This gives new peers (who haven't had a chance to prove themselves yet) an opportunity to start trading, and lets a peer discover potentially better trading partners than its current set.</li>
+</ul>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A file is divided into 100 pieces. In a swarm of 5 peers, piece #63 exists on only 1 peer, while pieces #1–#10 exist on all 5 peers. A new peer joins the swarm with zero pieces. Explain which piece(s) the new peer's client should prioritize requesting first, and why.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Rarest-First</div><div class="step-content"><p>The new client queries each existing peer for its bitfield (list of pieces held) and tallies how many peers hold each piece. Piece #63 has a <strong>rarity count of 1</strong> (only one holder in the entire swarm), while pieces #1–#10 have a rarity count of 5 (universally available). Following the rarest-first rule, the client requests <strong>piece #63 first</strong>, ahead of the common pieces #1–#10.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>By grabbing piece #63 early, the new peer creates a <em>second</em> copy of that rare piece in the swarm — so even if the original sole holder disconnects immediately afterward, the piece survives and remains downloadable by future peers. Had the client instead downloaded the abundant pieces #1–#10 first (which were never at risk of disappearing), it would have wasted valuable early opportunity while the truly fragile piece #63 remained a single point of failure for the entire swarm.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -421,16 +493,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of P2P Case Study: The BitTorrent Protocol?</div>
+  <div class="quiz-prompt">What is the primary role of the BitTorrent tracker?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>It stores a complete backup copy of the file being shared</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It maintains a list of peers currently in the swarm and introduces newcomers to existing peers, without holding any of the actual file data</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It verifies the correctness of every piece transferred between peers</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It performs the tit-for-tat choking decisions on behalf of every peer</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to P2P Case Study: The BitTorrent Protocol in Computer Networks.
+    <strong>Pedagogical Insight:</strong> The tracker is purely a matchmaking service — it never transfers file content itself. Once it has told a new peer who else is in the swarm, all actual piece exchange happens directly between peers, peer-to-peer.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Why does BitTorrent prioritize "rarest-first" piece selection instead of downloading pieces sequentially?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Sequential downloading is technically impossible in BitTorrent</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It protects the swarm from losing pieces entirely (if a piece's only holder disconnects) and encourages faster diversification of pieces across peers, enabling more parallel trades</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Rarest pieces are always smaller in size, so they download faster</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It ensures every peer downloads pieces in exactly the same order</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> A piece held by only one peer is at risk of vanishing from the swarm entirely if that peer leaves before anyone else copies it. Prioritizing rare pieces spreads them to more peers quickly, safeguarding the file's completeness for the whole swarm, and also gives peers a more diverse set of pieces to trade.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What is the purpose of "Optimistic Unchoke" in BitTorrent's choking algorithm?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>To permanently ban peers that have never uploaded anything</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>To periodically unchoke a random peer regardless of past reciprocity, giving new or currently-choked peers a chance to prove themselves and letting a client discover potentially better trading partners</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>To guarantee every peer in the swarm gets unchoked at the exact same time</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>To disable rarest-first piece selection temporarily</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Strict tit-for-tat alone would trap new peers in a catch-22: they can't get unchoked because they haven't uploaded anything yet, but they can't upload anything because they're choked and have no pieces. Optimistic Unchoke breaks this deadlock by occasionally giving a random peer a trial opportunity, independent of its trading history so far.
   </div>
 </div>
     </main>

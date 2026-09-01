@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -394,24 +394,59 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="inter-domain-routing-border-gateway-protocol-bgp">Inter-Domain Routing: Border Gateway Protocol (BGP)</h1>
-<p><strong>Autonomous Systems (AS), eBGP vs iBGP, policy-based routing, and path vectors.</strong></p>
+<h1 id="interdomain-routing-border-gateway-protocol-bgp">Interdomain Routing: Border Gateway Protocol (BGP)</h1>
+<p><strong>Autonomous Systems (AS), intra-AS vs inter-AS routing, path vector routing, and policy-based route selection.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Inter-Domain Routing: Border Gateway Protocol (BGP)</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>The previous topic's routing algorithms (Distance Vector, Link State) work beautifully <em>within</em> a single organisation's network — everyone cooperates, sharing information openly, all trying to achieve the same shared goal of globally optimal paths. But the real internet isn't one giant, cooperative network — it's actually a federation of thousands of <em>independently owned and operated</em> networks (internet service providers, universities, corporations), each fiercely protective of their own business interests, who must nonetheless somehow agree on paths that cross between each other's territory.</p>
+<p>Think of it like international mail: within your own country's postal service, routing decisions are purely about efficiency — the fastest, cheapest internal path. But once a letter needs to cross into another country's postal system, "efficiency" is no longer the only consideration — trade agreements, political relationships, and business contracts between the two countries' postal services matter enormously too; a country might deliberately route mail through a "friendly" neighbouring country's system even if a shorter path exists through a country they have no business relationship with. <strong>BGP (Border Gateway Protocol)</strong> is exactly this: the protocol that lets independently-operated networks (called <strong>Autonomous Systems</strong>, or ASes) exchange routing information <em>between</em> each other, where the actual route chosen is often driven as much by business/policy considerations as by pure path length.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>Autonomous Systems (AS).</strong> An AS is a network (or group of networks) under a single administrative control, using one internal routing policy — e.g., one ISP, one large corporation's network, one university's network. Each AS is identified globally by a unique AS number.</p>
+<p><strong>Intra-AS vs. Inter-AS routing — two different jobs, two different protocol families:</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Intra-AS routing</th>
+<th>Inter-AS routing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Scope</td>
+<td>Within a single AS</td>
+<td>Between different, independently-operated ASes</td>
+</tr>
+<tr>
+<td>Goal</td>
+<td>Pure technical efficiency (shortest/cheapest path)</td>
+<td>Efficiency <strong>plus</strong> business policy, contracts, trust relationships</td>
+</tr>
+<tr>
+<td>Example protocols</td>
+<td>OSPF, RIP (the Distance Vector / Link State protocols from the previous topic)</td>
+<td>BGP (essentially the only protocol used for this at internet scale)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>BGP as a path vector protocol.</strong> BGP is often described as a variant of Distance Vector routing, but with a crucial enhancement: instead of each router advertising only a <em>distance</em> to a destination, BGP advertises the <strong>entire AS-path</strong> — the complete sequence of AS numbers a route would traverse to reach the destination, e.g. "to reach network X, go through AS 64512, then AS 64513, then AS 64514 (the destination's own AS)." This extra path information solves the count-to-infinity/loop problem inherent to plain distance vector routing directly — a router can immediately detect and reject any advertised route whose AS-path already includes its own AS number, since accepting it would obviously create a loop.</p>
+<pre><code class="language-mermaid">flowchart LR
+    AS1[&quot;AS 100&lt;br/&gt;(your ISP)&quot;] --&gt;|advertises: &quot;I can reach&lt;br/&gt;Network X via AS-path: 100&quot;| AS2[&quot;AS 200&lt;br/&gt;(a transit provider)&quot;]
+    AS2 --&gt;|re-advertises: &quot;I can reach&lt;br/&gt;Network X via AS-path: 200, 100&quot;| AS3[&quot;AS 300&lt;br/&gt;(another network)&quot;]
+    AS3 -.-&gt;|&quot;AS 300 now knows a route&lt;br/&gt;to Network X, and knows exactly&lt;br/&gt;which ASes it would pass through&quot;| AS3
+</code></pre>
+<p><strong>Policy-based route selection — why BGP doesn't simply pick the "shortest" AS-path.</strong> Real-world business relationships between ASes typically fall into a few categories: <strong>customer</strong> (pays another AS for internet connectivity), <strong>provider</strong> (the AS being paid), and <strong>peer</strong> (two roughly equal-sized networks agreeing to exchange traffic between each other's customers directly, at no cost to either side, since it mutually benefits both). A common, general policy pattern many ASes follow: <strong>prefer routes learned from a customer</strong> (since the customer is paying, and routing their traffic is directly profitable) <strong>over routes learned from a peer, and prefer routes from a peer over routes learned from a provider</strong> (since sending traffic to a provider typically costs the sending AS money). This means the <em>shortest</em> available AS-path is often deliberately <strong>not</strong> the one actually chosen — a longer path through a paying customer can be commercially preferable to a shorter path through an expensive provider.</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>AS 500 learns two possible routes to reach a particular destination network: <strong>Route 1</strong>, a 2-hop AS-path via AS 500's <em>provider</em> (whom AS 500 pays for connectivity); and <strong>Route 2</strong>, a 4-hop (longer) AS-path via one of AS 500's <em>customers</em> (who pays AS 500). Using typical commercial BGP policy, determine which route AS 500 is likely to actually select, and why.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Apply the standard commercial preference ordering: routes learned from a <strong>customer</strong> are generally preferred over routes learned from a <strong>peer</strong>, which are in turn generally preferred over routes learned from a <strong>provider</strong> — regardless of raw AS-path length. Route 2, despite being longer (4 hops vs. 2), is learned from a customer relationship. Route 1, despite being shorter, is learned from a provider relationship (which typically costs AS 500 money to use).</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>AS 500 is likely to select <strong>Route 2</strong> (the longer, 4-hop path via its paying customer), not the shorter Route 1 — directly contradicting the naive assumption that BGP (or any routing protocol) always picks the "shortest" path. This concretely illustrates the defining feature of interdomain routing: business and policy considerations are woven directly into the route-selection process itself, not treated as an afterthought layered on top of a purely technical shortest-path calculation — a sharp contrast to the intra-AS routing algorithms (Distance Vector/Link State) from the previous topic, which optimise purely for path cost.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -421,16 +456,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Inter-Domain Routing: Border Gateway Protocol (BGP)?</div>
+  <div class="quiz-prompt">What is an Autonomous System (AS) in the context of interdomain routing?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>A single router within a network</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A network (or group of networks) under a single administrative control, operating its own internal routing policy, and identified globally by a unique AS number</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>A synonym for a single IP address</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>A protocol used exclusively for intra-AS routing</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Inter-Domain Routing: Border Gateway Protocol (BGP) in Computer Networks.
+    <strong>Pedagogical Insight:</strong> An AS represents the boundary of independent administrative control — one organisation's network, whether a small company or a massive ISP — and it's precisely the *boundaries between* these independently-controlled ASes where BGP's specialised inter-AS routing becomes necessary, since intra-AS protocols like OSPF assume a single, cooperating administrative authority.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">How does BGP, as a "path vector" protocol, directly address the routing-loop problem that plain Distance Vector protocols are susceptible to?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>It doesn't address loops at all; BGP is equally susceptible to routing loops</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>By advertising the complete AS-path (the full sequence of ASes a route would traverse), rather than just a distance value, an AS can immediately detect and reject any route whose AS-path already contains its own AS number, since accepting it would obviously create a loop</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>By requiring every AS to use Dijkstra's algorithm instead</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>By limiting the network to a maximum of two ASes</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Plain Distance Vector protocols only exchange numeric distance estimates, hiding the actual path taken — which is exactly what enables the count-to-infinity/looping problem. BGP's path vector approach makes the entire path explicit in every advertisement, so any AS can trivially spot (and refuse) a route that would loop back through itself.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Why might a network choose a longer AS-path over a shorter one when selecting a BGP route?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>BGP always randomly selects among available routes</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Because BGP route selection incorporates business/policy relationships (e.g., preferring routes learned from a paying customer over a route learned from a provider the network itself must pay), which can outweigh pure path length in the decision</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Longer paths are always technically faster</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Shorter AS-paths are never actually available in real networks</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Unlike purely technical intra-AS routing algorithms, BGP explicitly incorporates commercial relationships into route selection — a longer path through a customer relationship (which generates revenue) is commonly preferred over a shorter path through a provider relationship (which costs money), reflecting the genuinely business-driven nature of interdomain routing on the real internet.
   </div>
 </div>
     </main>

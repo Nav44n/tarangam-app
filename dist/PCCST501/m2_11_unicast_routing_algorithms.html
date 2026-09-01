@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -394,24 +394,81 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="unicast-routing-algorithms-distance-vector-vs-link-state">Unicast Routing Algorithms: Distance Vector vs Link State</h1>
-<p><strong>Dijkstra's shortest path algorithm (OSPF) vs Bellman-Ford equation and Count-to-Infinity problem (RIP).</strong></p>
+<h1 id="unicast-routing-algorithms-distance-vector-link-state">Unicast Routing Algorithms: Distance Vector &amp; Link State</h1>
+<p><strong>Bellman-Ford-based distance vector routing, Dijkstra-based link state routing, and a full step-by-step Dijkstra trace.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Unicast Routing Algorithms: Distance Vector vs Link State</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Imagine you want to find the fastest route to a friend's house, and you have two very different ways of gathering the information needed. <strong>Method 1 (Distance Vector):</strong> you only ever ask your immediate neighbours, "how far do you think it is to my friend's house?" — and you trust their answer completely, adjusting only by adding the distance from you to them. You never see a full map; you just gradually refine your own best guess by gossiping with neighbours, who are themselves gossiping with <em>their</em> neighbours, and so on, until the information (eventually) propagates and stabilises across the whole network. <strong>Method 2 (Link State):</strong> instead, every single location floods the <em>entire network</em> with information about its own direct connections ("I'm connected to A, 5 km away; to B, 3 km away") — so that eventually, <em>everyone</em> has a complete, identical map of the whole network's connections, and each person can independently run their own careful shortest-path calculation (using that complete map) to figure out the best route to anywhere, all on their own, with no further need to trust anyone else's calculations.</p>
+<p>These are the two fundamental philosophies underlying essentially all unicast routing algorithms: <strong>Distance Vector</strong> (decentralised, gossip-based, each router knows only distances, not the actual topology) and <strong>Link State</strong> (each router independently computes shortest paths using a complete, globally-known topology map). Real routing protocols (RIP for distance vector; OSPF for link state) are practical implementations of these two philosophies.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>Distance Vector Routing (based on the Bellman-Ford equation).</strong> Each router $x$ maintains a distance vector — its current best-known cost to every destination $y$ — and periodically exchanges this vector with its direct neighbours. Upon receiving a neighbour $v$'s vector, router $x$ updates its own estimate using:
+$$D_x(y) = \min_{v \in \text{neighbours}(x)} \big{ c(x,v) + D_v(y) \big}$$
+i.e., "my best cost to $y$ is the minimum, over all my neighbours, of (my direct cost to that neighbour) plus (that neighbour's own best-known cost to $y$)." This is applied iteratively and asynchronously — as neighbours' vectors change, routers recompute and potentially propagate further updates — and, given enough time and no further topology changes, the whole network <strong>converges</strong> to correct shortest-path distances everywhere. A well-known weakness: the <strong>"count-to-infinity" problem</strong>, where bad news (a link going down) can propagate very slowly through a chain of routers still trusting each other's stale, now-incorrect information, temporarily creating routing loops before eventually stabilising (mitigated by techniques like "split horizon" and "poison reverse," which prevent a router from advertising a route back to the neighbour it learned that route from).</p>
+<p><strong>Link State Routing (based on Dijkstra's shortest-path algorithm).</strong> Each router first uses a <strong>reliable flooding</strong> mechanism to distribute its own direct link costs to <em>every other router</em> in the network — so that, eventually, every router holds an identical, complete map of the network's full topology. Each router then independently runs Dijkstra's algorithm, using itself as the source, to compute shortest paths to every other node.</p>
+<p><strong>Dijkstra's algorithm — the core mechanism (recap and formalisation):</strong>
+1. Maintain a set $N'$ of nodes whose shortest distance from the source is already finalised (initially just the source itself, distance 0).
+2. For every node not yet in $N'$, maintain a tentative distance estimate (initially $\infty$, except direct neighbours of the source).
+3. Repeatedly: select the node <strong>not yet in $N'$</strong> with the smallest tentative distance, add it to $N'$ (its distance is now finalised), and "relax" all of its outgoing edges — for each neighbour $w$ of the just-added node $u$, check if going through $u$ improves $w$'s tentative distance: $D(w) = \min(D(w), D(u)+c(u,w))$.
+4. Repeat until every node has been added to $N'$.</p>
+<pre><code class="language-mermaid">flowchart LR
+    A[(&quot;A&lt;br/&gt;source&quot;)] -- 4 --&gt; B((&quot;B&quot;))
+    A -- 1 --&gt; C((&quot;C&quot;))
+    C -- 2 --&gt; B
+    C -- 5 --&gt; D((&quot;D&quot;))
+    B -- 1 --&gt; D
+</code></pre>
+<p><strong>Distance Vector vs. Link State — comparison:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Distance Vector</th>
+<th>Link State</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Information known to each router</td>
+<td>Only distances (not the actual topology)</td>
+<td>The complete network topology</td>
+</tr>
+<tr>
+<td>How information spreads</td>
+<td>Gossip with immediate neighbours only</td>
+<td>Flooded to every router</td>
+</tr>
+<tr>
+<td>Computation</td>
+<td>Distributed, iterative (Bellman-Ford)</td>
+<td>Centralised-per-router (Dijkstra), run independently by each router on the same known map</td>
+</tr>
+<tr>
+<td>Convergence speed after a change</td>
+<td>Can be slow (count-to-infinity risk)</td>
+<td>Generally faster</td>
+</tr>
+<tr>
+<td>Example real protocol</td>
+<td>RIP</td>
+<td>OSPF</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Using the graph shown above (A–B: 4, A–C: 1, C–B: 2, C–D: 5, B–D: 1), run Dijkstra's algorithm from source A, tracing the full step-by-step selection and distance updates.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>Initialise:</strong> $D(A)=0$ (source), $D(B)=4$ (direct edge), $D(C)=1$ (direct edge), $D(D)=\infty$ (no direct edge). $N' = {}$.
+<strong>Round 1:</strong> smallest tentative distance not yet in $N'$: $D(C)=1$. Add $C$ to $N'$. Relax $C$'s edges: via $C$, $D(B)$ could be $D(C)+c(C,B) = 1+2=3$, which is better than the current $4$ → update $D(B)=3$. Via $C$, $D(D)$ could be $D(C)+c(C,D)=1+5=6$, better than $\infty$ → update $D(D)=6$.
+<strong>Round 2:</strong> smallest tentative distance not yet in $N'$: $D(B)=3$. Add $B$ to $N'$. Relax $B$'s edges: via $B$, $D(D)$ could be $D(B)+c(B,D)=3+1=4$, which is better than the current $6$ → update $D(D)=4$.
+<strong>Round 3:</strong> smallest tentative distance not yet in $N'$: $D(D)=4$. Add $D$ to $N'$. No further unvisited nodes remain to relax against.
+<strong>Round 4:</strong> only $A$ (already in $N'$ from initialisation) remains — algorithm terminates.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Final shortest distances from $A$: $D(A)=0$, $D(C)=1$, $D(B)=3$ (via path A→C→B, cost $1+2=3$, cheaper than the direct A→B edge costing 4), $D(D)=4$ (via path A→C→B→D, cost $1+2+1=4$, cheaper than the direct A→C→D path costing $1+5=6$). This demonstrates Dijkstra's core insight: the shortest path to a node is not always the most "direct-looking" edge, and the algorithm systematically discovers genuinely optimal routes — including ones passing through several intermediate hops — by always finalising the globally-closest remaining node at each step.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -421,16 +478,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Unicast Routing Algorithms: Distance Vector vs Link State?</div>
+  <div class="quiz-prompt">What key piece of information does a Distance Vector router know that a Link State router's underlying algorithm relies on having *more* of?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>Distance Vector routers know the complete topology; Link State routers know only distances</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Distance Vector routers know only distances to destinations (learned via neighbour gossip); Link State routers, in contrast, have the *complete* network topology (via flooding) before computing shortest paths independently</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Both approaches require identical information</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Neither approach requires any information exchange at all</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Unicast Routing Algorithms: Distance Vector vs Link State in Computer Networks.
+    <strong>Pedagogical Insight:</strong> This is the fundamental philosophical difference: Distance Vector routers never see the actual network map, only cumulative distance estimates passed along by neighbours. Link State routers first ensure every router has full topology information via flooding, and only then does each one independently compute shortest paths (typically via Dijkstra) using that complete picture.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">In Dijkstra's algorithm, once a node is added to the finalised set $N'$, can its shortest-path distance ever change afterward?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Yes, it can be updated later if a cheaper path is discovered</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>No — once a node is added to $N'$, its distance is permanently finalised; this is guaranteed correct precisely because Dijkstra always selects the node with the smallest *tentative* distance among all unvisited nodes at each step, and (assuming non-negative edge weights) no later-discovered path through a still-unvisited, therefore-more-distant node could possibly be shorter</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Distances are only finalised at the very end of the algorithm, for all nodes simultaneously</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Node distances are never actually finalised; the algorithm only estimates</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Dijkstra's correctness relies on always finalising the globally closest remaining node next. Since all unvisited nodes have tentative distances at least as large as the one just selected (and edge weights are non-negative), no future path routed through a still-more-distant, unvisited node could ever produce a shorter path to an already-finalised node — this is exactly why the algorithm never needs to revisit or "undo" a finalised distance.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What is the "count-to-infinity" problem, and which routing approach is specifically susceptible to it?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Link State routing, because flooding takes too long</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Distance Vector routing, where bad news (e.g., a failed link) can propagate slowly through a chain of routers that keep trusting each other's stale, outdated distance information, temporarily creating routing loops with steadily increasing (but still incorrect) distance estimates before finally stabilising</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Both approaches are equally susceptible, with no meaningful difference</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It only affects the very first router that detects a failure, never any others</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Because Distance Vector routers only trust their neighbours' self-reported distances (without knowing the actual topology), a chain of routers can end up in a temporary loop of gradually-increasing incorrect distance estimates after a failure, slowly "counting up" toward correctly recognising a destination is unreachable — a known weakness specifically of the distributed, gossip-based Distance Vector approach, mitigated in practice by techniques like split horizon and poison reverse.
   </div>
 </div>
     </main>

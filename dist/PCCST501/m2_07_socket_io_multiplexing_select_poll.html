@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -394,24 +394,71 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="hands-on-io-multiplexing-with-select-and-poll">Hands-on: I/O Multiplexing with select() and poll()</h1>
-<p><strong>Handling multiple descriptors synchronously without multithreading, fd_set macros, and pollfd structures.</strong></p>
+<h1 id="socket-io-multiplexing-select-and-poll">Socket I/O Multiplexing: select() and poll()</h1>
+<p><strong>The problem of blocking I/O with multiple clients, the select() system call, poll() as its improvement, and a working multi-client server example.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Hands-on: I/O Multiplexing with select() and poll()</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>The previous topic's server handled exactly one client at a time — while <code>recv()</code> is blocked waiting for data from Client A, the server is <em>frozen</em>, completely unable to notice that Client B has also just connected and is waiting. Imagine a single receptionist who can only watch one phone line at a time — if they pick up line 1 and just sit there waiting silently for the caller to speak, they'll completely miss line 2 ringing, even though technically the phone system could handle both calls.</p>
+<p><strong>I/O multiplexing</strong> solves this by giving the receptionist an "watch all lines at once and tell me when <em>any</em> of them has something to report" ability. The <code>select()</code> (and its more scalable cousin, <code>poll()</code>) system call does exactly this at the socket level: instead of blocking on any <em>one</em> socket's <code>recv()</code>, you hand the operating system a whole list of sockets and ask "please block until at least one of these is ready for reading/writing, then tell me exactly which one(s)." This lets a <em>single</em> thread of a program handle many simultaneous client connections, without needing a separate thread or process per client.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>The core problem with plain blocking sockets and many clients:</strong></p>
+<pre><code class="language-mermaid">flowchart TB
+    A[&quot;Server calls recv() on Client A's socket&quot;] --&gt; B{&quot;Data available&lt;br/&gt;from Client A?&quot;}
+    B --&gt;|No| A
+    B --&gt;|Yes| C[&quot;Process Client A's data&quot;]
+    D[&quot;Client B connects and sends data&quot;] -.-&gt;|&quot;never noticed —&lt;br/&gt;server is stuck&lt;br/&gt;blocked on Client A!&quot;| A
+</code></pre>
+<p><strong>select() — the classic solution.</strong> <code>select(readfds, writefds, exceptfds, timeout)</code> takes sets of file descriptors (sockets) to monitor for read-readiness, write-readiness, and exceptional conditions, plus an optional timeout, and blocks until at least one socket in any set becomes ready (or the timeout expires) — then returns the specific subset that's actually ready, so the program only calls <code>recv()</code>/<code>accept()</code> on sockets it <em>knows</em> won't block.
+- <strong>Limitation:</strong> <code>select()</code>'s socket sets are conventionally implemented as fixed-size bitmasks with a hardcoded maximum (<code>FD_SETSIZE</code>, often 1024), and internally, checking readiness typically requires an $O(n)$ linear scan over every monitored socket on each call, every time — this becomes a real performance bottleneck as the number of simultaneous connections grows into the thousands.</p>
+<p><strong>poll() — an improvement.</strong> <code>poll(fds, timeout)</code> takes a dynamically-sized array of <code>{socket, events_to_watch}</code> structures instead of fixed bitmasks, removing the <code>FD_SETSIZE</code> ceiling and making it more convenient for large numbers of sockets — though it still involves an $O(n)$ scan internally, same fundamental cost as <code>select()</code>, just without the hard socket-count limit. (Even more scalable mechanisms — <code>epoll</code> on Linux, <code>kqueue</code> on BSD/macOS — avoid even this linear scan by having the kernel maintain the ready-list incrementally, but these are typically covered as further, OS-specific extensions beyond <code>select</code>/<code>poll</code>.)</p>
+<p><strong>A working multi-client TCP server using select() (Python):</strong></p>
+<pre><code class="language-python">import select
+import socket
+
+HOST, PORT = &quot;0.0.0.0&quot;, 5000
+server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+server_sock.bind((HOST, PORT))
+server_sock.listen(5)
+server_sock.setblocking(False)
+
+sockets_to_monitor = [server_sock]   # start by watching only the listening socket
+
+print(f&quot;Multiplexed server listening on {HOST}:{PORT}&quot;)
+while True:
+    ready_to_read, _, _ = select.select(sockets_to_monitor, [], [])
+    for sock in ready_to_read:
+        if sock is server_sock:
+            # the listening socket is &quot;ready&quot; -&gt; a new client is waiting to be accepted
+            client_sock, addr = server_sock.accept()
+            client_sock.setblocking(False)
+            sockets_to_monitor.append(client_sock)
+            print(f&quot;New connection from {addr}&quot;)
+        else:
+            # an existing client socket is &quot;ready&quot; -&gt; it has data to read
+            data = sock.recv(1024)
+            if data:
+                sock.sendall(b&quot;Echo: &quot; + data)
+            else:
+                # empty recv() means the client disconnected
+                print(&quot;Client disconnected&quot;)
+                sockets_to_monitor.remove(sock)
+                sock.close()
+</code></pre>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Trace what happens in the <code>select()</code>-based server above when: Client A connects, Client B connects shortly after (while Client A hasn't sent anything yet), and then Client A finally sends a message.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Initially, <code>sockets_to_monitor = [server_sock]</code>. <code>select()</code> blocks, watching just this one socket.
+Client A connects → the listening socket (<code>server_sock</code>) becomes "ready to read" (an incoming connection counts as data being ready) → <code>select()</code> returns, the loop sees <code>sock is server_sock</code>, calls <code>accept()</code>, and adds Client A's new dedicated socket to <code>sockets_to_monitor</code>. The loop then calls <code>select()</code> again, now watching <code>[server_sock, client_A_sock]</code>.
+Client B connects next → again the listening socket becomes ready → <code>accept()</code> is called, Client B's socket is added too. <code>select()</code> is now watching <code>[server_sock, client_A_sock, client_B_sock]</code>.
+Client A finally sends data → <code>client_A_sock</code> (specifically, only that one) becomes ready to read → <code>select()</code> returns with exactly <code>[client_A_sock]</code> in the ready list, and the server calls <code>recv()</code> on it — safely, since <code>select()</code> already confirmed data is waiting, so this <code>recv()</code> call is guaranteed not to block.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>At no point did the server ever block waiting on one specific client while ignoring the others — <code>select()</code> continuously re-evaluates the <em>entire</em> set of monitored sockets each time through the loop, and only returns once <em>something</em> (a new connection, or new data on an existing connection) is actually ready, telling the program precisely which socket(s) to act on. This is exactly how a single-threaded server can juggle many simultaneous clients: not by doing multiple things literally at once, but by never wastefully blocking on a socket that has nothing to offer yet.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -421,16 +468,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Hands-on: I/O Multiplexing with select() and poll()?</div>
+  <div class="quiz-prompt">What core problem does I/O multiplexing (select()/poll()) solve, compared to a simple server that calls blocking recv() on one socket at a time?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>It makes data transfer faster over the network itself</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It prevents the server from getting stuck blocked on one client's socket while other clients are waiting with data (or new connections) ready, by monitoring many sockets simultaneously and only acting on whichever ones are actually ready</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It eliminates the need for the TCP handshake</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It removes the need for a listening socket entirely</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Hands-on: I/O Multiplexing with select() and poll() in Computer Networks.
+    <strong>Pedagogical Insight:</strong> A server blocked inside `recv()` on one specific socket cannot notice activity on any other socket at the same time. `select()`/`poll()` instead monitor a whole group of sockets and return only once at least one is ready, letting a single thread of execution service many clients without ever blocking on one to the exclusion of the others.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What is a key limitation of select() compared to poll()?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>select() cannot be used with TCP sockets</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>select() typically has a hardcoded maximum number of sockets it can monitor (FD_SETSIZE), which poll()'s dynamically-sized array-based interface does not impose</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>poll() cannot detect new incoming connections</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>select() runs faster than poll() in every case</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> select()'s traditional implementation represents socket sets as fixed-size bitmasks with a compile-time maximum size, which becomes a real constraint for servers needing to handle very large numbers of simultaneous connections; poll() uses a dynamically-sized structure instead, removing this particular ceiling (though both still share an underlying O(n) scan cost as the number of monitored sockets grows).
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">In the example server code, why does receiving an empty result from `sock.recv(1024)` (i.e., zero bytes) indicate the client has disconnected, rather than simply "no data available right now"?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>It never indicates disconnection; empty data always means an error occurred</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Because select() only returns a socket as "ready to read" when there is actually something to read — including the special end-of-stream signal that occurs when the other side has closed the connection — so recv() returning zero bytes on a socket confirmed ready by select() specifically means the peer has closed the connection, not merely "nothing arrived yet"</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Empty data means the server itself has crashed</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It indicates the client is about to send a very large message</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Since `select()` already guarantees the socket is "ready to read" before `recv()` is called, a genuinely empty result (0 bytes, not a would-block condition) specifically signals that the TCP connection has been closed by the peer — this is the standard way socket APIs represent a graceful disconnect, and it's exactly why the example code treats this case as "client disconnected" and removes/closes that socket.
   </div>
 </div>
     </main>

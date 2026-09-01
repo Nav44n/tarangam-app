@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -394,24 +394,79 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="hands-on-elementary-tcp-sockets-in-clinux">Hands-on: Elementary TCP Sockets in C/Linux</h1>
-<p><strong>socket(), bind(), listen(), accept(), connect(), read(), write(), and client-server workflows.</strong></p>
+<h1 id="socket-programming-elementary-tcp-client-server">Socket Programming: Elementary TCP (Client-Server)</h1>
+<p><strong>The socket API call sequence for TCP: socket, bind, listen, accept, connect, send/recv, close — with a complete working Python example.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Hands-on: Elementary TCP Sockets in C/Linux</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Everything covered so far in this module — ports, the 3-way handshake, sliding windows, congestion control — happens <em>underneath</em> what a programmer actually writes. From an application programmer's point of view, all of that complexity is hidden behind a small, standard set of function calls called the <strong>socket API</strong> — think of a socket as a "phone" your program picks up, dials with, and talks through, while the operating system's networking stack handles the dial tone, the actual wiring, and the busy signals behind the scenes.</p>
+<p>There's a natural asymmetry between the two ends: a <strong>server</strong> must first set up a phone that can <em>receive</em> calls at a known, published number (a specific IP and port) and then patiently wait — it doesn't know who will call, or when. A <strong>client</strong>, in contrast, already knows the server's "phone number" and simply dials it whenever it's ready. This asymmetry is directly reflected in which socket API calls each side uses — the server calls <code>bind</code>, <code>listen</code>, and <code>accept</code> (setting up to receive), while the client calls <code>connect</code> (actively reaching out) — and understanding <em>why</em> each call exists, in this specific order, is the key to writing correct network code, not just memorising the function names.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>The TCP server call sequence:</strong></p>
+<pre><code class="language-mermaid">flowchart TB
+    S1[&quot;socket()&lt;br/&gt;create a socket&quot;] --&gt; S2[&quot;bind()&lt;br/&gt;attach it to a specific&lt;br/&gt;local IP + port&quot;]
+    S2 --&gt; S3[&quot;listen()&lt;br/&gt;mark it ready to accept&lt;br/&gt;incoming connections,&lt;br/&gt;set a backlog queue size&quot;]
+    S3 --&gt; S4[&quot;accept()&lt;br/&gt;BLOCKS until a client connects;&lt;br/&gt;returns a NEW socket&lt;br/&gt;dedicated to that client&quot;]
+    S4 --&gt; S5[&quot;recv() / send()&lt;br/&gt;exchange data over&lt;br/&gt;the new client socket&quot;]
+    S5 --&gt; S6[&quot;close()&lt;br/&gt;close the client socket&quot;]
+    S6 -.-&gt;|loop back for next client| S4
+</code></pre>
+<p><strong>The TCP client call sequence:</strong></p>
+<pre><code class="language-mermaid">flowchart TB
+    C1[&quot;socket()&lt;br/&gt;create a socket&quot;] --&gt; C2[&quot;connect()&lt;br/&gt;actively reach out to the&lt;br/&gt;server's known IP + port&lt;br/&gt;(triggers the 3-way handshake)&quot;]
+    C2 --&gt; C3[&quot;send() / recv()&lt;br/&gt;exchange data&quot;]
+    C3 --&gt; C4[&quot;close()&lt;br/&gt;close the socket&quot;]
+</code></pre>
+<p><strong>Why the server's <code>accept()</code> returns a <em>brand-new</em> socket.</strong> This is one of the most commonly misunderstood parts of socket programming: the original socket created by <code>bind()</code>/<code>listen()</code> is the <strong>listening socket</strong> — it never actually exchanges any application data. Every time <code>accept()</code> successfully returns (after a client connects), it hands back a <em>different</em>, brand-new socket specifically dedicated to that one client connection, while the original listening socket goes right back to waiting for the <em>next</em> incoming connection. This is exactly what allows a single server process to keep listening for new clients while separately exchanging data with already-connected ones (typically by handling each accepted socket in its own thread or process, or via the I/O multiplexing techniques covered in the next topic).</p>
+<p><strong>A complete, minimal working example (Python, using the standard <code>socket</code> module):</strong></p>
+<pre><code class="language-python"># --- server.py ---
+import socket
+
+HOST, PORT = &quot;0.0.0.0&quot;, 5000
+
+server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # 1. socket()
+server_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+server_sock.bind((HOST, PORT))                                   # 2. bind()
+server_sock.listen(5)                                            # 3. listen(), backlog=5
+print(f&quot;Server listening on {HOST}:{PORT}&quot;)
+
+while True:
+    client_sock, client_addr = server_sock.accept()              # 4. accept() — blocks
+    print(f&quot;Connected by {client_addr}&quot;)
+    data = client_sock.recv(1024)                                # 5. recv()
+    print(f&quot;Received: {data.decode()}&quot;)
+    client_sock.sendall(b&quot;Hello from server!&quot;)                   #    send()
+    client_sock.close()                                          # 6. close() this client
+</code></pre>
+<pre><code class="language-python"># --- client.py ---
+import socket
+
+HOST, PORT = &quot;127.0.0.1&quot;, 5000
+
+client_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # 1. socket()
+client_sock.connect((HOST, PORT))                                 # 2. connect() — handshake happens here
+client_sock.sendall(b&quot;Hello from client!&quot;)                        #    send()
+data = client_sock.recv(1024)                                     #    recv()
+print(f&quot;Received: {data.decode()}&quot;)
+client_sock.close()                                                # 3. close()
+</code></pre>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Using the code above, trace exactly what happens, in order, from the moment <code>server.py</code> is started, through a single client connecting via <code>client.py</code>, exchanging one message each way, and disconnecting.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><ol>
+<li><code>server.py</code> runs <code>socket()</code>, then <code>bind()</code> to <code>0.0.0.0:5000</code> (listening on all local network interfaces), then <code>listen(5)</code> — the server is now waiting, and its <code>accept()</code> call blocks (pauses execution) until a client shows up.</li>
+<li><code>client.py</code> runs <code>socket()</code>, then <code>connect(("127.0.0.1", 5000))</code> — this triggers the actual TCP 3-way handshake (SYN, SYN-ACK, ACK) with the server, at the transport layer, entirely hidden beneath this one function call.</li>
+<li>The moment the handshake completes, the server's blocked <code>accept()</code> call returns, providing a new <code>client_sock</code> dedicated to this connection, and the server prints the client's address.</li>
+<li>The client calls <code>sendall(b"Hello from client!")</code>; the server's <code>recv(1024)</code> (previously blocked, waiting for data) receives this message and prints it.</li>
+<li>The server calls <code>sendall(b"Hello from server!")</code>; the client's <code>recv(1024)</code> receives and prints this reply.</li>
+<li>The server calls <code>client_sock.close()</code> for this one client's dedicated socket — the underlying TCP 4-way teardown happens automatically behind this call — while its <em>original</em> listening socket, still open, loops back to <code>accept()</code> again, ready for the next client.</li>
+</ol></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>This trace shows the exact one-to-one correspondence between the transport-layer concepts from earlier in this module and the socket API calls that trigger them: <code>connect()</code> triggers the 3-way handshake; <code>close()</code> triggers the 4-way teardown; and the reliable, ordered, byte-stream delivery guaranteed by <code>send()</code>/<code>recv()</code> is exactly TCP's sliding-window and retransmission machinery working invisibly underneath. Nothing about congestion control, sequence numbers, or ACKs needed to appear anywhere in this application code — that's precisely the point of the layered architecture from Module 1: the transport layer's complexity is fully hidden behind this small, clean API.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -421,16 +476,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Hands-on: Elementary TCP Sockets in C/Linux?</div>
+  <div class="quiz-prompt">On the server side, what does the socket returned by `accept()` represent, and how is it different from the original socket created by `bind()`/`listen()`?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>They are the exact same socket object, used interchangeably</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>`accept()` returns a brand-new, dedicated socket specifically for the newly connected client, while the original listening socket remains open and continues waiting for future connections via further `accept()` calls</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>`accept()` closes the original listening socket permanently</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The listening socket is used for sending data, and the accepted socket is only used for receiving</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Hands-on: Elementary TCP Sockets in C/Linux in Computer Networks.
+    <strong>Pedagogical Insight:</strong> This distinction is the most common point of confusion for beginners: the listening socket's only job is to sit and wait for incoming connection attempts. Each time a client successfully connects, `accept()` hands back a completely separate socket dedicated to that one client's data exchange, freeing the original listening socket to immediately go back to waiting for the next client.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Which socket API call on the client side actually triggers the underlying TCP 3-way handshake?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>socket()</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>connect()</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>send()</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>recv()</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> `socket()` merely creates an unconnected socket object locally, with no network activity yet. It's specifically the `connect()` call that reaches out to the server's IP and port, triggering the SYN / SYN-ACK / ACK exchange described in the TCP basics topic, entirely hidden beneath this one function call.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">In the server's call sequence, why must `bind()` happen before `listen()`, and `listen()` before `accept()`?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>The order doesn't actually matter; they can be called in any sequence</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>`bind()` must first attach the socket to a specific local address/port before the socket can meaningfully `listen()` for connections to that address; and `listen()` must mark the socket as ready to accept connections (setting up the backlog queue) before any call to `accept()` can meaningfully wait for and retrieve one</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>`listen()` creates the socket, so it must come first</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>`accept()` must be called before `bind()` to reserve the port in advance</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Each call builds logically on the previous one: you can't listen for connections on an address you haven't bound to yet, and you can't accept a connection from a socket that hasn't been marked as actively listening. This dependency is exactly why the socket API enforces this specific calling order.
   </div>
 </div>
     </main>

@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -394,24 +394,124 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="network-layer-forwarding-vs-routing-ipv4-header">Network Layer: Forwarding vs Routing &amp; IPv4 Header</h1>
-<p><strong>Datagram networks, IPv4 header format, fragmentation &amp; reassembly, flags, and MTU.</strong></p>
+<h1 id="network-layer-overview-ip-protocols">Network Layer Overview &amp; IP Protocols</h1>
+<p><strong>Forwarding vs routing, the datagram (IPv4) header, and the roles of ICMP, ARP, and IGMP as helper protocols.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Network Layer: Forwarding vs Routing &amp; IPv4 Header</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>The Transport layer (Module 2 so far) assumed something crucial without explaining it: that data can somehow travel <em>between any two machines on the entire internet</em>, not just between two devices plugged into the same cable. That "somehow" is the <strong>Network layer</strong>'s entire job — and it splits neatly into two distinct sub-problems, often confused by beginners but genuinely different: <strong>routing</strong> is the <em>planning</em> problem — figuring out, in advance, the best paths through the network (this is a global, big-picture, "draw the map" task, handled by routing protocols and algorithms). <strong>Forwarding</strong> is the <em>execution</em> problem — given a packet that has just arrived at one specific router, quickly looking up "which outgoing link should this go out on?" and pushing it there (a fast, local, per-packet, "read the map I already have" task, performed by every router on every single packet). Routing happens occasionally, in the background, updating each router's map (its <strong>forwarding table</strong>); forwarding happens constantly, for every packet, using whatever that map currently says.</p>
+<p>The core protocol living at this layer is <strong>IP (Internet Protocol)</strong> — the one thing every single device on the internet must speak, regardless of what's above it (TCP or UDP) or below it (Ethernet, Wi-Fi, fiber). IP itself is deliberately simple and unreliable (much like UDP, but one layer down) — it just does its best to get each packet, independently, toward its destination, with a handful of small helper protocols (ICMP, ARP) picking up specific side-jobs IP itself doesn't handle.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>Routing vs. Forwarding — side by side:</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Routing</th>
+<th>Forwarding</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Question answered</td>
+<td>"What's the best overall path to every possible destination?"</td>
+<td>"This packet just arrived — which single outgoing link do I send it out on, right now?"</td>
+</tr>
+<tr>
+<td>Scope</td>
+<td>Network-wide (needs information from other routers)</td>
+<td>Local to a single router (uses only its own table)</td>
+</tr>
+<tr>
+<td>Frequency</td>
+<td>Occasional (runs in the background, updates when topology changes)</td>
+<td>Constant (happens for every single packet)</td>
+</tr>
+<tr>
+<td>Mechanism</td>
+<td>Routing algorithms/protocols (covered in upcoming topics)</td>
+<td>A fast table lookup (the forwarding table, built by routing)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The IPv4 datagram header (20 bytes minimum):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Size</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Version</td>
+<td>4 bits</td>
+<td>IP version (4, for IPv4)</td>
+</tr>
+<tr>
+<td>Header Length (IHL)</td>
+<td>4 bits</td>
+<td>Header length, accounting for variable-length options</td>
+</tr>
+<tr>
+<td>Type of Service (ToS)</td>
+<td>8 bits</td>
+<td>Traffic priority hints, used in QoS (later topic)</td>
+</tr>
+<tr>
+<td>Total Length</td>
+<td>16 bits</td>
+<td>Entire datagram size (header + data), in bytes</td>
+</tr>
+<tr>
+<td>Identification, Flags, Fragment Offset</td>
+<td>16+3+13 bits</td>
+<td>Support datagram fragmentation/reassembly when a link's MTU is too small</td>
+</tr>
+<tr>
+<td>Time to Live (TTL)</td>
+<td>8 bits</td>
+<td>Decremented by every router hop; datagram discarded when it hits 0, preventing infinite routing loops from consuming resources forever</td>
+</tr>
+<tr>
+<td>Protocol</td>
+<td>8 bits</td>
+<td>Identifies the transport-layer protocol carried inside (6=TCP, 17=UDP) — this is the network-layer analogue of a "port number," but for demultiplexing to the right <em>transport protocol</em>, not the right process</td>
+</tr>
+<tr>
+<td>Header Checksum</td>
+<td>16 bits</td>
+<td>Error detection over the header only (not the payload — that's left to upper layers)</td>
+</tr>
+<tr>
+<td>Source / Destination IP address</td>
+<td>32 + 32 bits</td>
+<td>The addresses actually used for routing decisions</td>
+</tr>
+<tr>
+<td>Options, Padding</td>
+<td>variable</td>
+<td>Rarely used in practice</td>
+</tr>
+</tbody>
+</table>
+<p><strong>ICMP (Internet Control Message Protocol) — IP's built-in error-reporting and diagnostic companion.</strong> ICMP messages are carried inside IP datagrams but serve a fundamentally different purpose than user data: they report problems (e.g., "Destination Unreachable," "Time Exceeded" — sent when TTL hits zero) and support diagnostics. Two everyday tools are built directly on ICMP: <code>ping</code> (sends ICMP Echo Request, expects ICMP Echo Reply, measuring round-trip time and reachability) and <code>traceroute</code>/<code>tracert</code> (cleverly sends packets with deliberately increasing TTL values — 1, 2, 3, ... — so that each successive router along the path is the one that finally lets TTL expire and sends back a "Time Exceeded" ICMP message, revealing the path one hop at a time).</p>
+<p><strong>ARP (Address Resolution Protocol) — bridging IP addresses to physical (MAC) addresses.</strong> IP routing decisions operate on IP addresses, but actually delivering a frame on a local network (like Ethernet) requires the <em>physical (MAC) address</em> of the next hop. ARP is a local-network-only protocol: a device broadcasts "who has IP address X?" to everyone on the local network, and the device that owns that IP replies with "that's me, here's my MAC address" — this mapping is then cached (in an "ARP table" or "ARP cache") to avoid repeating the broadcast for every single packet.</p>
+<p><strong>IGMP (Internet Group Management Protocol) — brief mention, detailed later.</strong> Used by hosts to inform their local router which multicast groups they wish to receive traffic for — foundational to the multicast routing topic later in this module.</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A datagram is sent with TTL = 3. It passes through Router A, Router B, and Router C before reaching its final destination host. Trace the TTL value at each hop, and explain what would happen if the destination were actually one hop further away (behind a fourth router, Router D).</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Datagram leaves source: TTL = 3.
+Arrives at Router A: Router A decrements TTL by 1 (now TTL=2), checks it's still greater than 0, forwards it onward.
+Arrives at Router B: decrements to TTL=1, still greater than 0, forwards onward.
+Arrives at Router C: decrements to TTL=0. Since the destination host is reached at exactly this point (per the original setup), the datagram is delivered successfully — routers only <em>discard and report</em> a datagram whose TTL reaches 0 <em>before</em> reaching the actual final destination; delivery to the end host itself doesn't require a further decrement-and-check step in the same way.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>If instead the destination were one hop further away, behind a fourth Router D: the datagram would arrive at Router D with TTL already at 0 (having been decremented to 0 by Router C, one hop too early), and Router D — following the TTL-expiry rule — would <strong>discard</strong> the datagram and send back an ICMP "Time Exceeded" message to the original source, rather than forwarding it any further. This exact mechanism (deliberately setting a small TTL and watching for the resulting "Time Exceeded" replies) is precisely how <code>traceroute</code> maps out a path, one router at a time, as mentioned in the theory section above.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -421,16 +521,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Network Layer: Forwarding vs Routing & IPv4 Header?</div>
+  <div class="quiz-prompt">What is the essential difference between "routing" and "forwarding" in the network layer?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>They are two different names for the exact same process</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Routing is the network-wide, occasional process of determining the best paths and building forwarding tables; forwarding is the fast, local, per-packet process of using an already-built table to decide which outgoing link to send a specific arriving packet on</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Forwarding only happens at the source host; routing only happens at the destination host</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Routing is done by hosts; forwarding is done only by routers</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Network Layer: Forwarding vs Routing & IPv4 Header in Computer Networks.
+    <strong>Pedagogical Insight:</strong> Routing is the "planning" phase — algorithms and protocols that figure out good paths and populate each router's forwarding table, running occasionally (updating when the network topology changes). Forwarding is the "execution" phase — the fast table lookup every router performs for every single packet that passes through it, using whatever table routing has most recently provided.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What is the purpose of the Time to Live (TTL) field in the IPv4 header?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>It specifies how long the receiving application should keep the data before deleting it</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It is decremented by each router the datagram passes through, and the datagram is discarded once it reaches zero — preventing a datagram stuck in a routing loop from circulating the network forever</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It encrypts the datagram's payload</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It indicates the total number of bytes in the datagram</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> TTL acts as a hop-count safety limit: since routing errors or loops could theoretically cause a datagram to circulate indefinitely, TTL guarantees every datagram is eventually discarded (and its source notified via ICMP) if it doesn't reach its destination within a bounded number of hops.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What specific problem does ARP (Address Resolution Protocol) solve?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Translating domain names into IP addresses</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Mapping a known IP address to the corresponding physical (MAC) address needed to actually deliver a frame on the local network</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Detecting and reporting network errors</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Establishing a TCP connection</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Routing and forwarding decisions are made using IP addresses, but delivering data on a local network segment (like Ethernet) ultimately requires the destination's physical (MAC) address. ARP is the local-network broadcast protocol specifically used to discover "which MAC address currently corresponds to this IP address" — a distinct task from DNS, which maps domain names to IP addresses at a different layer entirely.
   </div>
 </div>
     </main>

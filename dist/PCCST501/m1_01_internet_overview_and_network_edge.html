@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -394,62 +394,158 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<hr />
-<p>id: m1_01_internet_overview_and_network_edge
-title: "Internet Overview &amp; The Network Edge"
-sidebar_label: "1.1 Internet &amp; Network Edge"
-description: "An introduction to the nuts and bolts of the Internet, end systems, and access networks."</p>
-<hr />
 <h1 id="internet-overview-the-network-edge">Internet Overview &amp; The Network Edge</h1>
-<h2 id="1-the-big-picture-what-is-the-internet">1. The Big Picture: What is the Internet?</h2>
-<p>When you open an app on your phone to send a message, you are utilizing the largest engineered system in human history. The Internet can be defined in two distinct ways: by its "nuts and bolts" (the physical components) and by its services (what it does for applications).</p>
-<h3 id="the-nuts-and-bolts-view">The "Nuts and Bolts" View</h3>
-<p>Imagine the global highway system. The Internet is similar, but instead of moving cars, it moves data.</p>
+<p><strong>End systems and hosts, access networks and physical media, and the two complementary ways of defining "the Internet."</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model: The Global Highway System</div><div class="callout-body"><p>Imagine a global highway network. Cars don't teleport between cities — they travel on physical roads, pass through intersections, and eventually arrive at a driveway belonging to a house or office. The Internet works the same way, except it moves <strong>data</strong> instead of cars.</p>
 <ul>
-<li><strong>End Systems (Hosts):</strong> Laptops, smartphones, servers, smart TVs, and IoT devices. They sit at the "edge" of the network.</li>
-<li><strong>Communication Links:</strong> The roads. These include fiber optics, copper wire, radio, and satellite. Different links have different transmission rates (bandwidth).</li>
-<li><strong>Packet Switches:</strong> The intersections and roundabouts. Routers and switches take chunks of data (packets) arriving on one incoming communication link and forward them to an outgoing communication link.</li>
+<li>Your laptop, phone, or a streaming server is a <strong>house</strong> — an <em>end system</em> where a trip begins or ends.</li>
+<li>The fiber, copper, or radio link connecting you to the network is the <strong>road</strong> — a <em>communication link</em>.</li>
+<li>A router is an <strong>intersection</strong> — a <em>packet switch</em> that looks at an arriving chunk of data and forwards it toward the right road out.</li>
 </ul>
-<h3 id="the-services-view">The "Services" View</h3>
-<p>From a software engineering perspective, the Internet is a distributed application platform. It provides a communication infrastructure that enables applications (like web browsers, social media networks, and streaming services) to exchange data.</p>
+<p>Zoom out far enough, though, and this "nuts and bolts" picture isn't the only useful lens. A software engineer building an app for millions of users doesn't think about copper wire and fiber — they think of the Internet as a <strong>service</strong>: a distributed platform that reliably moves bytes between any two programs, anywhere. Both views are correct; they're just answering different questions ("how is it built?" vs. "what does it do for me?").</p></div></div>
+
 <hr />
-<h2 id="2-the-network-edge">2. The Network Edge</h2>
-<p>The "Network Edge" refers to the devices and systems that sit on the absolute boundary of the Internet. If the Internet is a vast city, the edge consists of the houses and businesses where the trips actually begin and end.</p>
-<h3 id="end-systems-hosts">End Systems (Hosts)</h3>
-<p>We call them "end systems" because they sit at the edge, and we call them "hosts" because they host (run) application programs such as a web browser or a web server.</p>
-<p>Hosts are broadly divided into:</p>
+<p><a id="the-math"></a></p>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<h3 id="21-the-nuts-and-bolts-view">2.1 The "Nuts and Bolts" View</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+<th>Real-world analogy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>End Systems (Hosts)</strong></td>
+<td>Laptops, smartphones, servers, smart TVs, IoT devices that sit at the <em>edge</em> of the network and run applications</td>
+<td>Houses and businesses</td>
+</tr>
+<tr>
+<td><strong>Communication Links</strong></td>
+<td>Fiber, copper, radio, satellite — each with its own transmission rate (bandwidth)</td>
+<td>Roads of varying width/speed</td>
+</tr>
+<tr>
+<td><strong>Packet Switches</strong></td>
+<td>Routers and switches; take packets arriving on one link and forward them out another</td>
+<td>Intersections and roundabouts</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-the-services-view">2.2 The "Services" View</h3>
+<p>From this angle the Internet is a <strong>distributed application platform</strong>: an infrastructure that lets applications (browsers, streaming clients, social apps) exchange data without either endpoint needing to understand the physical path in between.</p>
+<h3 id="23-the-network-edge">2.3 The Network Edge</h3>
+<p>The network edge is the outermost boundary of the Internet — where end systems physically attach. Hosts here split into two functional roles:</p>
 <ul>
-<li><strong>Clients:</strong> Desktops, mobile devices, and laptops that request information.</li>
-<li><strong>Servers:</strong> Powerful machines that store and distribute web pages, stream video, or relay emails. Today, most servers reside in massive data centers.</li>
+<li><strong>Clients</strong> — desktops, mobile devices, laptops that <em>request</em> information.</li>
+<li><strong>Servers</strong> — always-on, powerful machines that <em>supply</em> information (web pages, video streams, email), typically housed in large data centers today.</li>
 </ul>
-<h3 id="access-networks">Access Networks</h3>
-<p>How do you connect your laptop (at the edge) to the very first router (the edge router) in the vast network core? This is done via an Access Network.</p>
-<p>Common types of access networks include:</p>
+<h3 id="24-access-networks-getting-from-the-edge-to-the-first-router">2.4 Access Networks — Getting From the Edge to the First Router</h3>
+<pre><code class="language-mermaid">flowchart LR
+    H[&quot;Host&lt;br/&gt;(your laptop/phone)&quot;] --&gt;|Access Network| ER[&quot;Edge Router&lt;br/&gt;(first hop into the network core)&quot;]
+    ER --&gt; CORE[&quot;Network Core&lt;br/&gt;(routers, backbone links)&quot;]
+
+    subgraph AccessTypes[&quot;Common Access Network Types&quot;]
+        direction TB
+        DSL[&quot;DSL / Cable / FTTH&lt;br/&gt;(Home Networks)&quot;]
+        ENET[&quot;Ethernet&lt;br/&gt;(Enterprise Networks)&quot;]
+        WIFI[&quot;Wi-Fi&lt;br/&gt;(Wireless LAN)&quot;]
+        CELL[&quot;4G/5G&lt;br/&gt;(Wide-Area Wireless)&quot;]
+    end
+</code></pre>
 <ul>
-<li><strong>Home Networks (DSL, Cable, FTTH):</strong> Uses digital subscriber lines (copper telephone wire), cable (coaxial television cable), or Fiber to the Home.</li>
-<li><strong>Enterprise Networks (Ethernet):</strong> Used in companies and universities. Devices connect to Ethernet switches, which connect to an institutional router.</li>
-<li><strong>Wireless Access Networks (Wi-Fi, 4G/5G):</strong></li>
-<li><strong>Wireless LANs (Wi-Fi):</strong> Within a building, transmitting to a local base station (access point).</li>
-<li><strong>Wide-Area Wireless Networks (Cellular):</strong> Transmitting to a cell tower tens of kilometers away.</li>
+<li><strong>Home Networks:</strong> DSL (over copper telephone wire), Cable (over coaxial TV cable), or FTTH (Fiber to the Home).</li>
+<li><strong>Enterprise Networks:</strong> Devices connect via Ethernet switches, which connect to an institutional router — common in companies and universities.</li>
+<li><strong>Wireless Access Networks:</strong></li>
+<li><strong>Wi-Fi (WLAN):</strong> short range, within a building, to a local access point.</li>
+<li><strong>Cellular (4G/5G):</strong> long range, to a cell tower kilometers away.</li>
+</ul>
+<h3 id="25-physical-media">2.5 Physical Media</h3>
+<p>Bits must travel across some physical medium — electromagnetic waves or light pulses.</p>
+<ul>
+<li><strong>Guided Media</strong> (waves travel along a solid path):</li>
+<li><em>Twisted-Pair Copper</em> — cheapest, used in most Ethernet cabling (Cat5/Cat6).</li>
+<li><em>Coaxial Cable</em> — two concentric copper conductors, supports high download speeds.</li>
+<li><em>Fiber Optics</em> — pulses of light through glass fiber; extremely fast, immune to electromagnetic interference, backbone of long-haul transoceanic links.</li>
+<li><strong>Unguided Media</strong> (waves propagate through open air/space):</li>
+<li><em>Terrestrial Radio</em> — Wi-Fi, AM/FM.</li>
+<li><em>Satellite Radio</em> — geosynchronous or Low Earth Orbit (LEO, e.g., Starlink).</li>
 </ul>
 <hr />
-<h2 id="3-physical-media">3. Physical Media</h2>
-<p>Data doesn't teleport; it requires a physical medium to travel from point A to point B. Bits propagate across these media via electromagnetic waves or light pulses.</p>
-<ul>
-<li><strong>Guided Media:</strong> The waves are guided along a solid medium.</li>
-<li><strong>Twisted-Pair Copper Wire:</strong> The oldest and most common. Used in Ethernet cables (Cat5, Cat6).</li>
-<li><strong>Coaxial Cable:</strong> Two concentric copper conductors. Can achieve high download speeds.</li>
-<li><strong>Fiber Optics:</strong> Thin flexible glass fibers conducting pulses of light. Extremely fast, immune to electromagnetic interference, and used for long-haul transatlantic links.</li>
-<li><strong>Unguided Media:</strong> The waves propagate in the atmosphere and in outer space.</li>
-<li><strong>Terrestrial Radio Channels:</strong> AM/FM radio, Wi-Fi.</li>
-<li><strong>Satellite Radio Channels:</strong> Geosynchronous or Low Earth Orbit (LEO, like Starlink) satellites.</li>
-</ul>
+<p><a id="worked-example"></a></p>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>You stream a movie on a smart TV connected over Wi-Fi to your home router, which uses a Fiber-to-the-Home (FTTH) connection to your ISP. Identify every "nuts and bolts" component involved in getting one video frame from Netflix's server to your TV screen.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Tracing the Path</div><div class="step-content"><ol>
+<li><strong>End Systems:</strong> Netflix's server (a host, acting as <em>server</em>) and your smart TV (a host, acting as <em>client</em>).</li>
+<li><strong>Access Network (server side):</strong> Netflix's server sits in a data center connected via high-capacity enterprise-grade links into the network core.</li>
+<li><strong>Network Core:</strong> A sequence of <strong>packet switches</strong> (routers) forward the video's packets from Netflix's data center, across backbone links, toward your ISP.</li>
+<li><strong>Access Network (your side):</strong> The packets arrive at your ISP and travel over the <strong>FTTH fiber link</strong> (guided medium, physical layer) to your home router.</li>
+<li><strong>Final Hop:</strong> Your router forwards the packets over <strong>Wi-Fi</strong> (unguided medium, terrestrial radio) to the smart TV.</li>
+</ol></div></div>
+
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>A single video frame crosses <em>multiple</em> communication links (fiber, backbone links, Wi-Fi) and passes through <em>multiple</em> packet switches, yet the "services view" hides all of this: your smart TV's app simply sees a continuous stream of video data arriving, as if the underlying nuts-and-bolts complexity didn't exist.</p></div></div>
+
 <hr />
-<h2 id="4-active-recall-quiz">4. Active Recall Quiz</h2>
-<ul>
-<li><strong>Question 1:</strong> Why is a smartphone considered an "end system" or "host"?</li>
-<li><strong>Question 2:</strong> If you are watching a Netflix movie on a smart TV connected via Wi-Fi, which parts of the "nuts and bolts" are involved?</li>
-</ul>
+<p><a id="self-check"></a></p>
+<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q1: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Why is a smartphone considered an "end system" or "host," even though it isn't a powerful server?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Because it only receives data and never sends any</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Because it sits at the edge of the network and runs (hosts) application programs, regardless of whether it acts as a client or server</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Because it is directly wired into the network core</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Because it lacks an IP address</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> "End system" and "host" describe *position* (at the network's edge) and *function* (running application programs), not raw processing power. A smartphone qualifies just as much as a data-center server — it simply usually plays the *client* role rather than the *server* role.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Which of the following is an example of a "packet switch" rather than an "end system"?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>A smart TV streaming Netflix</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>A laptop sending an email</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A router forwarding packets between two communication links</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>A web server hosting a website</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Packet switches (routers and switches) sit *inside* the network core or at its access points, forwarding data between links — they don't originate or consume application data themselves, which is what distinguishes them from end systems (hosts) like laptops or servers.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Why is Fiber Optic cable preferred over Twisted-Pair Copper for long-haul, transoceanic communication links?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>It is cheaper to manufacture per meter</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It requires no maintenance ever</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It offers extremely high transmission rates and is immune to electromagnetic interference over very long distances</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It can only be used for wireless communication</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Fiber optics carry data as light pulses through glass, which suffers far less signal degradation and interference over long distances than electrical signals in copper, making it the backbone medium of choice for undersea and cross-continental links.
+  </div>
+</div>
     </main>
 
     <footer class="pagefoot" id="pagefoot">

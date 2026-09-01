@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -394,24 +394,78 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="transport-layer-services-multiplexing">Transport-Layer Services &amp; Multiplexing</h1>
-<p><strong>Process-to-process delivery, port numbers, connectionless vs connection-oriented multiplexing/demultiplexing.</strong></p>
+<h1 id="transport-layer-services-multiplexingdemultiplexing">Transport Layer Services &amp; Multiplexing/Demultiplexing</h1>
+<p><strong>Process-to-process delivery, port numbers, socket identification, and the multiplexing/demultiplexing mechanism.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Transport-Layer Services &amp; Multiplexing</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>The Network layer (IP) only promises to get a packet from one <strong>computer</strong> to another computer — like a postal service that only guarantees a letter reaches the right <em>building</em>, not the right <em>person inside</em> that building. But a single computer runs dozens of processes simultaneously — your browser, your email client, a background update checker, a game — all needing to send and receive data over the network at the same time. Someone has to sort the incoming mail and hand each letter to the correct occupant of the building.</p>
+<p>That "mail sorter inside the building" is exactly the <strong>Transport layer</strong>. Its core job is <strong>process-to-process delivery</strong> — taking the network layer's "got it to the right computer" and extending it to "got it to the right <em>application</em> on that computer." It does this using <strong>port numbers</strong>: a 16-bit number that acts like an apartment number, identifying which specific process should receive the data. <strong>Multiplexing</strong> is gathering data from many different application processes on the sending side and combining them (each tagged with its own port) into segments for the network layer to carry; <strong>demultiplexing</strong> is the reverse — on the receiving side, unpacking arriving segments and delivering each one's payload to the correct waiting process, based on the port numbers.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>Services the Transport layer can offer, generally (specific protocols choose which):</strong>
+- <strong>Process-to-process delivery</strong> (the one universal, non-negotiable job — every transport protocol does this).
+- <strong>Reliable data transfer</strong> — guaranteeing data arrives, in order, without loss or duplication (TCP does this; UDP does not).
+- <strong>Flow control</strong> — preventing a fast sender from overwhelming a slow receiver's buffer.
+- <strong>Congestion control</strong> — preventing the <em>network</em> (not just the receiver) from being overwhelmed by too much combined traffic.</p>
+<p><strong>Ports and sockets.</strong> A port number (0–65535) identifies a process on a machine. A <strong>socket</strong> is the actual endpoint of communication, uniquely identified by the 4-tuple: (source IP, source port, destination IP, destination port) — for TCP specifically, this exact 4-tuple (sometimes called the 5-tuple when including the protocol type) is what distinguishes one active connection from another, even between the same pair of machines.</p>
+<table>
+<thead>
+<tr>
+<th>Port range</th>
+<th>Name</th>
+<th>Typical use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0 – 1023</td>
+<td>Well-known ports</td>
+<td>Standard services (HTTP=80, HTTPS=443, FTP=21, SMTP=25, DNS=53)</td>
+</tr>
+<tr>
+<td>1024 – 49151</td>
+<td>Registered ports</td>
+<td>Vendor-registered application ports</td>
+</tr>
+<tr>
+<td>49152 – 65535</td>
+<td>Dynamic / private / ephemeral ports</td>
+<td>Temporarily assigned to a client for the duration of one connection</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Multiplexing (sender side).</strong> Every socket created by an application process is assigned a port. When the process sends data, the transport layer attaches header information (including source and destination port) to form a <strong>segment</strong>, and passes it down to the network layer — this "gathering many process-streams into one shared network layer" is multiplexing.</p>
+<p><strong>Demultiplexing (receiver side).</strong> When a segment arrives at a host, the transport layer examines its header:
+- <strong>UDP (connectionless) demultiplexing</strong> uses only the <strong>destination port</strong> — every UDP segment arriving at that port is delivered to the socket bound to it, regardless of who sent it.
+- <strong>TCP (connection-oriented) demultiplexing</strong> uses the <strong>full 4-tuple</strong> (source IP, source port, destination IP, destination port) — this is why a web server can simultaneously serve thousands of different clients all on the same well-known destination port 80: each client has a different source IP/port combination, so each gets routed to its own distinct socket.</p>
+<pre><code class="language-mermaid">flowchart TB
+    subgraph Sender Host
+        A1[Browser process] --&gt;|data, dst port 80| M[Multiplexer:&lt;br/&gt;attach header, port info]
+        A2[Email client] --&gt;|data, dst port 25| M
+        A3[Game client] --&gt;|data, dst port 7777| M
+        M --&gt; NET1[Network Layer / IP]
+    end
+    NET1 --&gt;|segments travel across the network| NET2[Network Layer / IP]
+    subgraph Receiver Host
+        NET2 --&gt; D[Demultiplexer:&lt;br/&gt;read dst port / 4-tuple]
+        D --&gt;|port 80| S1[Socket: Web server process]
+        D --&gt;|port 25| S2[Socket: Mail server process]
+        D --&gt;|port 7777| S3[Socket: Game server process]
+    end
+</code></pre>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A web server at IP <code>203.0.113.5</code>, port <code>80</code>, receives connections from two different clients: Client A at <code>198.51.100.10</code> using ephemeral port <code>52001</code>, and Client B at <code>198.51.100.20</code> using ephemeral port <code>52001</code> (note: the <em>same</em> ephemeral port number, coincidentally, but on a <em>different</em> client IP). Determine whether the server's TCP demultiplexing can correctly tell these two connections apart.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>TCP demultiplexing uses the full 4-tuple: (source IP, source port, destination IP, destination port).
+Connection A's 4-tuple: <code>(198.51.100.10, 52001, 203.0.113.5, 80)</code>.
+Connection B's 4-tuple: <code>(198.51.100.20, 52001, 203.0.113.5, 80)</code>.
+Even though the source <em>port</em> is identical (52001) for both, the source <em>IP</em> differs (<code>.10</code> vs <code>.20</code>), so the two 4-tuples are distinct.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Yes — the server correctly demultiplexes these as two separate connections, delivering each to its own distinct socket, because TCP's 4-tuple matching considers the <em>entire</em> combination, not port number alone. This is exactly how a single web server, listening on one well-known port (80), can simultaneously and correctly serve thousands of different clients at once — each client's unique IP (and often unique ephemeral port too) keeps every connection distinguishable.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -421,16 +475,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Transport-Layer Services & Multiplexing?</div>
+  <div class="quiz-prompt">What is the fundamental difference between how UDP and TCP perform demultiplexing?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>UDP uses the 4-tuple; TCP uses only the destination port</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>UDP uses only the destination port; TCP uses the full 4-tuple (source IP, source port, destination IP, destination port)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Both use identical demultiplexing mechanisms</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Neither protocol performs demultiplexing</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Transport-Layer Services & Multiplexing in Computer Networks.
+    <strong>Pedagogical Insight:</strong> UDP is connectionless, so it only needs to know which local port to deliver a segment to — all traffic to that port goes to the same socket. TCP is connection-oriented and must distinguish between multiple simultaneous connections to the same local port, which requires the full 4-tuple to uniquely identify each individual connection.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">A web server listens on well-known port 80 and simultaneously serves 5,000 different clients. How is this possible if they're all using the "same" destination port?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="true"><span>Each client has a distinct source IP and/or source ephemeral port, so the full 4-tuple differs for each connection even though the destination port (80) is shared</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The server actually opens 5,000 different destination ports</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Only one client can actually be served at a time</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>TCP does not support multiple connections to the same port</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> While the destination port stays fixed at 80 for all connections to this server, TCP identifies individual connections using the complete 4-tuple. Since each client has a unique source IP (and typically a unique ephemeral source port too), every connection's 4-tuple remains distinct, allowing thousands of simultaneous connections to the same destination port.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Ephemeral (dynamic/private) port numbers, typically in the range 49152–65535, are usually assigned to:</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Well-known, permanent server processes like HTTP or DNS</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A client application, temporarily, for the duration of a single connection</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The network layer's routing table</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Only UDP connections, never TCP</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> When a client (e.g., your browser) initiates a connection, the operating system assigns it a temporary, high-numbered ephemeral port for that specific connection's lifetime, distinguishing this outgoing connection from any others the same machine might simultaneously be making — unlike a server's well-known port, which stays fixed and is publicly known in advance.
   </div>
 </div>
     </main>

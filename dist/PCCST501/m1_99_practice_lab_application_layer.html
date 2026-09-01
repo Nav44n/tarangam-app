@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -395,42 +395,154 @@
   </div>
 </div>
 <h1 id="module-1-practice-lab-application-layer-networking-calculations">Module 1 Practice Lab: Application Layer &amp; Networking Calculations</h1>
-<p><strong>Calculations for P2P file distribution time, HTTP RTTs, DNS query latency, and socket addressing.</strong></p>
+<p><strong>Worked calculations for P2P file distribution time, HTTP round-trip latency, DNS query resolution time, and socket/4-tuple addressing.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Module 1 Practice Lab: Application Layer &amp; Networking Calculations</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model: Turning Concepts into Numbers</div><div class="callout-body"><p>Every topic in Module 1 has a quantitative side hiding underneath the concepts: P2P's "self-scaling" claim can be measured in seconds, HTTP's "persistent connections are faster" claim can be measured in round-trip times, and DNS's "hierarchy adds latency" claim can be measured in query hops. This lab is a set of worked, numeric problems pulling together File Transfer time, HTTP page-load latency, DNS resolution delay, and socket addressing — the exact style of calculation you should expect to be asked to reproduce on your own, with different numbers, in an exam setting.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<h2 id="2-reference-formulas">2. Reference Formulas</h2>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Formula</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Client-Server distribution time</td>
+<td>$D_{CS} \geq \max\left(\frac{NF}{u_s}, \frac{F}{d_{min}}\right)$</td>
+<td>$N$ peers, file size $F$, server upload $u_s$</td>
+</tr>
+<tr>
+<td>P2P distribution time</td>
+<td>$D_{P2P} \geq \max\left(\frac{F}{u_s}, \frac{F}{d_{min}}, \frac{F}{u_s + \sum u_i}\right)$</td>
+<td>$\sum u_i$ = total peer upload capacity</td>
+</tr>
+<tr>
+<td>Non-persistent HTTP page load</td>
+<td>$\text{Total time} = 2 \times \text{RTT} \times (1 + k)$ (serial)</td>
+<td>1 RTT to open TCP + 1 RTT per object requested; $k$ = number of embedded objects</td>
+</tr>
+<tr>
+<td>Persistent HTTP (no pipelining) page load</td>
+<td>$\text{Total time} = 2 \times \text{RTT}_{setup} + k \times \text{RTT}$</td>
+<td>One TCP setup (2 RTT total incl. first object), then 1 RTT per remaining object</td>
+</tr>
+<tr>
+<td>DNS resolution (cold cache, full iterative chain)</td>
+<td>$\text{Total DNS time} = \text{RTT}<em TLD="TLD">{root} + \text{RTT}</em>$} + \text{RTT}_{auth</td>
+<td>One RTT per hierarchy level walked</td>
+</tr>
+<tr>
+<td>Base64 (MIME) size expansion</td>
+<td>$\text{Encoded size} = \frac{4}{3} \times \text{Original size}$</td>
+<td>~33% overhead</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<h2 id="3-worked-problems">3. Worked Problems</h2>
+<div class="step-card"><div class="step-badge">Problem 1: P2P vs. Client-Server Distribution Time</div><div class="step-title">Setup</div><div class="step-content"><p>A file of size $F = 4$ Gbits is shared with $N = 20$ peers. Server upload rate $u_s = 20$ Mbps. Every peer has download rate $d_i = 4$ Mbps and upload rate $u_i = 0.5$ Mbps. Compute $D_{CS}$ and $D_{P2P}$.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Problem 1: Execution</div><div class="step-title">Applying the Formulas</div><div class="step-content"><p><strong>Client-Server:</strong>
+$$D_{CS} \geq \max\left(\frac{20 \times 4000}{20}, \frac{4000}{4}\right) = \max(4000, 1000) = 4000 \text{ s}$$</p>
+<p><strong>P2P:</strong> total peer upload = $20 \times 0.5 = 10$ Mbps.
+$$D_{P2P} \geq \max\left(\frac{4000}{20}, \frac{4000}{4}, \frac{4000}{20+10}\right) = \max(200, 1000, 133.3) = 1000 \text{ s}$$</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Problem 1: Conclusion</div><div class="step-title">Result</div><div class="step-content"><p>$D_{CS} = 4000$s vs. $D_{P2P} = 1000$s — <strong>P2P is 4× faster</strong> here because the server-load term ($\frac{NF}{u_s} = 4000$s) dominates Client-Server, while under P2P the bottleneck shifts entirely to each peer's own download rate ($\frac{F}{d_{min}} = 1000$s), which no additional server or peer bandwidth can improve. This is the textbook case where P2P's advantage is largest: many peers, and a server that would otherwise be badly overloaded.</p></div></div>
+
+<hr />
+<div class="step-card"><div class="step-badge">Problem 2: Non-Persistent vs. Persistent HTTP Latency</div><div class="step-title">Setup</div><div class="step-content"><p>A web page consists of 1 base HTML file plus 8 embedded images (9 objects total). The RTT between client and server is $20$ ms. Assume negligible transmission/processing time. Compute total page-load time under Non-Persistent HTTP (serial, one connection per object) vs. Persistent HTTP (one connection, no pipelining — must wait for each response before requesting the next).</p></div></div>
+
+<div class="step-card"><div class="step-badge">Problem 2: Execution</div><div class="step-title">Counting Round Trips</div><div class="step-content"><p><strong>Non-Persistent (serial):</strong> each of the 9 objects requires its own TCP handshake (1 RTT) + the actual GET/response (1 RTT) = 2 RTTs per object.
+$$\text{Total} = 9 \times 2 \times 20\text{ms} = 360 \text{ ms}$$</p>
+<p><strong>Persistent (no pipelining):</strong> one TCP handshake overall (1 RTT), then the first object's GET/response (1 RTT), then each of the remaining 8 objects only needs 1 RTT each (connection is already open).
+$$\text{Total} = (1 + 1) \times 20\text{ms} + 8 \times 20\text{ms} = 40\text{ms} + 160\text{ms} = 200 \text{ ms}$$</p></div></div>
+
+<div class="step-card"><div class="step-badge">Problem 2: Conclusion</div><div class="step-title">Result</div><div class="step-content"><p>Persistent HTTP finishes in <strong>200 ms</strong> vs. <strong>360 ms</strong> for Non-Persistent — a 44% latency reduction, purely from avoiding 8 redundant TCP handshakes. This gap grows even larger as either the RTT increases (e.g., a distant server) or the number of embedded objects increases (a richer, more image-heavy page).</p></div></div>
+
+<hr />
+<div class="step-card"><div class="step-badge">Problem 3: DNS Resolution Latency</div><div class="step-title">Setup</div><div class="step-content"><p>A client's local DNS cache is completely empty (a "cold cache"). Resolving <code>www.example.edu</code> requires the Local DNS Resolver to walk the full hierarchy: Root → <code>.edu</code> TLD → <code>example.edu</code> Authoritative server. Each hop has a measured RTT of Root = 8ms, TLD = 12ms, Authoritative = 10ms. The client-to-Local-DNS RTT is a separate 5ms. Compute the total time before the client receives the resolved IP address.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Problem 3: Execution</div><div class="step-title">Summing the Chain</div><div class="step-content"><p>The client's request to its Local DNS Resolver: $5$ms (one-way is often modeled as included in the resolver's total, but here we count the client↔resolver RTT once at the start).
+The resolver then performs three <strong>iterative</strong> queries in sequence, each requiring a full RTT before the next can begin (since each answer determines who to ask next):
+$$\text{DNS chain} = 8\text{ms (Root)} + 12\text{ms (TLD)} + 10\text{ms (Authoritative)} = 30 \text{ ms}$$
+Adding the client-to-resolver leg:
+$$\text{Total} = 5\text{ms} + 30\text{ms} = 35 \text{ ms}$$</p></div></div>
+
+<div class="step-card"><div class="step-badge">Problem 3: Conclusion</div><div class="step-title">Result</div><div class="step-content"><p>The client waits <strong>35 ms</strong> total before it even knows the destination's IP address — and this entire delay happens <em>before</em> the actual HTTP request to <code>www.example.edu</code> can even begin. This is precisely why DNS caching (honoring the TTL of each resource record) matters so much in practice: every subsequent request for the same hostname, from any user of that same Local DNS Resolver, can skip straight to a cached answer and avoid repeating this 30ms hierarchy walk.</p></div></div>
+
+<hr />
+<div class="step-card"><div class="step-badge">Problem 4: Socket / 4-Tuple Addressing</div><div class="step-title">Setup</div><div class="step-content"><p>A web server at IP <code>10.0.0.5</code>, port <code>80</code>, is simultaneously handling three connections: Connection X from <code>192.168.1.10:51000</code>, Connection Y from <code>192.168.1.10:51001</code>, and Connection Z from <code>192.168.1.20:51000</code>. Determine whether TCP can correctly distinguish all three as separate sockets, and identify which two connections would be indistinguishable if this were UDP instead of TCP.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Problem 4: Execution</div><div class="step-title">Comparing Demultiplexing Rules</div><div class="step-content"><p><strong>TCP (uses full 4-tuple: src IP, src port, dst IP, dst port):</strong>
+* X: <code>(192.168.1.10, 51000, 10.0.0.5, 80)</code>
+* Y: <code>(192.168.1.10, 51001, 10.0.0.5, 80)</code>
+* Z: <code>(192.168.1.20, 51000, 10.0.0.5, 80)</code></p>
+<p>All three 4-tuples are distinct (X and Y differ in source port; X and Z differ in source IP), so TCP correctly demultiplexes all three into separate sockets.</p>
+<p><strong>UDP (uses only destination port, ignoring source entirely):</strong> every one of X, Y, and Z arrives at the same destination port (80), and UDP demultiplexing does not look at source IP/port at all — so a UDP-based server would deliver <em>all three</em> to the exact same single socket, unable to distinguish which packet came from whom without inspecting the payload itself.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Problem 4: Conclusion</div><div class="step-title">Result</div><div class="step-content"><p>TCP's 4-tuple demultiplexing correctly separates all three connections into distinct sockets, which is exactly how one web server on port 80 can serve many simultaneous clients. If the same scenario used UDP, all three would collapse into one shared socket — illustrating precisely why connection-oriented applications (requiring per-client session state) are built on TCP rather than UDP.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q1: Foundational Concept</span>
+    <span class="quiz-category">Q1: Applied Calculation</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Module 1 Practice Lab: Application Layer & Networking Calculations?</div>
+  <div class="quiz-prompt">A file of size $F = 8$ Gbits is distributed to $N = 40$ peers, server upload $u_s = 10$ Mbps, slowest peer download $d_{min} = 5$ Mbps, total peer upload $\sum u_i = 20$ Mbps. What is the minimum P2P distribution time?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>800 seconds</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>1600 seconds</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>267 seconds</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>8000 seconds</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Module 1 Practice Lab: Application Layer & Networking Calculations in Computer Networks.
+    <strong>Pedagogical Insight:</strong> $D_{P2P} \geq \max\left(\frac{8000}{10}, \frac{8000}{5}, \frac{8000}{10+20}\right) = \max(800, 1600, 267) = 1600$ seconds. The slowest peer's own download rate is the binding constraint here, not the server or aggregate upload capacity.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Applied Calculation</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">With an RTT of 50ms, how much total time does Non-Persistent HTTP need to fetch an HTML page plus 3 embedded images (4 objects total), assuming serial connections and negligible transmission time?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>50 ms</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>200 ms</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>400 ms</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>800 ms</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Each of the 4 objects needs its own TCP handshake (1 RTT) plus its own request/response (1 RTT) = 2 RTT per object. Total = $4 \times 2 \times 50\text{ms} = 400$ ms.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Applied Calculation</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Two UDP datagrams both arrive at a server's port 9000 — one from Client A (`203.0.113.1:40000`) and one from Client B (`203.0.113.2:40000`). How does the server's UDP demultiplexing handle these two datagrams?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>It creates two separate sockets, one per client, using the full 4-tuple</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It delivers both to the same single socket bound to port 9000, since UDP demultiplexing only examines the destination port and ignores source IP/port</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It rejects both datagrams because the source ports match</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It automatically upgrades the connection to TCP to distinguish the clients</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> UDP is connectionless and demultiplexes using only the destination port — every datagram arriving at port 9000 goes to whichever single socket is bound there, regardless of which source IP or source port sent it. Any need to distinguish individual senders must be handled by the application reading the payload itself.
   </div>
 </div>
     </main>

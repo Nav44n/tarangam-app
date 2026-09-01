@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -394,24 +394,99 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="quality-of-service-qos-traffic-shaping-scheduling">Quality of Service (QoS): Traffic Shaping &amp; Scheduling</h1>
-<p><strong>Packet delay, jitter, Leaky Bucket and Token Bucket rate limiting, FIFO, Priority Queuing, and Weighted Fair Queuing (WFQ).</strong></p>
+<h1 id="quality-of-service-qos">Quality of Service (QoS)</h1>
+<p><strong>Best-effort vs QoS-aware networks, key QoS metrics, traffic shaping via the Leaky Bucket and Token Bucket algorithms, and DiffServ/IntServ.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Quality of Service (QoS): Traffic Shaping &amp; Scheduling</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>By default, the internet is what's called a <strong>best-effort</strong> network — every packet, whether it's part of a life-critical video call or a background software update silently downloading, is treated exactly the same by routers, with no special priority given to anything. This works acceptably most of the time, but breaks down noticeably during congestion: a video call and a large file download competing for the same limited bandwidth will both suffer somewhat, when really, the video call's late-arriving packets are far more damaging to the user's experience (causing stutters, freezes) than the file download taking a few seconds longer would be.</p>
+<p><strong>Quality of Service (QoS)</strong> is the deliberate set of mechanisms that let a network <em>differentiate</em> between traffic types, and treat some traffic preferentially — reserving bandwidth, minimising delay, or reducing jitter specifically for the traffic classes that need it most (like live video/voice), while accepting that other, less time-sensitive traffic (like a background download) can be treated with lower priority or throttled during periods of congestion. A key building block underlying much of QoS is <strong>traffic shaping</strong> — smoothing out a bursty stream of packets into a more predictable, steady flow, so it doesn't itself become the source of congestion.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>Key QoS metrics</strong> — the specific properties an application might care about, and QoS mechanisms try to control:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Meaning</th>
+<th>Especially matters for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bandwidth (throughput)</td>
+<td>Data rate actually achievable</td>
+<td>Large file transfers, video streaming quality</td>
+</tr>
+<tr>
+<td>Delay (latency)</td>
+<td>Time for a packet to travel from source to destination</td>
+<td>Live voice/video calls, online gaming</td>
+</tr>
+<tr>
+<td>Jitter</td>
+<td><em>Variation</em> in delay between successive packets (even if average delay is fine, wildly inconsistent delay is disruptive)</td>
+<td>Real-time audio/video (causes choppy, uneven playback)</td>
+</tr>
+<tr>
+<td>Packet loss</td>
+<td>Fraction of packets that never arrive</td>
+<td>Anything requiring completeness; some tolerance for loss in live audio/video</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The Leaky Bucket algorithm — smoothing bursty traffic into a constant rate.</strong> Picture an actual bucket with a small hole in the bottom, leaking water at a fixed, constant rate, regardless of how fast water is poured in from the top (excess water above the bucket's capacity simply overflows and is lost). Applied to network traffic: incoming packets (arriving in bursts, at varying rates) are queued in a buffer, and released onto the network at a strictly <strong>constant</strong> output rate, no matter how bursty the input was — smoothing traffic into a steady, predictable stream. If the buffer fills up faster than it's draining, excess packets are dropped.</p>
+<p><strong>The Token Bucket algorithm — allowing controlled bursts.</strong> A bucket accumulates <strong>tokens</strong> at a fixed rate (one token roughly corresponds to permission to send one unit of data, e.g. one byte or one packet), up to some maximum bucket capacity. A packet can only be transmitted if there are enough tokens currently available in the bucket, and transmitting it consumes that many tokens. Crucially, if the bucket has been accumulating tokens during a quiet period (no traffic sent), those tokens remain banked — allowing a <strong>burst</strong> of traffic to be sent all at once (up to the bucket's capacity) when data finally does arrive, rather than being forced into the Leaky Bucket's rigidly constant output rate.</p>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph LB[&quot;Leaky Bucket&quot;]
+        direction TB
+        LBin[&quot;Bursty input&lt;br/&gt;(variable rate)&quot;] --&gt; LBbuf[&quot;Buffer&lt;br/&gt;(queue)&quot;]
+        LBbuf --&gt; LBout[&quot;Constant output rate&lt;br/&gt;(strictly fixed)&quot;]
+        LBbuf -.-&gt;|&quot;buffer full →&lt;br/&gt;packets dropped&quot;| LBdrop[&quot;Dropped&quot;]
+    end
+    subgraph TB1[&quot;Token Bucket&quot;]
+        direction TB
+        Tgen[&quot;Tokens generated&lt;br/&gt;at fixed rate&quot;] --&gt; Tbucket[&quot;Token bucket&lt;br/&gt;(bounded capacity)&quot;]
+        TBin[&quot;Bursty input&quot;] --&gt;|&quot;consumes tokens&lt;br/&gt;to send&quot;| Tbucket
+        Tbucket --&gt; TBout[&quot;Output — can burst&lt;br/&gt;if tokens were saved up&quot;]
+    end
+</code></pre>
+<p><strong>Comparison — Leaky Bucket vs Token Bucket:</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Leaky Bucket</th>
+<th>Token Bucket</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Output pattern</td>
+<td>Strictly constant rate, always</td>
+<td>Allows bursts, up to bucket capacity, when tokens have accumulated</td>
+</tr>
+<tr>
+<td>Best suited for</td>
+<td>Applications needing a perfectly smooth, predictable output rate</td>
+<td>Applications that are naturally bursty but should still be rate-limited on <em>average</em></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Two architectural approaches to network-wide QoS:</strong>
+- <strong>IntServ (Integrated Services):</strong> an application explicitly <em>reserves</em> resources (bandwidth, etc.) along the entire path before sending, using a signalling protocol (RSVP) — provides strong, per-flow guarantees, but requires every router along the path to maintain per-flow state, which scales poorly to internet-wide deployment.
+- <strong>DiffServ (Differentiated Services):</strong> instead of per-flow reservations, packets are simply marked (via a field in the IP header) with a traffic class/priority ("expedited forwarding" for latency-sensitive traffic, "best effort" for everything else, etc.), and routers apply different queuing/forwarding treatment based on this marking — no per-flow state needed, making it far more scalable, at the cost of weaker (class-level, not flow-level) guarantees.</p>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A Token Bucket has a token generation rate of 2 tokens/second, and a maximum bucket capacity of 10 tokens. The bucket starts completely full (10 tokens) after a long idle period. A sudden burst of data requiring 8 tokens' worth of transmission arrives, followed immediately by another burst requiring 5 tokens' worth, arriving exactly 1 second later. Determine whether each burst can be fully transmitted immediately, or must be partially delayed.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>At time 0: bucket has 10 tokens (full, from the idle period). First burst arrives, needing 8 tokens — sufficient tokens are available (10 ≥ 8), so it transmits immediately, consuming 8 tokens, leaving 2 tokens in the bucket.
+Between time 0 and time 1 (1 second passes): tokens regenerate at 2 tokens/second, adding 2 more tokens: $2 + 2 = 4$ tokens now in the bucket (still within the 10-token cap, so no overflow/waste here).
+At time 1: second burst arrives, needing 5 tokens — but only 4 tokens are currently available (4 &lt; 5), which is <strong>insufficient</strong>.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The second burst cannot be fully transmitted immediately — it can send only the portion covered by the 4 available tokens right away, and must wait for additional tokens to regenerate (at 2/second) before the remaining 1 token's worth can be sent, roughly half a second later. This demonstrates the Token Bucket's defining behaviour precisely: it comfortably absorbs occasional bursts up to the banked token capacity, but still enforces a genuine average-rate limit (2 tokens/second) over time, gracefully throttling — rather than simply dropping — traffic that temporarily exceeds what's currently available.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -421,16 +496,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Quality of Service (QoS): Traffic Shaping & Scheduling?</div>
+  <div class="quiz-prompt">What is the key behavioural difference between the Leaky Bucket and Token Bucket traffic shaping algorithms?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>They are functionally identical, just with different names</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The Leaky Bucket always outputs traffic at a strictly constant rate, smoothing out all bursts; the Token Bucket allows a burst of traffic to be sent immediately (up to the bucket's capacity) if tokens have accumulated during a prior quiet period, while still enforcing an average rate limit over time</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The Leaky Bucket allows unlimited bursts; the Token Bucket enforces a strictly constant rate</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Neither algorithm actually limits the sending rate</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Quality of Service (QoS): Traffic Shaping & Scheduling in Computer Networks.
+    <strong>Pedagogical Insight:</strong> The Leaky Bucket's defining property is a rigid, constant output rate regardless of input burstiness. The Token Bucket is more flexible: it permits controlled bursts (spending banked-up tokens all at once) while still constraining the long-run average rate to the token generation rate — a meaningfully different, often more practically useful, behaviour for genuinely bursty traffic sources.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What is "jitter," as a QoS metric, and why does it matter particularly for live audio/video applications?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>The total number of packets lost</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The variation in delay between successive packets — even if the average delay is acceptable, wildly inconsistent packet-to-packet delay causes choppy, uneven playback in real-time audio/video applications, which need a steady, predictable stream to sound/look smooth</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The maximum achievable bandwidth on a link</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The time it takes to establish a TCP connection</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Live audio/video quality depends on packets arriving at a steady, predictable cadence for smooth playback — high jitter (inconsistent delay) causes noticeable stutters and glitches even when the *average* delay would otherwise be perfectly acceptable, which is why jitter is tracked as its own distinct QoS metric, separate from raw average delay.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What is the key architectural trade-off between IntServ and DiffServ approaches to QoS?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>They are functionally identical approaches with different names</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>IntServ provides strong, explicit, per-flow resource reservations (via signalling like RSVP) but requires every router to maintain per-flow state, scaling poorly to internet-wide deployment; DiffServ instead marks packets with a traffic class and lets routers apply class-based treatment with no per-flow state, scaling much better but providing only weaker, class-level (not flow-level) guarantees</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>IntServ requires no signalling at all; DiffServ requires per-flow reservations</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Both approaches require identical router state</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> IntServ's strength (precise, guaranteed, per-flow resource reservation) comes at the direct cost of requiring every router along a path to track and maintain state for every individual flow — a scalability problem at internet scale. DiffServ trades away that per-flow precision for a much more scalable, stateless-per-flow approach, marking traffic into a small number of classes that routers can treat differently without tracking individual flows.
   </div>
 </div>
     </main>

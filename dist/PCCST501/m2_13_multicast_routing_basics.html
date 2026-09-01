@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -394,24 +394,72 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1 id="multicasting-basics-multicast-routing-protocols">Multicasting Basics &amp; Multicast Routing Protocols</h1>
-<p><strong>Multicast addressing (Class D / 224.0.0.0/4), IGMP, reverse path forwarding (RPF), and shared trees (PIM).</strong></p>
+<h1 id="multicast-routing-basics">Multicast Routing Basics</h1>
+<p><strong>Unicast vs broadcast vs multicast, IGMP group membership, and the two families of multicast tree construction (source-based vs shared trees).</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>Multicasting Basics &amp; Multicast Routing Protocols</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Suppose a company needs to send the same live-streamed announcement video to exactly 500 specific employees scattered across a large office network, but not to the other 2,000 employees who aren't part of that department. There are three naive-sounding options: send 500 completely separate individual copies (<strong>unicast</strong> to each — wildly wasteful, since the same video data gets duplicated over and over across shared links); send it to <em>everyone</em> on the network and let uninterested devices discard it (<strong>broadcast</strong> — simpler, but wastes bandwidth on the 2,000 uninterested recipients and doesn't even work across most of the wider internet, where broadcast is deliberately blocked); or, the smart option: send it just <em>once</em>, and have the network itself — the routers — intelligently duplicate the traffic only at the specific points where paths to different interested recipients actually diverge, so no single link ever carries more copies of the same data than it strictly needs to.</p>
+<p>That third option is <strong>multicast</strong> — one sender, one transmission, delivered efficiently to an arbitrary, dynamically-changing group of interested receivers, with the network doing the smart work of duplicating traffic only where paths genuinely branch. This requires two distinct pieces of machinery: a way for individual devices to tell their local router "I want to join this multicast group" (<strong>IGMP</strong>), and a way for routers, network-wide, to collectively build an efficient distribution tree connecting the sender(s) to all the currently-interested receivers (<strong>multicast routing</strong>).</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>Three delivery models compared:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Destinations</th>
+<th>Efficiency</th>
+<th>Typical use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unicast</td>
+<td>One specific receiver</td>
+<td>One separate copy per receiver — inefficient for large groups</td>
+<td>Web browsing, normal file transfer</td>
+</tr>
+<tr>
+<td>Broadcast</td>
+<td>Every device on the (local) network</td>
+<td>Single transmission, but reaches many uninterested devices too, and doesn't scale to the wider internet</td>
+<td>ARP requests, DHCP discovery (local network only)</td>
+</tr>
+<tr>
+<td>Multicast</td>
+<td>An arbitrary, dynamically-changing <em>group</em> of interested receivers</td>
+<td>Single transmission per link, duplicated by routers only where paths to different receivers actually diverge</td>
+<td>Live video/audio streaming to a subscribed audience, some routing protocol updates, IPTV</td>
+</tr>
+</tbody>
+</table>
+<p><strong>IGMP (Internet Group Management Protocol).</strong> This is the <em>local</em> half of multicast — the protocol a host uses to tell its <strong>directly-connected router</strong> which multicast group(s) it currently wants to receive. A host sends an IGMP "Join" message for a specific multicast group address; the local router keeps track of which of its directly-attached networks currently have at least one interested member for each group, and periodically sends IGMP queries to confirm membership is still active (so it can stop forwarding traffic for a group once nobody local is interested anymore).</p>
+<p><strong>Multicast tree construction — two families of approaches:</strong>
+- <strong>Source-based trees:</strong> build a separate shortest-path tree rooted at <em>each individual sender</em>, reaching all current group members — this tends to give more efficient (shorter) paths from each specific sender, but at the cost of routers needing to maintain separate tree state for every distinct source, which can become a significant scaling burden with many senders.
+- <strong>Shared trees (Core-based/Rendezvous-Point trees):</strong> instead, build just <em>one single tree</em>, shared by <em>all</em> senders to the group, rooted at a designated central point (often called a "Rendezvous Point" or "Core"). Every sender's traffic is first routed to this central point, and from there distributed out along the one shared tree to all receivers. This dramatically reduces the amount of routing state each router must maintain (just one tree per group, not one per sender), at the cost of potentially less efficient (longer) individual paths, since traffic isn't necessarily following each sender's own true shortest path.</p>
+<pre><code class="language-mermaid">flowchart TB
+    subgraph SourceBased[&quot;Source-Based Tree (one per sender)&quot;]
+        S1((&quot;Sender 1&quot;)) --&gt; R1[&quot;Router&quot;]
+        R1 --&gt; RA((&quot;Receiver A&quot;))
+        R1 --&gt; RB((&quot;Receiver B&quot;))
+    end
+    subgraph Shared[&quot;Shared Tree (one tree, all senders)&quot;]
+        S2((&quot;Sender 2&quot;)) --&gt; CP((&quot;Core / Rendezvous&lt;br/&gt;Point&quot;))
+        S3((&quot;Sender 3&quot;)) --&gt; CP
+        CP --&gt; RC((&quot;Receiver C&quot;))
+        CP --&gt; RD((&quot;Receiver D&quot;))
+    end
+</code></pre>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A company streams a single live video feed (one sender) to employees across 3 different office buildings, with a varying number of interested viewers in each building, changing throughout the day as people join and leave the stream. Decide, with justification, whether a source-based tree or a shared tree is the more natural fit for this specific scenario.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Key facts of the scenario: there is only <strong>one sender</strong> (the live stream's single source), so source-based tree construction doesn't face the "many separate trees to maintain" scaling concern that arises with many simultaneous senders. Since a source-based tree, per sender, is specifically optimised for shortest paths <em>from that one sender</em>, and this scenario has exactly one sender whose efficient reach to all current viewers is the main goal, a source-based tree naturally provides the shortest, most efficient paths from this single source to every current, dynamically changing receiver.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>A <strong>source-based tree</strong> is the better natural fit here — with only one sender, its main downside (routing-state overhead scaling with the number of distinct senders) simply doesn't apply, while its main advantage (efficient, direct paths from the source) is fully realised. A shared tree's key benefit — reducing state when <em>many</em> different senders exist — would be solving a problem this particular scenario doesn't actually have, at the cost of potentially longer, less direct paths through a designated core point that isn't needed here.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -421,16 +469,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of Multicasting Basics & Multicast Routing Protocols?</div>
+  <div class="quiz-prompt">What is the core efficiency advantage of multicast over sending separate unicast transmissions to every group member?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>Multicast uses stronger encryption</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A single transmission is duplicated by routers only at the specific points where paths to different receivers actually diverge, so no link carries more copies of the same data than genuinely necessary — unlike unicast, which sends one full separate copy per receiver over potentially the same shared links</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Multicast guarantees reliable, ordered delivery, unlike unicast</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Multicast requires no routers at all</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to Multicasting Basics & Multicast Routing Protocols in Computer Networks.
+    <strong>Pedagogical Insight:</strong> Multicast's whole design goal is bandwidth efficiency for one-to-many delivery: rather than the sender producing N separate copies for N receivers, the network itself intelligently replicates the traffic only where paths to different receivers genuinely split apart, sharing links wherever multiple receivers' paths still overlap.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What is the specific role of IGMP in the overall multicast system?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>It builds the multicast distribution tree across the whole network</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It is the local protocol a host uses to inform its directly-connected router which multicast group(s) it currently wants to receive, allowing that router to track local group membership</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It replaces TCP for reliable multicast delivery</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It assigns IP addresses to multicast group members</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> IGMP operates purely at the "last hop" — between an individual host and its directly-attached router — communicating group membership interest. The broader task of actually building an efficient distribution tree across the entire network, connecting senders to all interested receivers network-wide, is handled by separate multicast routing protocols/mechanisms, not IGMP itself.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">What is the main trade-off between source-based trees and shared trees for multicast routing?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Source-based trees are always strictly better in every scenario</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Source-based trees give more efficient (shorter) paths per sender but require separate tree state for every distinct sender, which can become costly with many senders; shared trees use just one tree for all senders (much less routing state), at the cost of potentially less direct paths, since traffic is funnelled through one central rendezvous point</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Shared trees only work for exactly one receiver</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>There is no meaningful difference between the two approaches</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> This is a direct trade-off between path efficiency and routing-state scalability: source-based trees optimise each individual sender's paths but multiply routing state with every additional sender; shared trees minimise routing state to just one tree per group (regardless of sender count) but route all traffic through a single central point, which isn't necessarily each sender's own true shortest path.
   </div>
 </div>
     </main>

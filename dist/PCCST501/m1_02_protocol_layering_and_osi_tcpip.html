@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 3 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -394,71 +394,159 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
+<h1 id="protocol-layering-ositcp-ip-models">Protocol Layering &amp; OSI/TCP-IP Models</h1>
+<p><strong>Protocols, the rationale for layered architecture, the 7-layer OSI model, the 5-layer TCP/IP model, and encapsulation/decapsulation.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model: Flying From New York to London</div><div class="callout-body"><p>In human conversation, a protocol governs <em>what</em> is said and <em>when</em>. If you ask "What time is it?", the protocol dictates a reply with the time — not an unrelated song. Network protocols are the same idea, formalized: they define the exact <strong>format</strong> and <strong>order</strong> of messages exchanged, plus the <strong>actions</strong> taken when a message is sent or received.</p>
+<p>Now think about flying internationally. You don't hand your passport to the pilot or discuss baggage weight with air traffic control — the trip is broken into independent <strong>layers</strong>: buying a ticket, checking bags, boarding at the gate, and the physical act of flying. Each layer only needs to know how to talk to the layer directly above and below it. If the airline switches from human baggage handlers to robots, your ticketing and boarding experience doesn't change at all. This independence between layers — <strong>modularity</strong> — is exactly why network designers split the impossibly complex job of "send data anywhere in the world" into a stack of layers, each solving one narrow problem.</p></div></div>
+
 <hr />
-<p>id: m1_02_protocol_layering_and_osi_tcpip
-title: "Protocol Layering &amp; OSI/TCP/IP Models"
-sidebar_label: "1.2 Protocol Layering"
-description: "Understanding how network tasks are divided into layers using the OSI and TCP/IP reference models."</p>
-<hr />
-<h1 id="protocol-layering-and-osi-vs-tcpip">Protocol Layering and OSI vs. TCP/IP</h1>
-<h2 id="1-what-is-a-protocol">1. What is a Protocol?</h2>
-<p>In human communication, protocols dictate how we interact. If you ask, "What is the time?", the protocol dictates that the other person responds with the time, not by singing a song.</p>
-<p>In networking, a <strong>protocol</strong> defines the format and the order of messages exchanged between two or more communicating entities, as well as the actions taken on the transmission and/or receipt of a message or other event.</p>
-<hr />
-<h2 id="2-why-layering-the-airline-analogy">2. Why Layering? (The Airline Analogy)</h2>
-<p>Networks are incredibly complex systems. To deal with this complexity, network designers use a layered architecture.</p>
-<p>Imagine flying from New York to London:</p>
-<ul>
-<li><strong>Ticket Layer:</strong> You purchase a ticket.</li>
-<li><strong>Baggage Layer:</strong> You check your bags.</li>
-<li><strong>Gate Layer:</strong> You board the plane.</li>
-<li><strong>Runway Layer:</strong> The plane takes off.</li>
-</ul>
-<p>Each layer provides a service to the layer directly above it. The baggage layer relies on the ticket layer (you can't check bags without a ticket). By separating tasks into layers, if the airline decides to change how baggage is handled (e.g., using robots instead of humans), it does not affect the ticketing system or the flight physics. This is called <strong>modularity</strong>.</p>
-<hr />
-<h2 id="3-the-osi-reference-model-7-layers">3. The OSI Reference Model (7 Layers)</h2>
-<p>The Open Systems Interconnection (OSI) model was created by ISO as a conceptual framework. While not strictly implemented in modern software, it is the universal language network engineers use to troubleshoot.</p>
-<ul>
-<li><strong>Layer 7 - Application:</strong> Network process to application (HTTP, FTP, SMTP).</li>
-<li><strong>Layer 6 - Presentation:</strong> Data representation, encryption, and decryption (SSL/TLS, JPEG).</li>
-<li><strong>Layer 5 - Session:</strong> Interhost communication, establishing and terminating connections.</li>
-<li><strong>Layer 4 - Transport:</strong> End-to-end connections and reliability (TCP, UDP).</li>
-<li><strong>Layer 3 - Network:</strong> Path determination and logical addressing (IP, ICMP).</li>
-<li><strong>Layer 2 - Data Link:</strong> Physical addressing and MAC (Ethernet, Wi-Fi).</li>
-<li><strong>Layer 1 - Physical:</strong> Media, signal, and binary transmission (cables, hubs).</li>
-</ul>
+<p><a id="the-math"></a></p>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<h3 id="21-the-osi-reference-model-7-layers">2.1 The OSI Reference Model (7 Layers)</h3>
+<p>Created by ISO as a conceptual, vendor-neutral framework. Rarely implemented exactly as-is in software, but universally used by engineers as a shared troubleshooting vocabulary.</p>
+<pre><code class="language-mermaid">flowchart TB
+    L7[&quot;Layer 7 — Application&lt;br/&gt;(HTTP, FTP, SMTP)&quot;]
+    L6[&quot;Layer 6 — Presentation&lt;br/&gt;(encryption, JPEG, SSL/TLS)&quot;]
+    L5[&quot;Layer 5 — Session&lt;br/&gt;(establish/terminate connections)&quot;]
+    L4[&quot;Layer 4 — Transport&lt;br/&gt;(TCP, UDP — end-to-end delivery)&quot;]
+    L3[&quot;Layer 3 — Network&lt;br/&gt;(IP, ICMP — path determination)&quot;]
+    L2[&quot;Layer 2 — Data Link&lt;br/&gt;(Ethernet, Wi-Fi — MAC addressing)&quot;]
+    L1[&quot;Layer 1 — Physical&lt;br/&gt;(cables, hubs — raw bits)&quot;]
+    L7 --&gt; L6 --&gt; L5 --&gt; L4 --&gt; L3 --&gt; L2 --&gt; L1
+</code></pre>
 <blockquote>
-<p><strong>Mnemonic (Bottom to Top):</strong> <strong>P</strong>lease <strong>D</strong>o <strong>N</strong>ot <strong>T</strong>hrow <strong>S</strong>ausage <strong>P</strong>izza <strong>A</strong>way</p>
+<p><strong>Mnemonic (bottom to top):</strong> <strong>P</strong>lease <strong>D</strong>o <strong>N</strong>ot <strong>T</strong>hrow <strong>S</strong>ausage <strong>P</strong>izza <strong>A</strong>way</p>
 </blockquote>
+<h3 id="22-the-tcpip-model-5-layers">2.2 The TCP/IP Model (5 Layers)</h3>
+<p>The Internet actually runs on the simpler, practical TCP/IP suite, which merges OSI's top three layers into one:</p>
+<table>
+<thead>
+<tr>
+<th>TCP/IP Layer</th>
+<th>Corresponds to OSI</th>
+<th>Protocol Data Unit (PDU)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application</td>
+<td>Layers 5, 6, 7 combined</td>
+<td><strong>Message</strong></td>
+</tr>
+<tr>
+<td>Transport</td>
+<td>Layer 4</td>
+<td><strong>Segment</strong></td>
+</tr>
+<tr>
+<td>Network</td>
+<td>Layer 3</td>
+<td><strong>Datagram</strong> (Packet)</td>
+</tr>
+<tr>
+<td>Link</td>
+<td>Layer 2</td>
+<td><strong>Frame</strong></td>
+</tr>
+<tr>
+<td>Physical</td>
+<td>Layer 1</td>
+<td><strong>Bits</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="23-encapsulation-and-decapsulation">2.3 Encapsulation and Decapsulation</h3>
+<p>As data descends the sender's stack, each layer wraps the payload from the layer above inside its own header — like nesting a letter inside progressively larger envelopes.</p>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph Sender[&quot;Sender: Encapsulation (going down)&quot;]
+        direction TB
+        M[&quot;Application: Message&quot;] --&gt; S[&quot;Transport adds header → Segment&quot;]
+        S --&gt; D[&quot;Network adds IP header → Datagram&quot;]
+        D --&gt; F[&quot;Link adds MAC header/trailer → Frame&quot;]
+    end
+    F --&gt;|&quot;Bits travel across physical medium&quot;| G[&quot; &quot;]
+    subgraph Receiver[&quot;Receiver: Decapsulation (going up)&quot;]
+        direction BT
+        F2[&quot;Link reads/strips header → Datagram&quot;] --&gt; D2[&quot;Network reads/strips header → Segment&quot;]
+        D2 --&gt; S2[&quot;Transport reads/strips header → Message&quot;]
+        S2 --&gt; M2[&quot;Application: Message delivered&quot;]
+    end
+    G --&gt; F2
+</code></pre>
+<p>On the receiving side, the process reverses exactly: each layer reads only <em>its own</em> header, strips it off, and passes the remaining payload up to the next layer — which never needs to inspect headers from any layer other than its own peer.</p>
 <hr />
-<h2 id="4-the-tcpip-model-5-layers">4. The TCP/IP Model (5 Layers)</h2>
-<p>The Internet actually runs on the TCP/IP suite, which simplifies the OSI model into 5 practical layers (often depicted as 4 in older textbooks where Physical and Link are combined).</p>
-<ul>
-<li><strong>Application Layer:</strong> Combines OSI Layers 5, 6, and 7 <em>(PDU: Messages)</em>.</li>
-<li><strong>Transport Layer:</strong> Same as OSI Layer 4 <em>(PDU: Segments)</em>.</li>
-<li><strong>Network Layer:</strong> Same as OSI Layer 3 <em>(PDU: Datagrams / Packets)</em>.</li>
-<li><strong>Link Layer:</strong> Same as OSI Layer 2 <em>(PDU: Frames)</em>.</li>
-<li><strong>Physical Layer:</strong> Same as OSI Layer 1 <em>(PDU: Bits)</em>.</li>
-</ul>
+<p><a id="worked-example"></a></p>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A browser sends an HTTP GET request for a web page. Trace what the message is called at each layer of the TCP/IP stack as it travels down the sender's stack and is transmitted onto the wire.</p></div></div>
+
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Encapsulation Layer by Layer</div><div class="step-content"><ol>
+<li><strong>Application layer:</strong> The browser constructs the HTTP GET request — this is a <strong>Message</strong>.</li>
+<li><strong>Transport layer:</strong> TCP wraps the message with a header (containing source/destination port, sequence numbers) — it is now a <strong>Segment</strong>.</li>
+<li><strong>Network layer:</strong> IP wraps the segment with a header (containing source/destination IP address) — it is now a <strong>Datagram</strong>.</li>
+<li><strong>Link layer:</strong> Ethernet or Wi-Fi wraps the datagram with a MAC header and trailer — it is now a <strong>Frame</strong>.</li>
+<li><strong>Physical layer:</strong> The frame is converted into a stream of <strong>bits</strong> — electrical signals, light pulses, or radio waves — and transmitted onto the medium.</li>
+</ol></div></div>
+
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The same logical HTTP request is renamed at every layer (Message → Segment → Datagram → Frame → Bits) as successive headers are added. At the receiving web server, this exact sequence runs in reverse: bits are reassembled into a frame, the frame's header is stripped to reveal a datagram, the datagram's header is stripped to reveal a segment, and finally the segment's header is stripped to reveal the original HTTP Message, which is handed to the server's application process.</p></div></div>
+
 <hr />
-<h2 id="5-encapsulation-and-decapsulation">5. Encapsulation and Decapsulation</h2>
-<p>When a message is sent from a sender to a receiver, it travels down the layers on the sender's side and up the layers on the receiver's side.</p>
-<h3 id="encapsulation-sending">Encapsulation (Sending)</h3>
-<p>As the data moves down, each layer adds its own specific header (like placing a letter inside a sequence of increasingly larger envelopes):</p>
-<ol>
-<li><strong>Application</strong> creates a <strong>Message</strong>.</li>
-<li><strong>Transport</strong> adds a transport header $\rightarrow$ becomes a <strong>Segment</strong>.</li>
-<li><strong>Network</strong> adds an IP header $\rightarrow$ becomes a <strong>Datagram</strong>.</li>
-<li><strong>Link</strong> adds a MAC header and trailer $\rightarrow$ becomes a <strong>Frame</strong>.</li>
-</ol>
-<h3 id="decapsulation-receiving">Decapsulation (Receiving)</h3>
-<p>As the data moves up the receiver's stack, each layer reads its specific header, strips it off, and passes the remaining payload up to the next layer.</p>
-<hr />
-<h2 id="6-active-recall-quiz">6. Active Recall Quiz</h2>
-<ul>
-<li><strong>Question 1:</strong> Why is modularity/layering highly beneficial in network design?</li>
-<li><strong>Question 2:</strong> Match the Protocol Data Unit (PDU) to its corresponding TCP/IP layer: Frame, Segment, Datagram, Message.</li>
-</ul>
+<p><a id="self-check"></a></p>
+<h2 id="4-active-recall-checkpoint">4. Active Recall Checkpoint</h2>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q1: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Why is modularity/layering highly beneficial in network design?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>It makes every layer aware of every other layer's internal implementation</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It lets each layer change its internal implementation independently, as long as it keeps offering the same service to the layer above it</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It reduces the total number of headers required for transmission</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It eliminates the need for standardized protocols</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Layering isolates change: as long as a layer's *interface* to its neighbors stays the same, its internal implementation can be swapped out (e.g., replacing Wi-Fi with Ethernet at the link layer) without requiring any changes to the layers above or below it — exactly like the airline being able to automate baggage handling without affecting ticketing.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Match the Protocol Data Unit (PDU) to its corresponding TCP/IP layer: Frame, Segment, Datagram, Message.</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Frame=Application, Segment=Network, Datagram=Transport, Message=Link</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Frame=Link, Segment=Transport, Datagram=Network, Message=Application</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Frame=Physical, Segment=Application, Datagram=Link, Message=Transport</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Frame=Network, Segment=Link, Datagram=Application, Message=Transport</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> Each layer's PDU has a distinct name: the Application layer produces Messages, the Transport layer wraps them into Segments, the Network layer wraps those into Datagrams, and the Link layer wraps those into Frames — which are finally transmitted as raw bits by the Physical layer.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">In the OSI model, which layer is responsible for encryption/decryption and data representation formats like JPEG?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Application (Layer 7)</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Presentation (Layer 6)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Session (Layer 5)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Transport (Layer 4)</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> The Presentation layer (Layer 6) handles how data is represented, encoded, and secured — including encryption/decryption (SSL/TLS) and format conversions (JPEG) — distinct from the Application layer, which deals with the actual network process (like HTTP or FTP).
+  </div>
+</div>
     </main>
 
     <footer class="pagefoot" id="pagefoot">

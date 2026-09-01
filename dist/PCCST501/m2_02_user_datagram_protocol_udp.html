@@ -382,7 +382,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 2 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -395,23 +395,82 @@
   </div>
 </div>
 <h1 id="user-datagram-protocol-udp">User Datagram Protocol (UDP)</h1>
-<p><strong>UDP segment structure, checksum calculation with pseudo-header, and applications suited for UDP.</strong></p>
+<p><strong>UDP header structure, connectionless service, checksum computation, and when to prefer UDP over TCP.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
-<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Pedagogical breakdown and intuitive real-world scenario for <strong>User Datagram Protocol (UDP)</strong> will be detailed here.</p></div></div>
+<div class="callout callout-intuition"><div class="callout-header">💡 The Intuition: Core Mental Model</div><div class="callout-body"><p>Imagine sending a postcard versus sending a registered, tracked parcel. A postcard is fast and cheap to send — you just drop it in the mailbox and walk away, no confirmation it arrived, no reordering if several postcards arrive out of sequence, no resending if one gets lost. A registered parcel is slower and involves more overhead — signatures, tracking numbers, delivery confirmation, automatic resending if something goes wrong — but you get a strong guarantee it arrives correctly.</p>
+<p><strong>UDP (User Datagram Protocol)</strong> is the postcard of the transport layer: a bare-bones, <strong>connectionless</strong>, unreliable delivery service. It adds almost nothing on top of what the network layer (IP) already offers — just enough (port numbers, and an optional checksum) to get data to the right process on the right machine, and nothing more. No handshake before sending, no acknowledgment after, no automatic retransmission of lost data, no guaranteed ordering. This sounds like a big downside, but for many applications — live video calls, online gaming, DNS lookups — a late or perfectly-reliable-but-slow retransmitted postcard is <em>worse</em> than simply losing it and moving on, which is exactly why UDP remains a deliberate, popular choice rather than an inferior fallback.</p></div></div>
 
 <hr />
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p>Formal definitions, algorithmic principles, and syllabus directives corresponding to KTU 2024 scheme.</p>
+<p><strong>The UDP header — remarkably small, just 8 bytes:</strong></p>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph UDPHeader[&quot;UDP Header (8 bytes total)&quot;]
+        direction LR
+        A[&quot;Source Port&lt;br/&gt;(2 bytes)&quot;] --&gt; B[&quot;Destination Port&lt;br/&gt;(2 bytes)&quot;]
+        B --&gt; C[&quot;Length&lt;br/&gt;(2 bytes)&quot;]
+        C --&gt; D[&quot;Checksum&lt;br/&gt;(2 bytes)&quot;]
+    end
+    UDPHeader --&gt; E[&quot;Application Data (payload)&quot;]
+</code></pre>
+<ul>
+<li><strong>Source port (16 bits):</strong> the sending process's port (optional to fill meaningfully — can be zeroed if no reply is expected, though almost always set in practice).</li>
+<li><strong>Destination port (16 bits):</strong> identifies the receiving process — the only field UDP demultiplexing actually needs, as covered in the previous topic.</li>
+<li><strong>Length (16 bits):</strong> total length of the UDP segment (header + data), in bytes.</li>
+<li><strong>Checksum (16 bits):</strong> an <em>optional</em> (in IPv4; mandatory in IPv6) error-detection value computed over the header, data, and a "pseudo-header" (containing source/destination IP addresses, borrowed conceptually from the IP layer, to catch misdelivered packets too). If the receiver's recomputed checksum doesn't match, the segment is silently discarded — UDP does <em>not</em> request retransmission; that's left entirely to the application if it cares.</li>
+</ul>
+<p><strong>What UDP deliberately does NOT provide</strong> (all in contrast to TCP, covered next):
+- No connection establishment (no handshake) — a sender can just start firing datagrams immediately, which is why UDP is sometimes said to have essentially zero connection-setup latency.
+- No guaranteed delivery — datagrams can be lost, and UDP will never notice or retry.
+- No guaranteed ordering — datagrams can arrive in a different order than sent, and UDP does not reorder them.
+- No flow control — a fast sender can overwhelm a slow receiver, with UDP doing nothing to slow down.
+- No congestion control — UDP does not back off even if the network is congested, unlike TCP (this is a genuine, sometimes controversial trade-off, since a network full of aggressive UDP traffic can starve out well-behaved TCP flows).</p>
+<p><strong>When UDP is the better choice (comparison table):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Prefer UDP when...</th>
+<th>Prefer TCP when...</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Timeliness vs completeness</td>
+<td>Late data is useless (live video/audio, gaming)</td>
+<td>Every byte must arrive correctly, even if slower</td>
+</tr>
+<tr>
+<td>Overhead tolerance</td>
+<td>Minimal header/handshake overhead is critical</td>
+<td>Some overhead is acceptable for reliability</td>
+</tr>
+<tr>
+<td>Message boundaries</td>
+<td>Application wants each send() to arrive as one discrete datagram</td>
+<td>Application is fine with a continuous byte stream</td>
+</tr>
+<tr>
+<td>Simplicity of one-shot exchanges</td>
+<td>Quick request/response, e.g. DNS query</td>
+<td>Long-lived, stateful sessions, e.g. file transfer</td>
+</tr>
+<tr>
+<td>Multicast/broadcast support</td>
+<td>Needed (UDP supports these; TCP does not)</td>
+<td>Not needed</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Initial parameters and problem constraints.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A UDP segment carries 2 bytes of 16-bit data words (for a simplified checksum example): <code>0x0110</code> and <code>0x0000</code>, plus a pseudo-header word <code>0x000F</code>. Compute the UDP checksum using 1's complement addition, and describe what the receiver does with it.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Algorithmic execution and state transitions.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Sum the words using 1's complement (end-around-carry) addition: <code>0x0110 + 0x0000 + 0x000F = 0x011F</code> (no overflow/carry beyond 16 bits here, so no wraparound needed). Take the 1's complement (flip every bit) of the sum: <code>0x011F</code> in binary is <code>0000 0001 0001 1111</code>; flipping every bit gives <code>1111 1110 1110 0000</code>, i.e. <code>0xFEE0</code>. This value, <code>0xFEE0</code>, is placed in the checksum field and sent along with the segment.</p></div></div>
 
-<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Computed result and complexity assessment.</p></div></div>
+<div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>At the receiver, the same 1's complement sum is computed over <em>all</em> the received words, <strong>including</strong> the received checksum field itself this time. If nothing was corrupted in transit, this sum will come out as all 1s (<code>0xFFFF</code>) — because adding a value to its own 1's complement always yields all 1s. If the result is anything other than all 1s, the receiver knows the segment was corrupted and silently discards it — UDP does not notify the sender or request retransmission; if the application cares about that lost data, it's entirely the application's own responsibility to detect the loss and re-request it.</p></div></div>
 
 <hr />
 <p><a id="self-check"></a></p>
@@ -421,16 +480,52 @@
     <span class="quiz-category">Q1: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">What is the core algorithmic objective of User Datagram Protocol (UDP)?</div>
+  <div class="quiz-prompt">How large is the UDP header, and what four fields does it contain?</div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="true"><span>Core theoretical guarantee and syllabus specification</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A secondary optimization with no formal definition</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An outdated deprecated standard</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Purely a hardware implementation detail</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>20 bytes: source port, destination port, sequence number, checksum</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>8 bytes: source port, destination port, length, checksum</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>4 bytes: source port and destination port only</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>12 bytes: source port, destination port, checksum, and a connection ID</span></button>
 
   </div>
   <div class="quiz-explanation">
-    <strong>Pedagogical Insight:</strong> Detailed pedagogical explanation of why this principle is central to User Datagram Protocol (UDP) in Computer Networks.
+    <strong>Pedagogical Insight:</strong> UDP's header is deliberately minimal — just 8 bytes total, holding source port, destination port, length, and checksum — reflecting UDP's design philosophy of adding as little overhead as possible on top of the network layer.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">When a UDP receiver detects a checksum mismatch (indicating the segment was corrupted), what does it do?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Requests retransmission from the sender automatically</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Silently discards the segment, with no automatic notification to the sender or the application</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Attempts to repair the corrupted bits itself</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Crashes the receiving application</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> UDP provides only error *detection*, not error *recovery*. A failed checksum simply causes the segment to be dropped; UDP itself has no mechanism to request retransmission — any such recovery must be built into the application layer if the application needs it.
+  </div>
+</div>
+
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt">Which application is the best fit for UDP rather than TCP, and why?</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>A large file download, because completeness matters more than speed</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A live video call, because a late video frame (delayed by TCP's retransmission and reordering) is often more disruptive to the user experience than simply dropping and skipping that frame</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>An online banking transaction, because reliability is not important</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>A software update installer, because losing some bytes is acceptable</span></button>
+
+  </div>
+  <div class="quiz-explanation">
+    <strong>Pedagogical Insight:</strong> In a live video/audio call, a frame delayed by TCP's wait-for-retransmission behavior arrives too late to be useful anyway (the conversation has moved on) — so applications like this prefer UDP's "just send it, and move on regardless" behavior, tolerating occasional loss or glitches in exchange for minimal delay. File downloads and financial transactions, in contrast, need every byte correct and use TCP.
   </div>
 </div>
     </main>

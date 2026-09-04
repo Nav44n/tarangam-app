@@ -52,34 +52,31 @@ The imbalance at node $30$ was caused by inserting into the **left** subtree of 
 ---
 
 <a id="self-check"></a>
-## 4. Active Recall Checkpoint
+## 4. Active Recall Quizzes
 
-::: quiz Q1: Foundational Concept
-An imbalance caused by inserting into the right subtree of the left child of an unbalanced node requires which type of rotation?
-(A) LL (single right rotation)
-(B) RR (single left rotation)
-(*C) LR (double rotation: left rotation on the child, then right rotation on the parent)
-(D) RL (double rotation: right rotation on the child, then left rotation on the parent)
+::: quiz An imbalance caused by inserting into the right subtree of the left child of an unbalanced node requires which type of rotation?
+() LL (single right rotation)
+() RR (single left rotation)
+(*) LR (double rotation: left rotation on the child, then right rotation on the parent)
+() RL (double rotation: right rotation on the child, then left rotation on the parent)
 ::: explanation
 "Right subtree of the left child" is exactly the definition of the LR (Left-Right) zig-zag case. A single rotation can't straighten a zig-zag shape, so the fix requires two rotations: first a left rotation on the left child (converting the zig-zag into a straight LL shape), then a right rotation on the original unbalanced node.
 :::
 
-::: quiz Q2: Foundational Concept
-Do rotations in an AVL tree change which set of values is stored in the tree?
-(A) Yes, some values must be discarded during rotation
-(*B) No — rotations only rearrange parent/child pointers among a small local group of nodes; the same set of values remains, just restructured, and the BST ordering property is preserved
-(C) Yes, rotation always adds a new dummy node
-(D) Rotations only affect leaf nodes, never internal structure
+::: quiz Do rotations in an AVL tree change which set of values is stored in the tree?
+() Yes, some values must be discarded during rotation
+(*) No — rotations only rearrange parent/child pointers among a small local group of nodes; the same set of values remains, just restructured, and the BST ordering property is preserved
+() Yes, rotation always adds a new dummy node
+() Rotations only affect leaf nodes, never internal structure
 ::: explanation
 A rotation is purely a structural rearrangement — like redistributing weights on a balance scale without adding or removing any. Every value that was in the tree before the rotation is still in the tree afterward, and the rotation is specifically designed so the left-smaller/right-larger BST property still holds for every node once the dust settles.
 :::
 
-::: quiz Q3: Foundational Concept
-Why can a single rotation performed during a deletion sometimes require checking and rebalancing further up the tree, unlike after an insertion?
-(A) Deletion never actually requires rebalancing
-(*B) A rotation during deletion can reduce that subtree's height, which may cause a new imbalance to appear at an ancestor further up, so all ancestors up to the root must be checked
-(C) Deletion always requires exactly two rotations regardless of shape
-(D) Insertion and deletion always trigger identical rebalancing behaviour
+::: quiz Why can a single rotation performed during a deletion sometimes require checking and rebalancing further up the tree, unlike after an insertion?
+() Deletion never actually requires rebalancing
+(*) A rotation during deletion can reduce that subtree's height, which may cause a new imbalance to appear at an ancestor further up, so all ancestors up to the root must be checked
+() Deletion always requires exactly two rotations regardless of shape
+() Insertion and deletion always trigger identical rebalancing behaviour
 ::: explanation
 After insertion, fixing the lowest unbalanced ancestor is provably sufficient because the subtree's height after rotation is restored to what it was before the insertion. After deletion, a rotation can actually shrink the subtree's height further, and that shrinkage can propagate upward and trigger a fresh imbalance at an ancestor — so deletion rebalancing must walk all the way up to the root, potentially rotating at multiple levels, not just the first one found.
 :::

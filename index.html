@@ -3,90 +3,320 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tarangam - S5 Computer Science</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Tarangam - KTU Study Notes</title>
+<meta name="description" content="Interactive study notes, visual animations, and active recall quizzes for KTU S5 Computer Science courses.">
+<meta property="og:title" content="Tarangam - KTU Study Notes">
+<meta property="og:description" content="Interactive study notes, visual animations, and active recall quizzes for KTU S5 Computer Science courses.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
-  body { font-family: 'Space Grotesk', sans-serif; background-color: #090d16; color: #f3f4f6; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; }
-  .dashboard { max-width: 1000px; width: 100%; padding: 2rem; }
-  .header { text-align: center; margin-bottom: 3rem; }
-  .header h1 { font-size: 3rem; margin: 0; color: #3b82f6; }
-  .header p { font-size: 1.2rem; color: #9ca3af; }
-  .course-section { margin-bottom: 3rem; }
-  .course-title { font-size: 1.5rem; margin-bottom: 1rem; border-bottom: 1px solid #1f2937; padding-bottom: 0.5rem; }
-  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
-  .card { background-color: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 1.5rem; text-decoration: none; color: inherit; transition: transform 0.2s, border-color 0.2s; }
-  .card:hover { transform: translateY(-4px); border-color: #3b82f6; }
-  .card h2 { margin: 0 0 0.5rem 0; font-size: 1.25rem; }
-  .card p { margin: 0; color: #9ca3af; font-size: 0.9rem; }
-  .module-tag { display: inline-block; background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem; }
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background-color: #090d16;
+    color: #f3f4f6;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+  .dashboard {
+    max-width: 1080px;
+    width: 100%;
+    padding: 2.5rem 1.5rem;
+    box-sizing: border-box;
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  .header .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  .brand-badge {
+    width: 42px;
+    height: 42px;
+    background: #3b82f6;
+    color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  .header h1 {
+    font-size: 2.75rem;
+    margin: 0;
+    color: #f9fafb;
+    letter-spacing: -0.02em;
+  }
+  .header p {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    margin-top: 0.5rem;
+  }
+  .course-section {
+    margin-bottom: 2.5rem;
+    background: rgba(18, 24, 36, 0.6);
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 1.5rem;
+  }
+  .course-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #1e293b;
+  }
+  .course-title {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #f1f5f9;
+  }
+  .course-code {
+    font-family: 'IBM Plex Mono', monospace;
+    background-color: rgba(59, 130, 246, 0.12);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+  .card {
+    background-color: #121824;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: #38bdf8;
+    background-color: #1a2232;
+  }
+  .card h2 {
+    margin: 0 0 0.4rem 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #f1f5f9;
+  }
+  .card p {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+  .module-tag {
+    display: inline-block;
+    background-color: rgba(56, 189, 248, 0.1);
+    color: #38bdf8;
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    align-self: flex-start;
+  }
+  .card.card-upcoming {
+    opacity: 0.6;
+    border-style: dashed;
+    cursor: default;
+  }
+  .card.card-upcoming:hover {
+    transform: none;
+    border-color: #1e293b;
+    background-color: #121824;
+  }
+  .module-tag.upcoming {
+    background-color: rgba(148, 163, 184, 0.15);
+    color: #94a3b8;
+  }
 </style>
 </head>
-<body>
+<body data-theme="dark">
   <div class="dashboard">
     <div class="header">
-      <h1>Tarangam</h1>
-      <p>KTU 2024 Scheme &middot; S5 Computer Science</p>
+      <div class="logo">
+        <span class="brand-badge">त</span>
+        <h1>Tarangam</h1>
+      </div>
+      <p>Interactive Notes &middot; KTU 2024 Scheme &middot; S5 Computer Science</p>
     </div>
     
+    <!-- PCCST503: Machine Learning -->
     <div class="course-section">
-      <div class="course-title">PCCST503: Machine Learning</div>
+      <div class="course-header">
+        <div class="course-title">Machine Learning</div>
+        <span class="course-code">PCCST503</span>
+      </div>
       <div class="card-grid">
-        <a href="dist/PCCST503/m1_01_ml_definition_and_intuition.html" class="card">
+        <a href="PCCST503/m1_01_introduction_to_machine_learning_and_paradigms.html" class="card">
           <span class="module-tag">Module 1</span>
-          <h2>Parameter Estimation</h2>
-          <p>MLE, MAP, and the mathematical foundations of learning paradigms.</p>
+          <h2>Foundations & Regression</h2>
+          <p>Intro to ML, Probability Foundations, MLE, MAP, and the Regularization Bridge.</p>
         </a>
-        <a href="dist/PCCST503/m2_01_classification_intro_and_linear_flaws.html" class="card">
+        <a href="PCCST503/m1_p01_linear_regression_ols.html" class="card" style="border-color: var(--callout-formula-border); background: var(--callout-formula-bg);">
+          <span class="module-tag" style="background: var(--callout-formula-border); color: #fff;">Workbook</span>
+          <h2>Progressive Problems (M1)</h2>
+          <p>OLS Closed-Form, Gradient Descent, Metrics & R², Ridge & Lasso Regularization, and Normal Equation.</p>
+        </a>
+        <a href="PCCST503/m2_01_classification_foundations.html" class="card">
           <span class="module-tag">Module 2</span>
-          <h2>Supervised Learning</h2>
-          <p>Logistic Regression, Naive Bayes, KNN, and Decision Trees.</p>
+          <h2>Classification & Trees</h2>
+          <p>Foundations of Classification, Decision Trees Theory, Naive Bayes, and Logistic Regression.</p>
         </a>
-        <a href="dist/PCCST503/m3_01_generalisation_overfitting.html" class="card">
-          <span class="module-tag">Module 3</span>
-          <h2>SVMs & Neural Networks</h2>
+        <a href="PCCST503/m2_p01_information_gain_calculation.html" class="card" style="border-color: var(--callout-formula-border); background: var(--callout-formula-bg);">
+          <span class="module-tag" style="background: var(--callout-formula-border); color: #fff;">Workbook</span>
+          <h2>Progressive Problems (M2)</h2>
+          <p>Information Gain Decision Tree Root Calculation and Naive Bayes Classification.</p>
+        </a>
+        <div class="card card-upcoming" title="Module 3 notes are in preparation">
+          <span class="module-tag upcoming">Module 3 &middot; In Prep</span>
+          <h2>Neural Nets & SVMs</h2>
           <p>Maximum margin hyperplanes, Perceptrons, and Backpropagation.</p>
-        </a>
-        <a href="dist/PCCST503/m4_01_clustering_similarity.html" class="card">
-          <span class="module-tag">Module 4</span>
-          <h2>Unsupervised & Ensembles</h2>
+        </div>
+        <div class="card card-upcoming" title="Module 4 notes are in preparation">
+          <span class="module-tag upcoming">Module 4 &middot; In Prep</span>
+          <h2>PCA & Ensembles</h2>
           <p>K-Means, Hierarchical Clustering, PCA, Bagging, and Boosting.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PCCST501: Computer Networks -->
+    <div class="course-section">
+      <div class="course-header">
+        <div class="course-title">Computer Networks</div>
+        <span class="course-code">PCCST501</span>
+      </div>
+      <div class="card-grid">
+        <a href="PCCST501/m1_01_internet_overview_and_network_edge.html" class="card">
+          <span class="module-tag">Module 1</span>
+          <h2>Application Layer</h2>
+          <p>Internet overview, OSI & TCP/IP, HTTP, DNS, FTP, SMTP, and P2P.</p>
+        </a>
+        <a href="PCCST501/m1_p01_delays.html" class="card" style="border-color: var(--callout-formula-border); background: var(--callout-formula-bg);">
+          <span class="module-tag" style="background: var(--callout-formula-border); color: #fff;">Workbook</span>
+          <h2>Progressive Problems (M1)</h2>
+          <p>Delays, throughput, packet switching, and HTTP RTT systematic problems.</p>
+        </a>
+        <a href="PCCST501/m2_01_transport_layer_services_and_multiplexing.html" class="card">
+          <span class="module-tag">Module 2</span>
+          <h2>Transport & Network Layer</h2>
+          <p>TCP, UDP, Congestion Control, IPv4/IPv6, and Routing Algorithms.</p>
+        </a>
+        <a href="PCCST501/m2_p01_sliding_window_gbn_sr.html" class="card" style="border-color: var(--callout-formula-border); background: var(--callout-formula-bg);">
+          <span class="module-tag" style="background: var(--callout-formula-border); color: #fff;">Workbook</span>
+          <h2>Progressive Problems (M2)</h2>
+          <p>Sliding window (GBN/SR), TCP RTT & Congestion, Subnetting & CIDR, and Dijkstra/Bellman-Ford.</p>
+        </a>
+        <a href="PCCST501/m3_01_datalink_layer_services_and_framing.html" class="card">
+          <span class="module-tag">Module 3</span>
+          <h2>Data Link Layer</h2>
+          <p>Framing, CRC error detection, CSMA/CD, ARP, VLANs, and 802.11.</p>
+        </a>
+        <a href="PCCST501/m4_01_network_management_architecture_snmp.html" class="card">
+          <span class="module-tag">Module 4</span>
+          <h2>Physical Layer & Management</h2>
+          <p>SNMP, Nyquist & Shannon limits, PCM, and Modulation techniques.</p>
         </a>
       </div>
     </div>
 
+    <!-- PCCST502: Algorithm Design -->
     <div class="course-section">
-      <div class="course-title">PCCST501: Computer Networks</div>
+      <div class="course-header">
+        <div class="course-title">Design and Analysis of Algorithms</div>
+        <span class="course-code">PCCST502</span>
+      </div>
       <div class="card-grid">
-        <a href="dist/PCCST501/m1_01_introduction.html" class="card">
+        <a href="PCCST502/m1_01_algorithm_definition_and_criteria.html" class="card">
           <span class="module-tag">Module 1</span>
-          <h2>Network Fundamentals</h2>
-          <p>Introduction to Computer Networks. Content under development.</p>
+          <h2>Asymptotics & Recurrences</h2>
+          <p>Complexity analysis, Master theorem, Recursion trees, and AVL trees.</p>
+        </a>
+        <a href="PCCST502/m1_p01_asymptotics.html" class="card" style="border-color: var(--callout-formula-border); background: var(--callout-formula-bg);">
+          <span class="module-tag" style="background: var(--callout-formula-border); color: #fff;">Workbook</span>
+          <h2>Progressive Problems (M1)</h2>
+          <p>Systematic, step-by-step exhaustive problem variations.</p>
+        </a>
+        <a href="PCCST502/m2_01_disjoint_sets_and_union_find.html" class="card">
+          <span class="module-tag">Module 2</span>
+          <h2>Graphs & Divide and Conquer</h2>
+          <p>Union-Find, BFS/DFS, Kosaraju SCC, Merge Sort, and Strassen.</p>
+        </a>
+        <a href="PCCST502/m2_p01_union_find.html" class="card" style="border-color: var(--callout-formula-border); background: var(--callout-formula-bg);">
+          <span class="module-tag" style="background: var(--callout-formula-border); color: #fff;">Workbook</span>
+          <h2>Progressive Problems (M2)</h2>
+          <p>Systematic, step-by-step exhaustive problem variations.</p>
+        </a>
+        <a href="PCCST502/m3_01_greedy_strategy_control_abstraction.html" class="card">
+          <span class="module-tag">Module 3</span>
+          <h2>Greedy, DP & Backtracking</h2>
+          <p>Kruskal, Prim, Dijkstra, Matrix Chain Multiplication, and N-Queens.</p>
+        </a>
+        <a href="PCCST502/m4_01_branch_and_bound_control_abstraction.html" class="card">
+          <span class="module-tag">Module 4</span>
+          <h2>Branch & Bound & Complexity</h2>
+          <p>TSP, NP-Completeness proofs, Bin Packing, and Randomized Algorithms.</p>
         </a>
       </div>
     </div>
 
+    <!-- PECST522: Artificial Intelligence -->
     <div class="course-section">
-      <div class="course-title">PCCST502: Algorithm Design</div>
-      <div class="card-grid">
-        <a href="dist/PCCST502/m1_01_algorithm_analysis.html" class="card">
-          <span class="module-tag">Module 1</span>
-          <h2>Algorithm Analysis</h2>
-          <p>Asymptotic notation and complexity. Content under development.</p>
-        </a>
+      <div class="course-header">
+        <div class="course-title">Artificial Intelligence</div>
+        <span class="course-code">PECST522</span>
       </div>
-        <div class="course-section">
-      <div class="course-title">PECST522: Artificial Intelligence</div>
       <div class="card-grid">
-        <a href="dist/PECST522/m1_01_ai_definition_foundations_and_history.html" class="card">
+        <a href="PECST522/m1_01_ai_definition_foundations_and_history.html" class="card">
           <span class="module-tag">Module 1</span>
-          <h2>Intelligent Agents & Problem Solving</h2>
-          <p>PEAS framework, agent architectures, and classic AI state-space toy problems.</p>
+          <h2>Agents & Problem Solving</h2>
+          <p>PEAS framework, agent architectures, and classic AI toy problems.</p>
+        </a>
+        <a href="PECST522/m1_99_practice_lab_agents_and_problem_formulation.html" class="card" style="border-color: rgba(56, 189, 248, 0.4); background: linear-gradient(180deg, #121b2d 0%, #0e1524 100%);">
+          <span class="module-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">🧪 Module 1 Lab</span>
+          <h2>Practice Lab: Agents & PEAS</h2>
+          <p>Real-world scenario matrix, cheat tables, active recall quizzes, and KTU 7-mark model solutions.</p>
+        </a>
+        <a href="PECST522/m2_01_uninformed_search_dfs_bfs_ucs.html" class="card">
+          <span class="module-tag">Module 2</span>
+          <h2>Search & Game Playing</h2>
+          <p>A* Search, CSPs, AC-3, Minimax, and Alpha-Beta pruning.</p>
+        </a>
+        <a href="PECST522/m3_01_knowledge_based_agents_and_wumpus_world.html" class="card">
+          <span class="module-tag">Module 3</span>
+          <h2>Knowledge & Logic</h2>
+          <p>Wumpus World, Propositional & First-Order Logic, Unification, and Chaining.</p>
+        </a>
+        <a href="PECST522/m4_01_reinforcement_learning_learning_from_rewards.html" class="card">
+          <span class="module-tag">Module 4</span>
+          <h2>Reinforcement Learning</h2>
+          <p>Passive & Active RL, Q-Learning, Policy Search, and Inverse RL.</p>
         </a>
       </div>
     </div>
   </div>
 </body>
 </html>
-
-

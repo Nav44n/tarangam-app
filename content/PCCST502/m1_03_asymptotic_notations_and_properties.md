@@ -59,34 +59,31 @@ Choosing $c = 10$ and $n_0 = 1$ satisfies the definition: $3n^2+5n+2 \le 10n^2$ 
 ---
 
 <a id="self-check"></a>
-## 4. Active Recall Checkpoint
+## 4. Active Recall Quizzes
 
-::: quiz Q1: Foundational Concept
-Which asymptotic notation gives the *tightest* possible statement about a function's growth — both an upper and a lower bound simultaneously?
-(A) Big-O
-(B) Big-Omega
-(*C) Big-Theta
-(D) Little-o
+::: quiz Which asymptotic notation gives the *tightest* possible statement about a function's growth — both an upper and a lower bound simultaneously?
+() Big-O
+() Big-Omega
+(*) Big-Theta
+() Little-o
 ::: explanation
 Big-Theta requires proving both $f(n) = O(g(n))$ (upper bound) and $f(n) = \Omega(g(n))$ (lower bound) hold with the *same* $g(n)$, sandwiching $f(n)$ between two constant multiples of $g(n)$. Big-O alone only gives an upper bound, and Big-Omega alone only gives a lower bound.
 :::
 
-::: quiz Q2: Foundational Concept
-If $f(n) = O(g(n))$, is it necessarily true that $g(n) = O(f(n))$?
-(A) Yes, Big-O is always symmetric
-(*B) No — Big-O is not symmetric in general; only Big-Theta guarantees this two-way relationship
-(C) Yes, but only when $n_0 = 0$
-(D) No relationship can ever be inferred
+::: quiz If $f(n) = O(g(n))$, is it necessarily true that $g(n) = O(f(n))$?
+() Yes, Big-O is always symmetric
+(*) No — Big-O is not symmetric in general; only Big-Theta guarantees this two-way relationship
+() Yes, but only when $n_0 = 0$
+() No relationship can ever be inferred
 ::: explanation
 Big-O is a one-directional upper-bound statement. For example, $n = O(n^2)$ is true, but $n^2 = O(n)$ is false — $n^2$ grows strictly faster than $n$. Only Big-Theta ($f=\Theta(g)$) is guaranteed symmetric, because it requires bounds in both directions by definition.
 :::
 
-::: quiz Q3: Foundational Concept
-Using transitivity, if you know Algorithm A is $O(n \log n)$ and $n \log n$ is $O(n^2)$, what can you immediately conclude about Algorithm A?
-(A) Nothing further can be concluded
-(*B) Algorithm A is also $O(n^2)$
-(C) Algorithm A must be exactly $\Theta(n^2)$
-(D) Algorithm A is $O(\log n)$
+::: quiz Using transitivity, if you know Algorithm A is $O(n \log n)$ and $n \log n$ is $O(n^2)$, what can you immediately conclude about Algorithm A?
+() Nothing further can be concluded
+(*) Algorithm A is also $O(n^2)$
+() Algorithm A must be exactly $\Theta(n^2)$
+() Algorithm A is $O(\log n)$
 ::: explanation
 Transitivity of Big-O states: if $f(n)=O(g(n))$ and $g(n)=O(h(n))$, then $f(n)=O(h(n))$. Here $f = $ Algorithm A's cost, $g = n\log n$, $h = n^2$, so Algorithm A is $O(n^2)$ — though note this is a weaker (looser) statement than the original, tighter $O(n\log n)$ bound.
 :::

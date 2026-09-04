@@ -55,34 +55,31 @@ This procedure fails Finiteness, Definiteness, and Effectiveness — so it is *n
 ---
 
 <a id="self-check"></a>
-## 4. Active Recall Checkpoint
+## 4. Active Recall Quizzes
 
-::: quiz Q1: Foundational Concept
-A set of instructions that includes the step "repeat until the result looks good enough" fails which criterion of a valid algorithm?
-(A) Input
-(B) Output
-(*C) Definiteness (and possibly Finiteness, since "good enough" has no guaranteed stopping point)
-(D) Effectiveness only
+::: quiz A set of instructions that includes the step "repeat until the result looks good enough" fails which criterion of a valid algorithm?
+() Input
+() Output
+(*) Definiteness (and possibly Finiteness, since "good enough" has no guaranteed stopping point)
+() Effectiveness only
 ::: explanation
 "Looks good enough" is subjective and not precisely specified — two executions could stop at different points, or never stop at all. This directly violates Definiteness, and since there's no guarantee it ever terminates, it also threatens Finiteness.
 :::
 
-::: quiz Q2: Foundational Concept
-In the RAM model of computation, an operation like adding two numbers or comparing two array elements is assumed to take:
-(A) Time proportional to the size of the numbers involved
-(*B) A constant amount of time, $O(1)$, regardless of input size
-(C) Time proportional to the total memory available on the machine
-(D) An unpredictable, machine-dependent amount of time
+::: quiz In the RAM model of computation, an operation like adding two numbers or comparing two array elements is assumed to take:
+() Time proportional to the size of the numbers involved
+(*) A constant amount of time, $O(1)$, regardless of input size
+() Time proportional to the total memory available on the machine
+() An unpredictable, machine-dependent amount of time
 ::: explanation
 The RAM model's whole purpose is to give a hardware-independent baseline: it assumes basic operations (arithmetic, comparison, assignment, memory access) each cost exactly one unit of time, so that analysis of an algorithm's growth rate isn't muddied by real machine quirks like cache misses or clock speed.
 :::
 
-::: quiz Q3: Foundational Concept
-Which statement best captures the relationship between time efficiency and space efficiency?
-(A) They always improve together — a faster algorithm always uses less memory
-(*B) They often trade off against each other — using extra memory to store precomputed results can save time, and vice versa
-(C) Space efficiency is irrelevant in modern computing and can be ignored
-(D) Time efficiency only matters for recursive algorithms
+::: quiz Which statement best captures the relationship between time efficiency and space efficiency?
+() They always improve together — a faster algorithm always uses less memory
+(*) They often trade off against each other — using extra memory to store precomputed results can save time, and vice versa
+() Space efficiency is irrelevant in modern computing and can be ignored
+() Time efficiency only matters for recursive algorithms
 ::: explanation
 A classic example is memoization: storing (caching) previously computed results uses more space, but saves the time of recomputing them. Conversely, recomputing values on the fly instead of storing them saves memory at the cost of extra computation time. Good algorithm design often means consciously choosing where on this trade-off you want to sit.
 :::

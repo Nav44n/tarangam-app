@@ -48,34 +48,31 @@ Mixed drill: (a) solve $T(n) = 4T(n/2) + n^2$ using the Master Theorem; (b) inse
 ---
 
 <a id="self-check"></a>
-## 4. Active Recall Checkpoint
+## 4. Active Recall Quizzes
 
-::: quiz Q1: Foundational Concept
-When a recurrence is given in the exact form $T(n) = aT(n/b) + f(n)$ and you can cleanly classify $f(n)$ against $n^{\log_b a}$, which technique is usually fastest?
-(A) Always draw a full recursion tree regardless
-(*B) Apply the Master Theorem directly, since it's a shortcut precisely for recurrences of this standard form
-(C) Always use the substitution method with a random guess
-(D) Rewrite the recursion as an iterative loop first
+::: quiz When a recurrence is given in the exact form $T(n) = aT(n/b) + f(n)$ and you can cleanly classify $f(n)$ against $n^{\log_b a}$, which technique is usually fastest?
+() Always draw a full recursion tree regardless
+(*) Apply the Master Theorem directly, since it's a shortcut precisely for recurrences of this standard form
+() Always use the substitution method with a random guess
+() Rewrite the recursion as an iterative loop first
 ::: explanation
 The Master Theorem exists exactly to shortcut the recursion-tree/iteration reasoning for this common recurrence shape — if $f(n)$ classifies cleanly into one of the three cases, you get the answer immediately without unrolling anything by hand.
 :::
 
-::: quiz Q2: Foundational Concept
-While inserting keys in strictly increasing order into an AVL tree (e.g., 10, 20, 30, 40, 50, ...), what pattern of rotations would you expect to repeatedly see, and why?
-(A) LR and RL double rotations, because increasing order always creates zig-zag shapes
-(*B) RR single (left) rotations, because each new maximum key extends a straight line down the right side, repeatedly triggering the "straight-line-leaning-right" imbalance
-(C) No rotations are ever needed for sorted insertion order
-(D) LL single rotations, because the tree leans left
+::: quiz While inserting keys in strictly increasing order into an AVL tree (e.g., 10, 20, 30, 40, 50, ...), what pattern of rotations would you expect to repeatedly see, and why?
+() LR and RL double rotations, because increasing order always creates zig-zag shapes
+(*) RR single (left) rotations, because each new maximum key extends a straight line down the right side, repeatedly triggering the "straight-line-leaning-right" imbalance
+() No rotations are ever needed for sorted insertion order
+() LL single rotations, because the tree leans left
 ::: explanation
 Inserting strictly increasing keys always extends the rightmost path of the tree — exactly the RR (straight-line-right) imbalance shape — so AVL trees repeatedly trigger single left rotations to keep correcting this lean, which is exactly the mechanism that prevents the tree from ever becoming the fully degenerate, $O(n)$-height line that a plain (non-self-balancing) BST would become under the same insertion order.
 :::
 
-::: quiz Q3: Foundational Concept
-If two different valid derivation methods (e.g., the loop-summation method and the recursion-tree method applied to an equivalent recursive formulation) give *different* final Big-O answers for what should be the same underlying algorithm, what does this most likely indicate?
-(A) Both answers are correct simultaneously and no contradiction exists
-(*B) An arithmetic or setup error was made in one of the derivations, and re-deriving via the other method is a fast way to locate the mistake
-(C) Big-O notation is inherently inconsistent between methods
-(D) The algorithm's complexity is undefined
+::: quiz If two different valid derivation methods (e.g., the loop-summation method and the recursion-tree method applied to an equivalent recursive formulation) give *different* final Big-O answers for what should be the same underlying algorithm, what does this most likely indicate?
+() Both answers are correct simultaneously and no contradiction exists
+(*) An arithmetic or setup error was made in one of the derivations, and re-deriving via the other method is a fast way to locate the mistake
+() Big-O notation is inherently inconsistent between methods
+() The algorithm's complexity is undefined
 ::: explanation
 A given algorithm has one true asymptotic complexity; every valid analysis method, applied correctly, must agree on it. A disagreement between two independently-applied methods is a strong, practical signal to recheck your work — usually faster than staring at a single derivation looking for a subtle mistake.
 :::

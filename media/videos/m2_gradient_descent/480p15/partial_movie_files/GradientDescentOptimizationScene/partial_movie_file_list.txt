@@ -1,8 +1,0 @@
-# This file is used internally by FFMPEG.
-file 'file:D:/tarangam-app/media/videos/m2_gradient_descent/480p15/partial_movie_files/GradientDescentOptimizationScene/2118183852_1072319112_223132457.mp4'
-file 'file:D:/tarangam-app/media/videos/m2_gradient_descent/480p15/partial_movie_files/GradientDescentOptimizationScene/366519484_1483997976_4139309942.mp4'
-file 'file:D:/tarangam-app/media/videos/m2_gradient_descent/480p15/partial_movie_files/GradientDescentOptimizationScene/366519484_727498143_2040483625.mp4'
-file 'file:D:/tarangam-app/media/videos/m2_gradient_descent/480p15/partial_movie_files/GradientDescentOptimizationScene/366519484_3353480720_2040483625.mp4'
-file 'file:D:/tarangam-app/media/videos/m2_gradient_descent/480p15/partial_movie_files/GradientDescentOptimizationScene/366519484_2681983593_2040483625.mp4'
-file 'file:D:/tarangam-app/media/videos/m2_gradient_descent/480p15/partial_movie_files/GradientDescentOptimizationScene/366519484_2410875559_2040483625.mp4'
-file 'file:D:/tarangam-app/media/videos/m2_gradient_descent/480p15/partial_movie_files/GradientDescentOptimizationScene/366519484_847192958_250209207.mp4'

@@ -53,34 +53,31 @@ $T(n) = n + n\log_2 n$. As $n$ grows large, $n\log_2 n$ dominates the smaller $n
 ---
 
 <a id="self-check"></a>
-## 4. Active Recall Checkpoint
+## 4. Active Recall Quizzes
 
-::: quiz Q1: Foundational Concept
-In the iteration/expansion method, what determines the number of levels $k$ you expand before stopping?
-(A) You always stop after exactly 3 levels
-(*B) You stop once the recursive argument reaches the base case (e.g. $n/2^k = 1$ or $n-k=1$), and solve for $k$ accordingly
-(C) You stop as soon as the pattern looks complicated
-(D) The number of levels is always equal to $n$
+::: quiz In the iteration/expansion method, what determines the number of levels $k$ you expand before stopping?
+() You always stop after exactly 3 levels
+(*) You stop once the recursive argument reaches the base case (e.g. $n/2^k = 1$ or $n-k=1$), and solve for $k$ accordingly
+() You stop as soon as the pattern looks complicated
+() The number of levels is always equal to $n$
 ::: explanation
 The whole point of finding the "general pattern at level $k$" is to then determine exactly which value of $k$ makes the recursive term hit its base case (a directly solvable, non-recursive instance) — this is what lets you convert the infinite-looking pattern into a concrete, finite formula.
 :::
 
-::: quiz Q2: Foundational Concept
-For the recurrence $T(n) = 2T(n/2) + n$, the iteration method reveals that at every level of expansion, the total "extra work" contributed (outside the recursive calls) is:
-(A) Increasing with each level
-(*B) Exactly $n$ at every level, because the halving of problem size is exactly compensated by the doubling of the number of sub-problems
-(C) Decreasing with each level
-(D) Zero at every level except the last
+::: quiz For the recurrence $T(n) = 2T(n/2) + n$, the iteration method reveals that at every level of expansion, the total "extra work" contributed (outside the recursive calls) is:
+() Increasing with each level
+(*) Exactly $n$ at every level, because the halving of problem size is exactly compensated by the doubling of the number of sub-problems
+() Decreasing with each level
+() Zero at every level except the last
 ::: explanation
 At level $k$ there are $2^k$ sub-problems, each contributing $n/2^k$ extra work (from the $f(n)=n$ term evaluated at the sub-problem's size), and $2^k \times \frac{n}{2^k} = n$ — the level count and the per-problem shrinkage exactly cancel, so every level contributes the same total, $n$. This is exactly the "Case 2" balance point of the Master Theorem, covered next.
 :::
 
-::: quiz Q3: Foundational Concept
-Using the iteration method's result $T(n) = n + n\log_2 n$ for the Merge-Sort-style recurrence, the final Big-Theta complexity is:
-(A) $\Theta(n)$
-(*B) $\Theta(n \log n)$
-(C) $\Theta(n^2)$
-(D) $\Theta(\log n)$
+::: quiz Using the iteration method's result $T(n) = n + n\log_2 n$ for the Merge-Sort-style recurrence, the final Big-Theta complexity is:
+() $\Theta(n)$
+(*) $\Theta(n \log n)$
+() $\Theta(n^2)$
+() $\Theta(\log n)$
 ::: explanation
 Between the two terms $n$ and $n\log_2 n$, the second dominates as $n$ grows (since $\log_2 n$ grows without bound, however slowly), so asymptotic notation keeps only the dominant term, giving $\Theta(n\log n)$.
 :::

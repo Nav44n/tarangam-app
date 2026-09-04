@@ -55,34 +55,31 @@ Apply the Master Theorem to Binary Search's recurrence, $T(n) = T(n/2) + O(1)$ (
 ---
 
 <a id="self-check"></a>
-## 4. Active Recall Checkpoint
+## 4. Active Recall Quizzes
 
-::: quiz Q1: Foundational Concept
-In the Master Theorem for $T(n) = aT(n/b)+f(n)$, which case applies when $f(n)$ grows at *exactly* the same rate as $n^{\log_b a}$?
-(A) Case 1
-(*B) Case 2
-(C) Case 3
-(D) None of the cases apply
+::: quiz In the Master Theorem for $T(n) = aT(n/b)+f(n)$, which case applies when $f(n)$ grows at *exactly* the same rate as $n^{\log_b a}$?
+() Case 1
+(*) Case 2
+() Case 3
+() None of the cases apply
 ::: explanation
 Case 2 is defined precisely by $f(n) = \Theta(n^{\log_b a})$ — the extra work per call matches the reference function's growth rate exactly, meaning every level of the recursion tree contributes roughly equal total work, giving the extra $\log n$ factor: $T(n) = \Theta(n^{\log_b a}\log n)$.
 :::
 
-::: quiz Q2: Foundational Concept
-For the recurrence $T(n) = 4T(n/2) + n$, what is $n^{\log_b a}$, and which Master Theorem case applies?
-(A) $n^{\log_2 4} = n^2$; since $f(n)=n$ grows slower, this is Case 1, giving $T(n)=\Theta(n^2)$
-(*B) $n^{\log_2 4} = n^2$; since $f(n)=n$ grows slower, this is Case 1, giving $T(n)=\Theta(n^2)$ [note: same as A — see explanation]
-(C) $n^{\log_2 4} = n^2$; this is Case 3, giving $T(n)=\Theta(n)$
-(D) $n^{\log_2 4} = n^2$; this is Case 2, giving $T(n)=\Theta(n^2\log n)$
+::: quiz For the recurrence $T(n) = 4T(n/2) + n$, what is $n^{\log_b a}$, and which Master Theorem case applies?
+() $n^{\log_2 4} = n^2$; since $f(n)=n$ grows slower, this is Case 1, giving $T(n)=\Theta(n^2)$
+(*) $n^{\log_2 4} = n^2$; since $f(n)=n$ grows slower, this is Case 1, giving $T(n)=\Theta(n^2)$ [note: same as A — see explanation]
+() $n^{\log_2 4} = n^2$; this is Case 3, giving $T(n)=\Theta(n)$
+() $n^{\log_2 4} = n^2$; this is Case 2, giving $T(n)=\Theta(n^2\log n)$
 ::: explanation
 Here $a=4, b=2$, so $\log_b a = \log_2 4 = 2$, giving reference function $n^2$. Since $f(n)=n=n^1$ grows polynomially slower than $n^2$ (i.e. $f(n) = O(n^{2-\epsilon})$ for $\epsilon=1$), this satisfies Case 1, and the leaves dominate: $T(n) = \Theta(n^{\log_b a}) = \Theta(n^2)$.
 :::
 
-::: quiz Q3: Foundational Concept
-Which of the following recurrences falls *outside* the basic three-case Master Theorem (i.e., is in the "gap" where none of the three cases cleanly apply)?
-(A) $T(n) = 2T(n/2) + n$
-(B) $T(n) = T(n/2) + 1$
-(*C) $T(n) = 2T(n/2) + n\log n$
-(D) $T(n) = 3T(n/2) + n^3$
+::: quiz Which of the following recurrences falls *outside* the basic three-case Master Theorem (i.e., is in the "gap" where none of the three cases cleanly apply)?
+() $T(n) = 2T(n/2) + n$
+() $T(n) = T(n/2) + 1$
+(*) $T(n) = 2T(n/2) + n\log n$
+() $T(n) = 3T(n/2) + n^3$
 ::: explanation
 Here $\log_b a = \log_2 2 = 1$, so the reference function is $n$. $f(n) = n\log n$ is asymptotically larger than $n$ but not by a full polynomial factor $n^\epsilon$ for any constant $\epsilon>0$ — it only differs by a logarithmic factor. This sits in the gap between Case 2 (exact match) and Case 3 (polynomially larger), so the basic Master Theorem doesn't directly apply; the actual answer, $\Theta(n\log^2 n)$, requires the iteration or recursion-tree method (or an extended version of the theorem) to derive.
 :::

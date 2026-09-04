@@ -48,24 +48,22 @@ Linear search is $O(n)$; binary search is $O(\log n)$. This single comparison �
 ---
 
 <a id="self-check"></a>
-## 4. Active Recall Checkpoint
+## 4. Active Recall Quizzes
 
-::: quiz Q1: Foundational Concept
-Why do we analyse algorithms using abstract notation (like "$O(n)$") instead of just timing them with a stopwatch on a real computer?
-(A) Stopwatches are not accurate enough for any measurement
-(*B) A stopwatch result depends on the specific machine, language, and system load, and doesn't tell us how the algorithm scales as input size grows
-(C) Because real computers cannot run algorithms larger than a few hundred elements
-(D) Abstract notation is only used when no computer is available
+::: quiz Why do we analyse algorithms using abstract notation (like "$O(n)$") instead of just timing them with a stopwatch on a real computer?
+() Stopwatches are not accurate enough for any measurement
+(*) A stopwatch result depends on the specific machine, language, and system load, and doesn't tell us how the algorithm scales as input size grows
+() Because real computers cannot run algorithms larger than a few hundred elements
+() Abstract notation is only used when no computer is available
 ::: explanation
 A stopwatch measures one run on one machine at one input size. It can't answer "what happens if the input is 100× bigger?" — and it conflates the algorithm's inherent efficiency with hardware speed. Asymptotic analysis strips away machine-specific detail and directly answers "how does the work grow with input size," which is the question that actually matters when choosing between two algorithms.
 :::
 
-::: quiz Q2: Foundational Concept
-Which of these best describes the overall structure of Module 1?
-(A) A random collection of unrelated topics
-(*B) A build-up from defining what an algorithm is, to measuring its cost, to a notation for describing that cost, to techniques for calculating it in loops and recursion, ending in a real worked case (AVL trees)
-(C) A single topic (Big-O notation) repeated with different examples
-(D) A history of who invented each algorithm
+::: quiz Which of these best describes the overall structure of Module 1?
+() A random collection of unrelated topics
+(*) A build-up from defining what an algorithm is, to measuring its cost, to a notation for describing that cost, to techniques for calculating it in loops and recursion, ending in a real worked case (AVL trees)
+() A single topic (Big-O notation) repeated with different examples
+() A history of who invented each algorithm
 ::: explanation
 Each topic in Module 1 is a prerequisite for the next: you can't use Big-O notation meaningfully until you know what you're measuring (time/space complexity), and you can't calculate the complexity of a recursive AVL insertion until you know how to solve recurrences. The module is deliberately sequential.
 :::

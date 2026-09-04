@@ -50,34 +50,31 @@ Linear search's best case is $O(1)$, but both its worst case and average case ar
 ---
 
 <a id="self-check"></a>
-## 4. Active Recall Checkpoint
+## 4. Active Recall Quizzes
 
-::: quiz Q1: Foundational Concept
-Why do engineers usually prioritise worst-case complexity over average-case complexity when choosing an algorithm for a critical system?
-(A) Worst-case analysis is always numerically smaller than average-case
-(*B) Worst-case gives an unconditional guarantee that holds for every possible input, while average-case depends on an assumed input distribution that may not match reality
-(C) Average-case complexity cannot be calculated mathematically
-(D) Worst-case is easier to compute in all situations
+::: quiz Why do engineers usually prioritise worst-case complexity over average-case complexity when choosing an algorithm for a critical system?
+() Worst-case analysis is always numerically smaller than average-case
+(*) Worst-case gives an unconditional guarantee that holds for every possible input, while average-case depends on an assumed input distribution that may not match reality
+() Average-case complexity cannot be calculated mathematically
+() Worst-case is easier to compute in all situations
 ::: explanation
 Worst-case bounds are distribution-free — they hold no matter what the input looks like. Average-case analysis requires assuming a probability distribution over inputs (e.g., "every arrangement is equally likely"), and if real-world inputs don't follow that assumption, the average-case guarantee can be misleading. For anything safety- or time-critical, the unconditional worst-case guarantee is far more valuable.
 :::
 
-::: quiz Q2: Foundational Concept
-For linear search on an array of size $n$, what is the best-case time complexity?
-(A) $O(n)$
-(*B) $O(1)$
-(C) $O(\log n)$
-(D) $O(n^2)$
+::: quiz For linear search on an array of size $n$, what is the best-case time complexity?
+() $O(n)$
+(*) $O(1)$
+() $O(\log n)$
+() $O(n^2)$
 ::: explanation
 In the best case, the target element is the very first one checked, so the algorithm does exactly one comparison regardless of how large $n$ is — a constant amount of work, $O(1)$.
 :::
 
-::: quiz Q3: Foundational Concept
-"In-place" or "$O(1)$ auxiliary space" for an algorithm typically means:
-(A) The algorithm uses zero memory at all, including for the input
-(*B) The algorithm uses only a constant amount of *extra* memory beyond what's needed to store the input and output
-(C) The algorithm can only run on machines with exactly 1 unit of RAM
-(D) The algorithm never modifies the input array
+::: quiz "In-place" or "$O(1)$ auxiliary space" for an algorithm typically means:
+() The algorithm uses zero memory at all, including for the input
+(*) The algorithm uses only a constant amount of *extra* memory beyond what's needed to store the input and output
+() The algorithm can only run on machines with exactly 1 unit of RAM
+() The algorithm never modifies the input array
 ::: explanation
 Space complexity discussions usually separate the space needed to hold the input/output (which any algorithm needs regardless) from the auxiliary space the algorithm additionally allocates while working (extra variables, temporary structures, recursion stack). "In-place" means this auxiliary part stays constant, not growing with $n$.
 :::

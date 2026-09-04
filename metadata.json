@@ -1,0 +1,6 @@
+{
+  "name": "Tarangam - KTU Study Notes",
+  "description": "Interactive study notes, visual animations, and active recall quizzes for KTU S5 Computer Science courses.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

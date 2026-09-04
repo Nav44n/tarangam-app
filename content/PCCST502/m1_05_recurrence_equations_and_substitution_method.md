@@ -55,34 +55,31 @@ The inductive step succeeds with $c=1$, and the base case $T(1)=1 \le c(1)^2=1$ 
 ---
 
 <a id="self-check"></a>
-## 4. Active Recall Checkpoint
+## 4. Active Recall Quizzes
 
-::: quiz Q1: Foundational Concept
-In the substitution method, what is the correct order of steps?
-(A) Prove the answer directly with no guess needed, then verify with an example
-(*B) Guess the form of the solution, assume it holds for smaller inputs (inductive hypothesis), substitute into the recurrence, then verify the guess holds for $n$
-(C) Run the algorithm many times and average the results
-(D) Convert the recurrence into a loop first, then analyse the loop
+::: quiz In the substitution method, what is the correct order of steps?
+() Prove the answer directly with no guess needed, then verify with an example
+(*) Guess the form of the solution, assume it holds for smaller inputs (inductive hypothesis), substitute into the recurrence, then verify the guess holds for $n$
+() Run the algorithm many times and average the results
+() Convert the recurrence into a loop first, then analyse the loop
 ::: explanation
 The substitution method is "guess and verify by induction": you propose a candidate closed-form bound, assume it's already true for smaller sub-problems (the inductive hypothesis), plug that assumption into the recurrence's right-hand side, and algebraically confirm the result still fits your guessed bound for the current size $n$.
 :::
 
-::: quiz Q2: Foundational Concept
-Why must every recurrence include a base case (e.g. $T(1) = O(1)$)?
-(A) Base cases make the algorithm run faster
-(*B) Without a base case, the recursion has no defined stopping point, violating the Finiteness requirement of a valid algorithm
-(C) Base cases are optional and only used for style
-(D) Base cases determine the time complexity entirely, regardless of the recursive step
+::: quiz Why must every recurrence include a base case (e.g. $T(1) = O(1)$)?
+() Base cases make the algorithm run faster
+(*) Without a base case, the recursion has no defined stopping point, violating the Finiteness requirement of a valid algorithm
+() Base cases are optional and only used for style
+() Base cases determine the time complexity entirely, regardless of the recursive step
 ::: explanation
 A recurrence describes how a problem of size $n$ reduces to a smaller one, but if this reduction never bottoms out at a directly-solvable case, the recursion would never terminate — exactly the Finiteness violation discussed in the very first Module 1 topic. The base case is what anchors the induction proof and guarantees the algorithm actually stops.
 :::
 
-::: quiz Q3: Foundational Concept
-For the recurrence $T(n) = T(n-1) + n$ with $T(1)=1$, the substitution method proves the solution is:
-(A) $O(n)$
-(*B) $O(n^2)$
-(C) $O(\log n)$
-(D) $O(2^n)$
+::: quiz For the recurrence $T(n) = T(n-1) + n$ with $T(1)=1$, the substitution method proves the solution is:
+() $O(n)$
+(*) $O(n^2)$
+() $O(\log n)$
+() $O(2^n)$
 ::: explanation
 The worked example above shows that guessing $T(n) \le cn^2$ and carrying out the inductive step (with $c=1$) successfully proves the bound, matching the recurrence's true closed form $T(n) = \frac{n(n+1)}{2} = \Theta(n^2)$.
 :::

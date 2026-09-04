@@ -52,34 +52,31 @@ $BF(x) = 2$ violates the AVL invariant $|BF(x)| \le 1$ — this node is "left-he
 ---
 
 <a id="self-check"></a>
-## 4. Active Recall Checkpoint
+## 4. Active Recall Quizzes
 
-::: quiz Q1: Foundational Concept
-Why does a plain (unbalanced) Binary Search Tree degrade to $O(n)$ search time in the worst case?
-(A) BSTs are inherently slower than arrays for all operations
-(*B) If elements are inserted in a already-sorted (or reverse-sorted) order, the tree can degenerate into a line with no branching, making search behave like linear search
-(C) BSTs cannot store more than a fixed number of elements
-(D) BST search always requires visiting every node regardless of structure
+::: quiz Why does a plain (unbalanced) Binary Search Tree degrade to $O(n)$ search time in the worst case?
+() BSTs are inherently slower than arrays for all operations
+(*) If elements are inserted in a already-sorted (or reverse-sorted) order, the tree can degenerate into a line with no branching, making search behave like linear search
+() BSTs cannot store more than a fixed number of elements
+() BST search always requires visiting every node regardless of structure
 ::: explanation
 The BST property lets you eliminate roughly half the remaining candidates at each step *only if* the tree actually branches at each level. If every node has just one child (a "skewed" tree, which happens with already-sorted insertion order), there's no branching to exploit, and search must potentially visit every node — exactly linear search's behaviour.
 :::
 
-::: quiz Q2: Foundational Concept
-What is the AVL invariant that must hold at every node of a valid AVL tree?
-(A) Every node must have exactly two children
-(*B) The balance factor (height of left subtree minus height of right subtree) must satisfy $|BF(x)| \le 1$
-(C) The tree must be a perfectly complete binary tree
-(D) The left subtree must always be taller than the right subtree
+::: quiz What is the AVL invariant that must hold at every node of a valid AVL tree?
+() Every node must have exactly two children
+(*) The balance factor (height of left subtree minus height of right subtree) must satisfy $|BF(x)| \le 1$
+() The tree must be a perfectly complete binary tree
+() The left subtree must always be taller than the right subtree
 ::: explanation
 The defining rule of an AVL tree is that no node's left and right subtree heights may differ by more than 1 — formally $BF(x) \in \{-1,0,+1\}$ for every node $x$. Any insertion or deletion that breaks this rule must trigger a rebalancing rotation.
 :::
 
-::: quiz Q3: Foundational Concept
-The proven height bound for an AVL tree with $n$ nodes is approximately:
-(A) $h < n$
-(B) $h < \sqrt{n}$
-(*C) $h < 1.44 \log_2 n$
-(D) $h < n \log n$
+::: quiz The proven height bound for an AVL tree with $n$ nodes is approximately:
+() $h < n$
+() $h < \sqrt{n}$
+(*) $h < 1.44 \log_2 n$
+() $h < n \log n$
 ::: explanation
 By analysing the minimum-node AVL tree of a given height (which follows a Fibonacci-like recurrence, $N_h = N_{h-1}+N_{h-2}+1$) and inverting the relationship between height and node count, the height is provably bounded by roughly $1.44 \log_2 n$ — a constant factor times $\log n$, guaranteeing logarithmic-height performance regardless of insertion order.
 :::

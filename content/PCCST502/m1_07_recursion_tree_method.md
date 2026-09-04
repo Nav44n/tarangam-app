@@ -57,34 +57,31 @@ Because the level totals shrink geometrically, the sum across all $\log_4 n$ lev
 ---
 
 <a id="self-check"></a>
-## 4. Active Recall Checkpoint
+## 4. Active Recall Quizzes
 
-::: quiz Q1: Foundational Concept
-In a recursion tree for $T(n) = aT(n/b) + f(n)$, how many nodes exist at level $i$, and what is the size of the sub-problem at each of those nodes?
-(A) $b^i$ nodes, each of size $n/a^i$
-(*B) $a^i$ nodes, each of size $n/b^i$
-(C) $a \cdot i$ nodes, each of size $n - i$
-(D) $i$ nodes, each of size $n/i$
+::: quiz In a recursion tree for $T(n) = aT(n/b) + f(n)$, how many nodes exist at level $i$, and what is the size of the sub-problem at each of those nodes?
+() $b^i$ nodes, each of size $n/a^i$
+(*) $a^i$ nodes, each of size $n/b^i$
+() $a \cdot i$ nodes, each of size $n - i$
+() $i$ nodes, each of size $n/i$
 ::: explanation
 Each node spawns $a$ children (since the recurrence has $a$ recursive calls per call), so the node count multiplies by $a$ each level, giving $a^i$ nodes at level $i$. The sub-problem shrinks by a factor of $b$ each level (division by $b$), giving size $n/b^i$ at level $i$.
 :::
 
-::: quiz Q2: Foundational Concept
-If, when summing level totals in a recursion tree, the total work *decreases* geometrically as you go from the root toward the leaves, which part of the tree dominates the overall complexity?
-(*A) The root (top level)
-(B) The leaves (bottom level)
-(C) All levels contribute equally
-(D) The middle level always dominates
+::: quiz If, when summing level totals in a recursion tree, the total work *decreases* geometrically as you go from the root toward the leaves, which part of the tree dominates the overall complexity?
+(*) The root (top level)
+() The leaves (bottom level)
+() All levels contribute equally
+() The middle level always dominates
 ::: explanation
 A geometric series that shrinks from level to level is dominated by its first (largest) term — here, the root's own cost $f(n)$ — because the sum of all the remaining, smaller terms converges to at most a constant multiple of that first term.
 :::
 
-::: quiz Q3: Foundational Concept
-For $T(n) = 3T(n/4) + n^2$, the recursion tree method concludes that $T(n)$ is:
-(A) $\Theta(n \log n)$
-(*B) $\Theta(n^2)$
-(C) $\Theta(n^{\log_4 3})$
-(D) $\Theta(n^3)$
+::: quiz For $T(n) = 3T(n/4) + n^2$, the recursion tree method concludes that $T(n)$ is:
+() $\Theta(n \log n)$
+(*) $\Theta(n^2)$
+() $\Theta(n^{\log_4 3})$
+() $\Theta(n^3)$
 ::: explanation
 Since the per-level totals form a shrinking geometric series (ratio $3/16 < 1$), the root's own cost $n^2$ dominates the entire sum, giving $T(n) = \Theta(n^2)$ — as shown step by step in the worked example.
 :::

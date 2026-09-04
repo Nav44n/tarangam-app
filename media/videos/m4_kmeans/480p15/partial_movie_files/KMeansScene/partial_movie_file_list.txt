@@ -1,7 +1,0 @@
-# This file is used internally by FFMPEG.
-file 'file:D:/tarangam-app/media/videos/m4_kmeans/480p15/partial_movie_files/KMeansScene/2118183852_3923463921_223132457.mp4'
-file 'file:D:/tarangam-app/media/videos/m4_kmeans/480p15/partial_movie_files/KMeansScene/366519484_549192071_2735286568.mp4'
-file 'file:D:/tarangam-app/media/videos/m4_kmeans/480p15/partial_movie_files/KMeansScene/366519484_847192958_3919188683.mp4'
-file 'file:D:/tarangam-app/media/videos/m4_kmeans/480p15/partial_movie_files/KMeansScene/366519484_847192958_3928825410.mp4'
-file 'file:D:/tarangam-app/media/videos/m4_kmeans/480p15/partial_movie_files/KMeansScene/366519484_3666825589_2954984132.mp4'
-file 'file:D:/tarangam-app/media/videos/m4_kmeans/480p15/partial_movie_files/KMeansScene/366519484_2645707024_1804462926.mp4'

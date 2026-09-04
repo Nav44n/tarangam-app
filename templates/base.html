@@ -9,8 +9,15 @@
 <link rel="stylesheet" href="../../style.css">
 <script>
   window.MathJax = {
-    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
-    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+    tex: {
+      inlineMath: [['$','$'],['\\(','\\)']],
+      displayMath: [['$$','$$'],['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code']
+    }
   };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
@@ -38,23 +45,7 @@
     </div>
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
-      {% for mod_num, mod in modules.items() %}
-      <div class="module-block {% if mod_num == current_mod %}open{% endif %}" data-mod="{{ mod_num }}">
-        <button class="module-head" onclick="this.parentElement.classList.toggle('open')">
-          <span class="module-num">M{{ mod_num }}</span>
-          <span>{{ mod.title }}</span>
-          <span class="chev">&#9656;</span>
-        </button>
-        <div class="topic-list">
-          {% for topic in mod.topics %}
-          <a href="{{ topic.filename }}" class="topic-link {% if topic.id == current_id %}active{% endif %}" id="topic-{{ topic.id }}">
-            <span class="topic-dot"></span>
-            <span>{{ topic.title }}</span>
-          </a>
-          {% endfor %}
-        </div>
-      </div>
-      {% endfor %}
+      {{ nav_tree | safe }}
     </nav>
 
     <div class="sidebar-foot">
@@ -247,7 +238,8 @@
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
       const options = widget.querySelectorAll('.quiz-option-btn');
-      const explanation = widget.querySelector('.quiz-explanation');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
 
       options.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -267,8 +259,11 @@
             btn.classList.add('selected-wrong');
           }
 
-          if (explanation) {
-            explanation.classList.add('revealed');
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
           }
         });
       });
@@ -288,9 +283,68 @@
         });
       }
     });
+
+    // 5. Intuition Clickable Dropdowns Interactivity
+    const expandIntuition = () => {
+      const anchor = document.getElementById('the-intuition');
+      if (anchor) {
+        let el = anchor.parentElement ? anchor.parentElement.nextElementSibling : null;
+        while (el && !el.classList.contains('callout-intuition') && el.tagName !== 'H1') {
+          if (el.querySelector && el.querySelector('.callout-intuition')) {
+            el = el.querySelector('.callout-intuition');
+            break;
+          }
+          el = el.nextElementSibling;
+        }
+        if (el && el.classList.contains('callout-intuition')) {
+          el.open = true;
+        }
+      }
+    };
+
+    if (window.location.hash === '#the-intuition') {
+      setTimeout(expandIntuition, 100);
+    }
+    window.addEventListener('hashchange', () => {
+      if (window.location.hash === '#the-intuition') {
+        expandIntuition();
+      }
+    });
+
+    document.querySelectorAll('a[href="#the-intuition"]').forEach(link => {
+      link.addEventListener('click', () => {
+        setTimeout(expandIntuition, 50);
+      });
+    });
+
+    // Make "1. The Intuition" heading clickable to toggle dropdown
+    document.querySelectorAll('h2').forEach(heading => {
+      if (heading.textContent.includes('The Intuition') || heading.textContent.includes('Intuition')) {
+        heading.style.cursor = 'pointer';
+        heading.title = 'Click to drop down intuition';
+        heading.addEventListener('click', () => {
+          let el = heading.nextElementSibling;
+          while (el && !el.classList.contains('callout-intuition') && el.tagName !== 'H2') {
+            el = el.nextElementSibling;
+          }
+          if (el && el.classList.contains('callout-intuition')) {
+            el.open = !el.open;
+          }
+        });
+      }
+    });
+
+    // Ensure MathJax renders formulas when details/dropdowns are opened
+    document.querySelectorAll('details').forEach(d => {
+      d.addEventListener('toggle', () => {
+        if (d.open && window.MathJax && window.MathJax.typesetPromise) {
+          window.MathJax.typesetPromise([d]).catch(() => {});
+        }
+      });
+    });
   });
 
-  // 5. Keyboard Navigation Shortcuts
+  // 6. Keyboard Navigation Shortcuts
   document.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
     

@@ -77,34 +77,31 @@ Expanding $\frac{n^2+n}{2} = \frac{1}{2}n^2 + \frac{1}{2}n$. As $n$ grows large,
 ---
 
 <a id="self-check"></a>
-## 4. Active Recall Checkpoint
+## 4. Active Recall Quizzes
 
-::: quiz Q1: Foundational Concept
-A loop where the control variable doubles each iteration (e.g. `i = i * 2`) until it exceeds $n$ has time complexity:
-(A) $\Theta(n)$
-(*B) $\Theta(\log n)$
-(C) $\Theta(n^2)$
-(D) $\Theta(n \log n)$
+::: quiz A loop where the control variable doubles each iteration (e.g. `i = i * 2`) until it exceeds $n$ has time complexity:
+() $\Theta(n)$
+(*) $\Theta(\log n)$
+() $\Theta(n^2)$
+() $\Theta(n \log n)$
 ::: explanation
 If $i$ doubles each iteration starting from 1, after $k$ iterations $i = 2^k$. The loop stops once $2^k$ exceeds $n$, which happens at $k \approx \log_2 n$. So the number of iterations grows logarithmically with $n$.
 :::
 
-::: quiz Q2: Foundational Concept
-A nested loop where the inner loop runs from $1$ to the current value of the outer loop variable $i$ (which itself ranges from 1 to $n$) has a total number of iterations equal to which sum, and what is its asymptotic complexity?
-(A) $\sum_{i=1}^{n} n$, giving $\Theta(n^2)$
-(*B) $\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$, giving $\Theta(n^2)$
-(C) $\sum_{i=1}^{n} \log i$, giving $\Theta(n \log n)$
-(D) $\sum_{i=1}^{n} 1$, giving $\Theta(n)$
+::: quiz A nested loop where the inner loop runs from $1$ to the current value of the outer loop variable $i$ (which itself ranges from 1 to $n$) has a total number of iterations equal to which sum, and what is its asymptotic complexity?
+() $\sum_{i=1}^{n} n$, giving $\Theta(n^2)$
+(*) $\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$, giving $\Theta(n^2)$
+() $\sum_{i=1}^{n} \log i$, giving $\Theta(n \log n)$
+() $\sum_{i=1}^{n} 1$, giving $\Theta(n)$
 ::: explanation
 The inner loop runs $i$ times for each outer value of $i$, so total iterations $= 1+2+\dots+n = \frac{n(n+1)}{2}$ (the arithmetic series sum). Once expanded, the dominant term is $n^2$, and asymptotic notation drops the constant $\frac12$ and the lower-order $n$ term, giving $\Theta(n^2)$ — the same growth rate as a fully independent $n \times n$ nested loop.
 :::
 
-::: quiz Q3: Foundational Concept
-In amortized analysis of a dynamic array that doubles its size whenever full, why is the *amortized* cost per insertion $O(1)$ even though a single resize operation costs $O(n)$?
-(A) Resizes never actually happen in practice
-(*B) Resizes happen rarely (only $O(\log n)$ times across $n$ insertions), and their total cost across all insertions sums to $O(n)$, which averages to $O(1)$ per insertion
-(C) The cost of a resize is always exactly 1 operation
-(D) Amortized analysis ignores expensive operations entirely
+::: quiz In amortized analysis of a dynamic array that doubles its size whenever full, why is the *amortized* cost per insertion $O(1)$ even though a single resize operation costs $O(n)$?
+() Resizes never actually happen in practice
+(*) Resizes happen rarely (only $O(\log n)$ times across $n$ insertions), and their total cost across all insertions sums to $O(n)$, which averages to $O(1)$ per insertion
+() The cost of a resize is always exactly 1 operation
+() Amortized analysis ignores expensive operations entirely
 ::: explanation
 Even though an individual resize copies up to $n$ elements ($O(n)$ for that one operation), resizes become exponentially rarer as the array grows (doubling means only $\log_2 n$ resizes total for $n$ insertions), and the sum of all resize costs across the whole sequence is a geometric series that totals $O(n)$. Spread over $n$ insertions, that's $O(1)$ per insertion on average — which is what "amortized $O(1)$" means.
 :::

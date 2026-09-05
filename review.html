@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tarangam — Review Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], processEscapes: true },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<!-- Import zustand via UMD/global or ESM -->
+<script type="module">
+  import { createStore } from 'https://esm.sh/zustand/vanilla';
+  import { persist } from 'https://esm.sh/zustand/middleware';
+  window.createZustandStore = createStore;
+  window.zustandPersist = persist;
+</script>
+<style>
+  .review-container {
+    max-width: 600px;
+    margin: 4rem auto;
+    padding: 2rem;
+  }
+  .card-front {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-md);
+  }
+  .card-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  .sm2-controls {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    justify-content: center;
+  }
+  .sm2-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.1s;
+  }
+  .sm2-btn:active { transform: scale(0.98); }
+  .btn-again { background: #fee2e2; color: #991b1b; }
+  .btn-good { background: #dcfce7; color: #166534; }
+  .btn-easy { background: #dbeafe; color: #1e40af; }
+  
+  [data-theme="dark"] .btn-again { background: #450a0a; color: #fca5a5; }
+  [data-theme="dark"] .btn-good { background: #052e16; color: #86efac; }
+  [data-theme="dark"] .btn-easy { background: #172554; color: #93c5fd; }
+  
+  .hidden { display: none !important; }
+</style>
+</head>
+<body data-theme="dark">
+
+<header class="navbar">
+  <div class="nav-left">
+    <a href="/" class="nav-brand">TARANGAM</a>
+  </div>
+  <div class="nav-right" id="gamification-hud">
+    <!-- Populated by JS -->
+  </div>
+</header>
+
+<main class="review-container">
+  <div id="deck-status" style="margin-bottom: 2rem; color: var(--ink-dim);">
+    Loading your due cards...
+  </div>
+
+  <div id="active-card" class="hidden">
+    <div class="card-front">
+      <div id="card-category" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 1rem;"></div>
+      <div id="card-prompt" style="font-size: 1.125rem; font-weight: 500; line-height: 1.6;"></div>
+      
+      <div class="card-options" id="card-options"></div>
+      
+      <div id="card-explanation" class="hidden" style="margin-top: 2rem; padding: 1rem; background: var(--surface-hover); border-radius: var(--radius-md); font-size: 0.875rem;">
+      </div>
+      
+      <div class="sm2-controls hidden" id="sm2-controls">
+        <button class="sm2-btn btn-again" onclick="rateCard(1)">Again (Hard)</button>
+        <button class="sm2-btn btn-good" onclick="rateCard(3)">Good</button>
+        <button class="sm2-btn btn-easy" onclick="rateCard(5)">Easy</button>
+      </div>
+    </div>
+  </div>
+  
+  <div id="done-message" class="hidden" style="text-align: center; padding: 4rem 0;">
+    <h2>🎉 You're all caught up!</h2>
+    <p style="color: var(--ink-dim); margin-top: 1rem;">You've reviewed all due cards for today. Awesome job.</p>
+    <a href="/" style="display: inline-block; margin-top: 2rem; padding: 0.75rem 1.5rem; background: var(--accent); color: white; border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">Return Home</a>
+  </div>
+</main>
+
+<script type="module">
+  import { useGamificationStore, sm2Advance } from './shared.js';
+  
+  let questionBank = [];
+  let dueCards = [];
+  let currentCardIndex = 0;
+  let currentSelectionIsCorrect = false;
+
+  async function initDeck() {
+    try {
+      const res = await fetch('/questionBank.json');
+      questionBank = await res.json();
+      
+      const store = useGamificationStore.getState();
+      const now = Date.now();
+      
+      // Find due cards: either never reviewed (no sm2 object) or nextReview <= now
+      dueCards = questionBank.filter(q => {
+        const sm2 = store.sm2Data[q.id];
+        if (!sm2) return true; // new card
+        return sm2.nextReview <= now; // due card
+      });
+      
+      // Shuffle due cards
+      dueCards.sort(() => Math.random() - 0.5);
+      
+      // Limit to 20 per session to avoid overwhelm
+      dueCards = dueCards.slice(0, 20);
+      
+      updateStatus();
+      if (dueCards.length > 0) {
+        renderCard(dueCards[0]);
+      } else {
+        document.getElementById('done-message').classList.remove('hidden');
+      }
+    } catch (e) {
+      document.getElementById('deck-status').innerText = 'Failed to load question bank.';
+    }
+  }
+
+  function updateStatus() {
+    const statusEl = document.getElementById('deck-status');
+    if (dueCards.length === 0) {
+      statusEl.classList.add('hidden');
+    } else {
+      statusEl.innerText = `Reviewing card ${currentCardIndex + 1} of ${dueCards.length}`;
+    }
+  }
+
+  function renderCard(card) {
+    document.getElementById('active-card').classList.remove('hidden');
+    document.getElementById('card-category').innerHTML = `${card.courseCode} &middot; ${card.category}`;
+    document.getElementById('card-prompt').innerHTML = card.prompt;
+    
+    const optionsHtml = card.options.map((opt, i) => {
+      const isCorrect = opt.isCorrect;
+      return `<button class="quiz-option-btn" style="text-align: left; background: transparent; border: 1px solid var(--border); padding: 1rem; border-radius: var(--radius-md); cursor: pointer;" onclick="window.selectOption(this, ${isCorrect})">${opt.text}</button>`;
+    }).join('');
+    
+    document.getElementById('card-options').innerHTML = optionsHtml;
+    
+    const explanationEl = document.getElementById('card-explanation');
+    explanationEl.innerHTML = `<strong>Explanation:</strong><br>${card.explanation}`;
+    explanationEl.classList.add('hidden');
+    
+    document.getElementById('sm2-controls').classList.add('hidden');
+    
+    if (window.MathJax) {
+      window.MathJax.typesetPromise();
+    }
+  }
+
+  window.selectOption = function(btnEl, isCorrect) {
+    // Disable all options
+    const btns = document.getElementById('card-options').querySelectorAll('button');
+    btns.forEach(b => {
+      b.disabled = true;
+      b.style.opacity = '0.5';
+    });
+    
+    // Highlight selected
+    btnEl.style.opacity = '1';
+    if (isCorrect) {
+      btnEl.style.borderColor = '#22c55e';
+      btnEl.style.background = 'rgba(34, 197, 94, 0.1)';
+      currentSelectionIsCorrect = true;
+      // Award XP!
+      useGamificationStore.getState().addXP(15);
+    } else {
+      btnEl.style.borderColor = '#ef4444';
+      btnEl.style.background = 'rgba(239, 68, 68, 0.1)';
+      currentSelectionIsCorrect = false;
+    }
+    
+    // Show explanation and SM2 controls
+    document.getElementById('card-explanation').classList.remove('hidden');
+    document.getElementById('sm2-controls').classList.remove('hidden');
+    
+    // Auto-highlight correct answer if they got it wrong
+    if (!isCorrect) {
+      const card = dueCards[currentCardIndex];
+      const correctIdx = card.options.findIndex(o => o.isCorrect);
+      if (correctIdx >= 0) {
+        btns[correctIdx].style.borderColor = '#22c55e';
+        btns[correctIdx].style.borderWidth = '2px';
+      }
+    }
+  };
+
+  window.rateCard = function(quality) {
+    const card = dueCards[currentCardIndex];
+    const store = useGamificationStore.getState();
+    const currentData = store.sm2Data[card.id];
+    
+    const newData = sm2Advance(currentData, quality);
+    store.updateSM2(card.id, newData);
+    
+    // Move to next card
+    currentCardIndex++;
+    if (currentCardIndex < dueCards.length) {
+      updateStatus();
+      renderCard(dueCards[currentCardIndex]);
+    } else {
+      document.getElementById('active-card').classList.add('hidden');
+      document.getElementById('deck-status').classList.add('hidden');
+      document.getElementById('done-message').classList.remove('hidden');
+    }
+  };
+
+  initDeck();
+</script>
+</body>
+</html>

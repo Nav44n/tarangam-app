@@ -1,38 +1,69 @@
 import fs from 'fs';
 import path from 'path';
 import { marked } from 'marked';
+import { markedHighlight } from 'marked-highlight';
+import hljs from 'highlight.js';
+
+marked.use(markedHighlight({
+  langPrefix: 'hljs language-',
+  highlight(code, lang) {
+    const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+    return hljs.highlight(code, { language }).value;
+  }
+}));
 
 const CONTENT_DIR = 'content';
 const OUTPUT_DIR = 'dist';
 const TEMPLATE_PATH = path.join('templates', 'base.html');
+const globalQuestionBank = [];
 
 const COURSE_METADATA = {
   PCCST503: 'Machine Learning',
   PCCST501: 'Computer Networks',
   PCCST502: 'Design and Analysis of Algorithms',
-  PECST522: 'Artificial Intelligence'
+  PBCST504: 'Microcontrollers',
+  PECST522: 'Artificial Intelligence',
+  PCCSL507: 'Networks Lab',
+  PCCSL508: 'Machine Learning Lab'
 };
 
 const MODULE_NAMES = {
+  PCCSL507: {
+    0: 'Syllabus & Blueprint'
+  },
+  PCCSL508: {
+    0: 'Syllabus & Blueprint'
+  },
+  PBCST504: {
+    0: 'Syllabus & Blueprint',
+    1: 'ARM Cortex-M Architecture',
+    2: 'STM32 & Peripheral Programming',
+    3: 'Protocols & USB Interface',
+    4: 'IoT, RTOS & TrustZone'
+  },
   PECST522: {
+    0: 'Syllabus & Blueprint',
     1: 'Agents & Problem Solving',
     2: 'Search & Game Playing',
     3: 'Knowledge & Logic',
     4: 'Reinforcement Learning'
   },
   PCCST502: {
+    0: 'Syllabus & Blueprint',
     1: 'Analysis & Recurrences',
     2: 'Graphs & Divide/Conquer',
     3: 'Greedy, DP & Backtracking',
     4: 'Branch/Bound & Complexity'
   },
   PCCST501: {
+    0: 'Syllabus & Blueprint',
     1: 'Application Layer',
     2: 'Transport & Network Layer',
     3: 'Data Link Layer',
     4: 'Physical Layer & SNMP'
   },
   PCCST503: {
+    0: 'Syllabus & Blueprint',
     1: 'Foundations & Regression',
     2: 'Classification & Trees',
     3: 'Neural Nets & SVMs',
@@ -46,7 +77,7 @@ marked.setOptions({
   breaks: false
 });
 
-function transformCustomWidgets(markdownText) {
+function transformCustomWidgets(markdownText, pageData) {
   // 1. Admonition Callouts (Clickable Dropdowns: intuitions collapsed by default)
   const callouts = [
     { type: 'intuition', icon: '💡 The Intuition' },
@@ -89,12 +120,26 @@ function transformCustomWidgets(markdownText) {
     }
 
     let optionsHtml = '';
+    const questionId = 'q-' + Math.random().toString(36).substr(2, 9);
+    if (pageData) {
+      globalQuestionBank.push({
+        id: questionId,
+        topicId: pageData.id,
+        courseCode: pageData.course_code,
+        topicTitle: pageData.title,
+        url: pageData.course_code + '/' + pageData.filename,
+        category: qHeader.trim(),
+        prompt: prompt.trim(),
+        options: options,
+        explanation: explanation.trim()
+      });
+    }
     for (const { text, isCorrect } of options) {
       const correctAttr = isCorrect ? 'data-correct="true"' : 'data-correct="false"';
       optionsHtml += `<button class="quiz-option-btn" ${correctAttr}><span>${text}</span></button>\n`;
     }
 
-    return `<div class="quiz-widget">
+    return `<div class="quiz-widget" id="${questionId}">
   <div class="quiz-header">
     <span class="quiz-category">${qHeader.trim()}</span>
     <span class="quiz-xp">+10 XP</span>
@@ -185,22 +230,26 @@ function transformCustomWidgets(markdownText) {
   return markdownText;
 }
 
-function renderNavTree(modules, currentMod, currentId) {
+function renderNavTree(modules, currentMod, currentId, courseCode) {
   let html = '';
   for (const [modNum, mod] of Object.entries(modules)) {
-    const isOpen = parseInt(modNum, 10) === parseInt(currentMod, 10);
+    const isModZero = parseInt(modNum, 10) === 0;
+    const isOpen = parseInt(modNum, 10) === parseInt(currentMod, 10) || isModZero;
+    const badgeLabel = isModZero ? 'SYL' : `M${modNum}`;
+    const badgeStyle = isModZero ? 'style="background:rgba(56,189,248,0.2); color:#38bdf8; font-weight:700;"' : '';
     html += `
       <div class="module-block ${isOpen ? 'open' : ''}" data-mod="${modNum}">
         <button class="module-head" onclick="this.parentElement.classList.toggle('open')">
-          <span class="module-num">M${modNum}</span>
+          <span class="module-num" ${badgeStyle}>${badgeLabel}</span>
           <span>${mod.title}</span>
           <span class="chev">&#9656;</span>
         </button>
         <div class="topic-list">`;
     for (const topic of mod.topics) {
       const isActive = topic.id === currentId;
+      const href = courseCode ? `/${courseCode}/${topic.filename}` : topic.filename;
       html += `
-          <a href="${topic.filename}" class="topic-link ${isActive ? 'active' : ''}" id="topic-${topic.id}">
+          <a href="${href}" class="topic-link ${isActive ? 'active' : ''}" id="topic-${topic.id}">
             <span class="topic-dot"></span>
             <span>${topic.title}</span>
           </a>`;
@@ -212,7 +261,7 @@ function renderNavTree(modules, currentMod, currentId) {
   return html;
 }
 
-function compileMarkdownToHtml(rawMarkdown) {
+function compileMarkdownToHtml(rawMarkdown, pageData) {
   // 1. Normalize display equations indented with 4+ spaces so marked does not turn them into indented <pre><code> blocks
   let text = rawMarkdown.replace(/^[ ]{4,}(\$\$[\s\S]*?\$\$[ ]*)$/gm, (match, block) => {
     return '  ' + block.trim();
@@ -255,14 +304,15 @@ function compileMarkdownToHtml(rawMarkdown) {
   text = text.replace(/@@CODE_BLOCK_(\d+)@@/g, (m, id) => codeBlocks[parseInt(id, 10)]);
 
   // 7. Transform custom widgets (callouts, quizzes, steps, toggles, manim)
-  text = transformCustomWidgets(text);
+  text = transformCustomWidgets(text, pageData);
 
   // 8. Parse markdown using marked
   let html = marked.parse(text);
 
   // 9. Restore all preserved math tokens byte-for-byte
   html = html.replace(/@@MATH_(?:DISPLAY|INLINE)_(\d+)@@/g, (m, id) => {
-    return mathTokens[parseInt(id, 10)];
+    let token = mathTokens[parseInt(id, 10)];
+    return token.replace(/</g, '&lt;').replace(/>/g, '&gt;');
   });
 
   return html;
@@ -282,7 +332,7 @@ function renderTemplate(templateStr, data) {
   result = result.replace(/\{\{\s*content\s*\|\s*safe\s*\}\}/g, () => data.content || '');
 
   // Render navigation module tree
-  const navTreeHtml = renderNavTree(data.modules || {}, data.current_mod, data.current_id);
+  const navTreeHtml = renderNavTree(data.modules || {}, data.current_mod, data.current_id, data.course_code);
   result = result.replace(/\{\{\s*nav_tree\s*\|\s*safe\s*\}\}/g, () => navTreeHtml);
   // Also replace legacy template loop if present
   result = result.replace(/\{%\s*for mod_num, mod in modules\.items\(\)\s*%\}[\s\S]*?\{%\s*endfor\s*%\}\s*(?=<\/nav>)/g, () => navTreeHtml);
@@ -314,6 +364,10 @@ function renderTemplate(templateStr, data) {
 
 function formatTopicTitle(filename) {
   const cleanName = filename.replace(/\.md$/, '');
+  if (cleanName.startsWith('m0_')) {
+    const rawSubject = cleanName.replace(/^m0_\d*_+/i, '').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    return `📋 ${rawSubject || 'Official Syllabus & Blueprint'}`;
+  }
   const labMatch = cleanName.match(/^m(\d+)_99_practice_lab_(.*)$/i);
   if (labMatch) {
     const modNum = labMatch[1];
@@ -361,12 +415,16 @@ export function buildSite() {
     const modules = {};
     const pages = [];
 
-    const files = fs.readdirSync(coursePath).filter(f => f.endsWith('.md')).sort();
+    const files = fs.readdirSync(coursePath)
+      .filter(f => f.endsWith('.md') && !f.startsWith('_'))
+      .sort();
 
     for (const filename of files) {
       const modMatch = filename.match(/^m(\d+)_/);
       const modNum = modMatch ? parseInt(modMatch[1], 10) : 0;
-      const title = formatTopicTitle(filename);
+      const rawMd = fs.readFileSync(path.join(coursePath, filename), 'utf-8');
+      const h1Match = rawMd.match(/^#\s+(.+)$/m);
+      const title = h1Match ? h1Match[1].trim() : formatTopicTitle(filename);
       const htmlFilename = filename.replace(/\.md$/, '.html');
 
       if (!modules[modNum]) {
@@ -393,24 +451,38 @@ export function buildSite() {
       const wordCount = rawMarkdown.split(/\s+/).length;
       const readTime = Math.max(2, Math.round(wordCount / 180));
 
-      const renderedHtmlBody = compileMarkdownToHtml(rawMarkdown);
+      const renderedHtmlBody = compileMarkdownToHtml(rawMarkdown, page);
 
       const prevPage = idx > 0 ? pages[idx - 1].pageData : null;
       const nextPage = idx < pages.length - 1 ? pages[idx + 1].pageData : null;
 
-      const headerPrefix = `<div class="topic-header">
-  <div class="topic-badges">
-    <span class="badge badge-accent">MODULE ${modNum}</span>
-    <span class="badge">⏱️ ${readTime} MIN READ</span>
-    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
-    <span class="badge">🎯 KTU 2024 SCHEME</span>
-  </div>
-  <div class="quick-jump-bar">
+      const isSyllabus = modNum === 0;
+      const badgeModText = isSyllabus ? 'SYLLABUS & BLUEPRINT' : `MODULE ${modNum}`;
+      const quickJumpHtml = isSyllabus ? `
+    <a href="#course-overview" class="jump-pill">📋 Overview</a>
+    <a href="#course-objectives" class="jump-pill">🎯 Objectives</a>
+    <a href="#module-by-module-syllabus-breakdown" class="jump-pill">📚 Modules (1–4)</a>
+    <a href="#prescribed-reference-books-textbooks" class="jump-pill">📖 Textbooks</a>
+    <a href="#course-assessment-method-cie-ese" class="jump-pill">⚖️ Evaluation (CIE/ESE)</a>
+    <a href="#course-outcomes-cos" class="jump-pill">🎓 Outcomes (COs)</a>
+    <a href="#co-po-mapping-table" class="jump-pill">🗺️ CO-PO Matrix</a>
+      ` : `
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
     <a href="#foundations" class="jump-pill">🏛️ Foundations</a>
     <a href="#history" class="jump-pill">📜 History</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+      `;
+
+      const headerPrefix = `<div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">${badgeModText}</span>
+    <span class="badge">⏱️ ${readTime} MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    ${quickJumpHtml}
   </div>
 </div>\n`;
 
@@ -456,6 +528,16 @@ export function buildSite() {
     const standaloneIndex = rootIndex.replace(/href="dist\//g, 'href="');
     fs.writeFileSync(path.join(OUTPUT_DIR, 'index.html'), standaloneIndex, 'utf-8');
   }
+  
+  if (fs.existsSync('review.html')) {
+    fs.cpSync('review.html', path.join(OUTPUT_DIR, 'review.html'));
+  }
+  if (fs.existsSync('shared.js')) {
+    fs.cpSync('shared.js', path.join(OUTPUT_DIR, 'shared.js'));
+  }
+  if (fs.existsSync('style.css')) {
+    fs.cpSync('style.css', path.join(OUTPUT_DIR, 'style.css'));
+  }
 
   // Copy assets and media if they exist
   if (fs.existsSync('assets')) {
@@ -465,6 +547,8 @@ export function buildSite() {
     fs.cpSync('media', path.join(OUTPUT_DIR, 'media'), { recursive: true });
   }
 
+  fs.writeFileSync(path.join(OUTPUT_DIR, 'questionBank.json'), JSON.stringify(globalQuestionBank, null, 2));
+  console.log('📚 Saved ' + globalQuestionBank.length + ' questions to questionBank.json');
   console.log('✅ Tarangam curriculum compilation completed successfully.');
 }
 

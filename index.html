@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<base href="/">
 <title>Tarangam - KTU Study Notes</title>
 <meta name="description" content="Interactive study notes, visual animations, and active recall quizzes for KTU S5 Computer Science courses.">
 <meta property="og:title" content="Tarangam - KTU Study Notes">
@@ -10,7 +11,7 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="/style.css">
 <style>
   body {
     font-family: 'Space Grotesk', sans-serif;
@@ -126,6 +127,23 @@
     font-size: 0.82rem;
     line-height: 1.45;
   }
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+  }
+  .card-head .module-tag {
+    margin-bottom: 0;
+  }
+  .card-body-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
   .module-tag {
     display: inline-block;
     background-color: rgba(56, 189, 248, 0.1);
@@ -146,10 +164,92 @@
     transform: none;
     border-color: #1e293b;
     background-color: #121824;
+    box-shadow: none;
   }
   .module-tag.upcoming {
     background-color: rgba(148, 163, 184, 0.15);
     color: #94a3b8;
+  }
+  .syllabus-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: rgba(56, 189, 248, 0.1);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.28);
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .syllabus-pill:hover {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: #38bdf8;
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
+  .workbook-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: rgba(168, 85, 247, 0.15);
+    color: #c084fc;
+    border: 1px solid rgba(168, 85, 247, 0.35);
+    padding: 0.16rem 0.55rem;
+    border-radius: 9999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    z-index: 2;
+    position: relative;
+  }
+  .workbook-pill:hover {
+    background: rgba(168, 85, 247, 0.3);
+    border-color: #c084fc;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(168, 85, 247, 0.35);
+  }
+  .download-bar {
+    margin-top: 1.25rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+  }
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #3b82f6 100%);
+    color: #ffffff;
+    padding: 0.65rem 1.35rem;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+  .download-btn:hover {
+    background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 50%, #2563eb 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+    color: #ffffff;
+  }
+  .download-btn svg {
+    flex-shrink: 0;
+  }
+  .download-subtext {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-top: 0.35rem;
   }
 </style>
 </head>
@@ -161,44 +261,64 @@
         <h1>Tarangam</h1>
       </div>
       <p>Interactive Notes &middot; KTU 2024 Scheme &middot; S5 Computer Science</p>
+      <div class="download-bar">
+        <a href="/api/download-project" id="download-project-btn" class="download-btn" title="Download the entire project with all notes, workbooks, and code as a ZIP archive">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Download Whole Project (.ZIP)
+        </a>
+      </div>
+      <div class="download-subtext">Includes all source code, Markdown notes, worked problem workbooks, and compiled HTML</div>
     </div>
     
     <!-- PCCST503: Machine Learning -->
     <div class="course-section">
       <div class="course-header">
-        <div class="course-title">Machine Learning</div>
+        <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+          <a href="/PCCST503/m0_00_course_syllabus_and_blueprint.html" class="course-title" style="text-decoration:none; color:inherit;">Machine Learning</a>
+          <a href="/PCCST503/m0_00_course_syllabus_and_blueprint.html" class="syllabus-pill" title="View official KTU Syllabus, 40:60 CIE/ESE scheme, and CO-PO matrix">📋 Official Syllabus & Scheme</a>
+        </div>
         <span class="course-code">PCCST503</span>
       </div>
       <div class="card-grid">
-        <a href="PCCST503/m1_01_introduction_to_machine_learning_and_paradigms.html" class="card">
-          <span class="module-tag">Module 1</span>
-          <h2>Foundations & Regression</h2>
-          <p>Intro to ML, Probability Foundations, MLE, MAP, and the Regularization Bridge.</p>
-        </a>
-        <a href="PCCST503/m1_p01_linear_regression_ols.html" class="card" style="border-color: var(--callout-formula-border); background: var(--callout-formula-bg);">
-          <span class="module-tag" style="background: var(--callout-formula-border); color: #fff;">Workbook</span>
-          <h2>Progressive Problems (M1)</h2>
-          <p>OLS Closed-Form, Gradient Descent, Metrics & R², Ridge & Lasso Regularization, and Normal Equation.</p>
-        </a>
-        <a href="PCCST503/m2_01_classification_foundations.html" class="card">
-          <span class="module-tag">Module 2</span>
-          <h2>Classification & Trees</h2>
-          <p>Foundations of Classification, Decision Trees Theory, Naive Bayes, and Logistic Regression.</p>
-        </a>
-        <a href="PCCST503/m2_p01_information_gain_calculation.html" class="card" style="border-color: var(--callout-formula-border); background: var(--callout-formula-bg);">
-          <span class="module-tag" style="background: var(--callout-formula-border); color: #fff;">Workbook</span>
-          <h2>Progressive Problems (M2)</h2>
-          <p>Information Gain Decision Tree Root Calculation and Naive Bayes Classification.</p>
-        </a>
-        <div class="card card-upcoming" title="Module 3 notes are in preparation">
-          <span class="module-tag upcoming">Module 3 &middot; In Prep</span>
-          <h2>Neural Nets & SVMs</h2>
-          <p>Maximum margin hyperplanes, Perceptrons, and Backpropagation.</p>
+        <div class="card" onclick="if(!event.target.closest('.workbook-pill')) window.location.href='/PCCST503/m1_01_introduction_to_machine_learning_and_paradigms.html'" style="cursor: pointer;">
+          <div class="card-head">
+            <span class="module-tag">Module 1</span>
+            <a href="/PCCST503/m1_p01_linear_regression_ols.html" class="workbook-pill" title="Module 1 Workbook: Progressive Problems" onclick="event.stopPropagation();">📝 Workbook</a>
+          </div>
+          <a href="/PCCST503/m1_01_introduction_to_machine_learning_and_paradigms.html" class="card-body-link">
+            <h2>Foundations & Regression</h2>
+            <p>Intro to ML, Probability Foundations, MLE, MAP, and the Regularization Bridge.</p>
+          </a>
         </div>
-        <div class="card card-upcoming" title="Module 4 notes are in preparation">
-          <span class="module-tag upcoming">Module 4 &middot; In Prep</span>
-          <h2>PCA & Ensembles</h2>
-          <p>K-Means, Hierarchical Clustering, PCA, Bagging, and Boosting.</p>
+        <div class="card" onclick="if(!event.target.closest('.workbook-pill')) window.location.href='/PCCST503/m2_01_classification_foundations.html'" style="cursor: pointer;">
+          <div class="card-head">
+            <span class="module-tag">Module 2</span>
+            <a href="/PCCST503/m2_p01_information_gain_calculation.html" class="workbook-pill" title="Module 2 Workbook: Progressive Problems" onclick="event.stopPropagation();">📝 Workbook</a>
+          </div>
+          <a href="/PCCST503/m2_01_classification_foundations.html" class="card-body-link">
+            <h2>Classification & Trees</h2>
+            <p>Foundations of Classification, Decision Trees Theory, Naive Bayes, and Logistic Regression.</p>
+          </a>
+        </div>
+        <div class="card" onclick="if(!event.target.closest('.workbook-pill')) window.location.href='/PCCST503/m3_01_support_vector_machines_and_kernel_methods.html'" style="cursor: pointer;">
+          <div class="card-head">
+            <span class="module-tag">Module 3</span>
+            <a href="/PCCST503/m3_p01_svm_maximum_margin_and_hyperplanes.html" class="workbook-pill" title="Module 3 Workbook: Progressive Problems" onclick="event.stopPropagation();">📝 Workbook</a>
+          </div>
+          <a href="/PCCST503/m3_01_support_vector_machines_and_kernel_methods.html" class="card-body-link">
+            <h2>SVMs & Neural Networks</h2>
+            <p>Maximum margin hyperplanes, Slack variables, Perceptrons, and Backpropagation.</p>
+          </a>
+        </div>
+        <div class="card" onclick="if(!event.target.closest('.workbook-pill')) window.location.href='/PCCST503/m4_01_unsupervised_clustering_and_dimensionality_reduction_pca.html'" style="cursor: pointer;">
+          <div class="card-head">
+            <span class="module-tag">Module 4</span>
+            <a href="/PCCST503/m4_p01_kmeans_hierarchical_clustering_and_pca_traces.html" class="workbook-pill" title="Module 4 Workbook: Progressive Problems" onclick="event.stopPropagation();">📝 Workbook</a>
+          </div>
+          <a href="/PCCST503/m4_01_unsupervised_clustering_and_dimensionality_reduction_pca.html" class="card-body-link">
+            <h2>Clustering, PCA & Ensembles</h2>
+            <p>K-Means, Hierarchical Linkages, PCA Eigenvectors, AdaBoost, and Bias-Variance Tradeoff.</p>
+          </a>
         </div>
       </div>
     </div>
@@ -206,79 +326,140 @@
     <!-- PCCST501: Computer Networks -->
     <div class="course-section">
       <div class="course-header">
-        <div class="course-title">Computer Networks</div>
+        <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+          <a href="/PCCST501/m0_00_course_syllabus_and_blueprint.html" class="course-title" style="text-decoration:none; color:inherit;">Computer Networks</a>
+          <a href="/PCCST501/m0_00_course_syllabus_and_blueprint.html" class="syllabus-pill" title="View official KTU Syllabus, 40:60 CIE/ESE scheme, and CO-PO matrix">📋 Official Syllabus & Scheme</a>
+        </div>
         <span class="course-code">PCCST501</span>
       </div>
       <div class="card-grid">
-        <a href="PCCST501/m1_01_internet_overview_and_network_edge.html" class="card">
-          <span class="module-tag">Module 1</span>
-          <h2>Application Layer</h2>
-          <p>Internet overview, OSI & TCP/IP, HTTP, DNS, FTP, SMTP, and P2P.</p>
-        </a>
-        <a href="PCCST501/m1_p01_delays.html" class="card" style="border-color: var(--callout-formula-border); background: var(--callout-formula-bg);">
-          <span class="module-tag" style="background: var(--callout-formula-border); color: #fff;">Workbook</span>
-          <h2>Progressive Problems (M1)</h2>
-          <p>Delays, throughput, packet switching, and HTTP RTT systematic problems.</p>
-        </a>
-        <a href="PCCST501/m2_01_transport_layer_services_and_multiplexing.html" class="card">
-          <span class="module-tag">Module 2</span>
-          <h2>Transport & Network Layer</h2>
-          <p>TCP, UDP, Congestion Control, IPv4/IPv6, and Routing Algorithms.</p>
-        </a>
-        <a href="PCCST501/m2_p01_sliding_window_gbn_sr.html" class="card" style="border-color: var(--callout-formula-border); background: var(--callout-formula-bg);">
-          <span class="module-tag" style="background: var(--callout-formula-border); color: #fff;">Workbook</span>
-          <h2>Progressive Problems (M2)</h2>
-          <p>Sliding window (GBN/SR), TCP RTT & Congestion, Subnetting & CIDR, and Dijkstra/Bellman-Ford.</p>
-        </a>
-        <a href="PCCST501/m3_01_datalink_layer_services_and_framing.html" class="card">
-          <span class="module-tag">Module 3</span>
+        <div class="card" onclick="if(!event.target.closest('.workbook-pill')) window.location.href='/PCCST501/m1_01_internet_overview_and_network_edge.html'" style="cursor: pointer;">
+          <div class="card-head">
+            <span class="module-tag">Module 1</span>
+            <a href="/PCCST501/m1_p01_delays.html" class="workbook-pill" title="Module 1 Workbook: Progressive Problems" onclick="event.stopPropagation();">📝 Workbook</a>
+          </div>
+          <a href="/PCCST501/m1_01_internet_overview_and_network_edge.html" class="card-body-link">
+            <h2>Application Layer</h2>
+            <p>Internet overview, OSI & TCP/IP, HTTP, DNS, FTP, SMTP, and P2P.</p>
+          </a>
+        </div>
+        <div class="card" onclick="if(!event.target.closest('.workbook-pill')) window.location.href='/PCCST501/m2_01_transport_layer_services_and_multiplexing.html'" style="cursor: pointer;">
+          <div class="card-head">
+            <span class="module-tag">Module 2</span>
+            <a href="/PCCST501/m2_p01_sliding_window_gbn_sr.html" class="workbook-pill" title="Module 2 Workbook: Progressive Problems" onclick="event.stopPropagation();">📝 Workbook</a>
+          </div>
+          <a href="/PCCST501/m2_01_transport_layer_services_and_multiplexing.html" class="card-body-link">
+            <h2>Transport & Network Layer</h2>
+            <p>TCP, UDP, Congestion Control, IPv4/IPv6, and Routing Algorithms.</p>
+          </a>
+        </div>
+        <div class="card card-upcoming" title="Module 3 notes are in preparation">
+          <div class="card-head">
+            <span class="module-tag upcoming">Module 3 &middot; In Prep</span>
+          </div>
           <h2>Data Link Layer</h2>
           <p>Framing, CRC error detection, CSMA/CD, ARP, VLANs, and 802.11.</p>
-        </a>
-        <a href="PCCST501/m4_01_network_management_architecture_snmp.html" class="card">
-          <span class="module-tag">Module 4</span>
+        </div>
+        <div class="card card-upcoming" title="Module 4 notes are in preparation">
+          <div class="card-head">
+            <span class="module-tag upcoming">Module 4 &middot; In Prep</span>
+          </div>
           <h2>Physical Layer & Management</h2>
           <p>SNMP, Nyquist & Shannon limits, PCM, and Modulation techniques.</p>
-        </a>
+        </div>
       </div>
     </div>
 
     <!-- PCCST502: Algorithm Design -->
     <div class="course-section">
       <div class="course-header">
-        <div class="course-title">Design and Analysis of Algorithms</div>
+        <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+          <a href="/PCCST502/m0_00_course_syllabus_and_blueprint.html" class="course-title" style="text-decoration:none; color:inherit;">Design and Analysis of Algorithms</a>
+          <a href="/PCCST502/m0_00_course_syllabus_and_blueprint.html" class="syllabus-pill" title="View official KTU Syllabus, 40:60 CIE/ESE scheme, and CO-PO matrix">📋 Official Syllabus & Scheme</a>
+        </div>
         <span class="course-code">PCCST502</span>
       </div>
       <div class="card-grid">
-        <a href="PCCST502/m1_01_algorithm_definition_and_criteria.html" class="card">
-          <span class="module-tag">Module 1</span>
-          <h2>Asymptotics & Recurrences</h2>
-          <p>Complexity analysis, Master theorem, Recursion trees, and AVL trees.</p>
+        <div class="card" onclick="if(!event.target.closest('.workbook-pill')) window.location.href='/PCCST502/m1_01_algorithm_definition_and_criteria.html'" style="cursor: pointer;">
+          <div class="card-head">
+            <span class="module-tag">Module 1</span>
+            <a href="/PCCST502/m1_p01_asymptotics.html" class="workbook-pill" title="Module 1 Workbook: Progressive Problems" onclick="event.stopPropagation();">📝 Workbook</a>
+          </div>
+          <a href="/PCCST502/m1_01_algorithm_definition_and_criteria.html" class="card-body-link">
+            <h2>Asymptotics & Recurrences</h2>
+            <p>Complexity analysis, Master theorem, Recursion trees, and AVL trees.</p>
+          </a>
+        </div>
+        <div class="card" onclick="if(!event.target.closest('.workbook-pill')) window.location.href='/PCCST502/m2_p01_union_find.html'" style="cursor: pointer;">
+          <div class="card-head">
+            <span class="module-tag">Module 2</span>
+            <a href="/PCCST502/m2_p01_union_find.html" class="workbook-pill" title="Module 2 Workbook: Progressive Problems" onclick="event.stopPropagation();">📝 Workbook</a>
+          </div>
+          <a href="/PCCST502/m2_p01_union_find.html" class="card-body-link">
+            <h2>Graphs & Divide and Conquer</h2>
+            <p>Union-Find, BFS/DFS, Kosaraju SCC, Merge Sort, and Strassen.</p>
+          </a>
+        </div>
+        <div class="card" onclick="if(!event.target.closest('.workbook-pill')) window.location.href='/PCCST502/m3_01_greedy_strategy_and_fractional_knapsack.html'" style="cursor: pointer;">
+          <div class="card-head">
+            <span class="module-tag">Module 3</span>
+            <a href="/PCCST502/m3_p01_fractional_knapsack_and_greedy_choice.html" class="workbook-pill" title="Module 3 Workbook: Progressive Problems" onclick="event.stopPropagation();">📝 Workbook</a>
+          </div>
+          <a href="/PCCST502/m3_01_greedy_strategy_and_fractional_knapsack.html" class="card-body-link">
+            <h2>Greedy, DP & Backtracking</h2>
+            <p>Kruskal, Prim, Dijkstra, Matrix Chain Multiplication, and N-Queens.</p>
+          </a>
+        </div>
+        <div class="card" onclick="if(!event.target.closest('.workbook-pill')) window.location.href='/PCCST502/m4_01_the_branch_and_bound_paradigm_control_abstraction.html'" style="cursor: pointer;">
+          <div class="card-head">
+            <span class="module-tag">Module 4</span>
+            <a href="/PCCST502/m4_p01_tsp_reduced_matrix_branch_and_bound.html" class="workbook-pill" title="Module 4 Workbook: Progressive Problems" onclick="event.stopPropagation();">📝 Workbook</a>
+          </div>
+          <a href="/PCCST502/m4_01_the_branch_and_bound_paradigm_control_abstraction.html" class="card-body-link">
+            <h2>Branch & Bound & Complexity</h2>
+            <p>TSP, NP-Completeness proofs, Bin Packing, and Randomized Algorithms.</p>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PBCST504: Microcontrollers -->
+    <div class="course-section">
+      <div class="course-header">
+        <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+          <a href="/PBCST504/m0_00_course_syllabus_and_blueprint.html" class="course-title" style="text-decoration:none; color:inherit;">Microcontrollers</a>
+          <a href="/PBCST504/m0_00_course_syllabus_and_blueprint.html" class="syllabus-pill" title="View official KTU Syllabus, 60:40 PBL CIE/ESE scheme, and Project Rubric">📋 Official Syllabus & Scheme</a>
+        </div>
+        <span class="course-code">PBCST504</span>
+      </div>
+      <div class="card-grid">
+        <a href="/PBCST504/m1_01_embedded_systems_and_microcontroller_foundations.html" class="card">
+          <div class="card-head">
+            <span class="module-tag">Module 1</span>
+          </div>
+          <h2>ARM Cortex-M Architecture</h2>
+          <p>Embedded systems vs computers, Embedded C, Cortex-M23/M33, registers, and AHB/APB buses.</p>
         </a>
-        <a href="PCCST502/m1_p01_asymptotics.html" class="card" style="border-color: var(--callout-formula-border); background: var(--callout-formula-bg);">
-          <span class="module-tag" style="background: var(--callout-formula-border); color: #fff;">Workbook</span>
-          <h2>Progressive Problems (M1)</h2>
-          <p>Systematic, step-by-step exhaustive problem variations.</p>
+        <a href="/PBCST504/m2_01_stm32_family_architecture_and_ecosystem.html" class="card">
+          <div class="card-head">
+            <span class="module-tag">Module 2</span>
+          </div>
+          <h2>STM32 & Peripheral Programming</h2>
+          <p>STM32U575, CubeIDE, HAL, GPIO, ADC sensor conditioning, DAC waveforms, NVIC, and Timers/RTC.</p>
         </a>
-        <a href="PCCST502/m2_01_disjoint_sets_and_union_find.html" class="card">
-          <span class="module-tag">Module 2</span>
-          <h2>Graphs & Divide and Conquer</h2>
-          <p>Union-Find, BFS/DFS, Kosaraju SCC, Merge Sort, and Strassen.</p>
+        <a href="/PBCST504/m3_01_serial_communication_usart_i2c_spi_can.html" class="card">
+          <div class="card-head">
+            <span class="module-tag">Module 3</span>
+          </div>
+          <h2>Protocols & USB Interface</h2>
+          <p>USART, I2C temperature/LCD, SPI EEPROM, multi-node CAN bus, and USB HID keyboard/mouse.</p>
         </a>
-        <a href="PCCST502/m2_p01_union_find.html" class="card" style="border-color: var(--callout-formula-border); background: var(--callout-formula-bg);">
-          <span class="module-tag" style="background: var(--callout-formula-border); color: #fff;">Workbook</span>
-          <h2>Progressive Problems (M2)</h2>
-          <p>Systematic, step-by-step exhaustive problem variations.</p>
-        </a>
-        <a href="PCCST502/m3_01_greedy_strategy_control_abstraction.html" class="card">
-          <span class="module-tag">Module 3</span>
-          <h2>Greedy, DP & Backtracking</h2>
-          <p>Kruskal, Prim, Dijkstra, Matrix Chain Multiplication, and N-Queens.</p>
-        </a>
-        <a href="PCCST502/m4_01_branch_and_bound_control_abstraction.html" class="card">
-          <span class="module-tag">Module 4</span>
-          <h2>Branch & Bound & Complexity</h2>
-          <p>TSP, NP-Completeness proofs, Bin Packing, and Randomized Algorithms.</p>
+        <a href="/PBCST504/m4_01_iot_architecture_protocols_and_wireless.html" class="card">
+          <div class="card-head">
+            <span class="module-tag">Module 4</span>
+          </div>
+          <h2>IoT, RTOS & TrustZone</h2>
+          <p>MQTT, CoAP, GSM/BLE/LoRa, FreeRTOS tasks & semaphores, and ARM TrustZone security.</p>
         </a>
       </div>
     </div>
@@ -286,37 +467,87 @@
     <!-- PECST522: Artificial Intelligence -->
     <div class="course-section">
       <div class="course-header">
-        <div class="course-title">Artificial Intelligence</div>
+        <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+          <a href="/PECST522/m0_00_course_syllabus_and_blueprint.html" class="course-title" style="text-decoration:none; color:inherit;">Artificial Intelligence</a>
+          <a href="/PECST522/m0_00_course_syllabus_and_blueprint.html" class="syllabus-pill" title="View official KTU Syllabus, 40:60 CIE/ESE scheme, and CO-PO matrix">📋 Official Syllabus & Scheme</a>
+        </div>
         <span class="course-code">PECST522</span>
       </div>
       <div class="card-grid">
-        <a href="PECST522/m1_01_ai_definition_foundations_and_history.html" class="card">
-          <span class="module-tag">Module 1</span>
-          <h2>Agents & Problem Solving</h2>
-          <p>PEAS framework, agent architectures, and classic AI toy problems.</p>
-        </a>
-        <a href="PECST522/m1_99_practice_lab_agents_and_problem_formulation.html" class="card" style="border-color: rgba(56, 189, 248, 0.4); background: linear-gradient(180deg, #121b2d 0%, #0e1524 100%);">
-          <span class="module-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">🧪 Module 1 Lab</span>
-          <h2>Practice Lab: Agents & PEAS</h2>
-          <p>Real-world scenario matrix, cheat tables, active recall quizzes, and KTU 7-mark model solutions.</p>
-        </a>
-        <a href="PECST522/m2_01_uninformed_search_dfs_bfs_ucs.html" class="card">
-          <span class="module-tag">Module 2</span>
+        <div class="card" onclick="if(!event.target.closest('.workbook-pill')) window.location.href='/PECST522/m1_01_ai_definition_foundations_and_history.html'" style="cursor: pointer;">
+          <div class="card-head">
+            <span class="module-tag">Module 1</span>
+            <a href="/PECST522/m1_99_practice_lab_agents_and_problem_formulation.html" class="workbook-pill" title="Practice Lab: Agents & PEAS" onclick="event.stopPropagation();">🧪 Practice Lab</a>
+          </div>
+          <a href="/PECST522/m1_01_ai_definition_foundations_and_history.html" class="card-body-link">
+            <h2>Agents & Problem Solving</h2>
+            <p>PEAS framework, agent architectures, and classic AI toy problems.</p>
+          </a>
+        </div>
+        <a href="/PECST522/m2_01_uninformed_search_dfs_bfs_ucs.html" class="card">
+          <div class="card-head">
+            <span class="module-tag">Module 2</span>
+          </div>
           <h2>Search & Game Playing</h2>
           <p>A* Search, CSPs, AC-3, Minimax, and Alpha-Beta pruning.</p>
         </a>
-        <a href="PECST522/m3_01_knowledge_based_agents_and_wumpus_world.html" class="card">
-          <span class="module-tag">Module 3</span>
+        <div class="card card-upcoming" title="Module 3 notes are in preparation">
+          <div class="card-head">
+            <span class="module-tag upcoming">Module 3 &middot; In Prep</span>
+          </div>
           <h2>Knowledge & Logic</h2>
           <p>Wumpus World, Propositional & First-Order Logic, Unification, and Chaining.</p>
-        </a>
-        <a href="PECST522/m4_01_reinforcement_learning_learning_from_rewards.html" class="card">
-          <span class="module-tag">Module 4</span>
+        </div>
+        <div class="card card-upcoming" title="Module 4 notes are in preparation">
+          <div class="card-head">
+            <span class="module-tag upcoming">Module 4 &middot; In Prep</span>
+          </div>
           <h2>Reinforcement Learning</h2>
           <p>Passive & Active RL, Q-Learning, Policy Search, and Inverse RL.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PCCSL507: Networks Lab -->
+    <div class="course-section">
+      <div class="course-header">
+        <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+          <a href="/PCCSL507/m0_00_course_syllabus_and_blueprint.html" class="course-title" style="text-decoration:none; color:inherit;">Networks Lab</a>
+          <a href="/PCCSL507/m0_00_course_syllabus_and_blueprint.html" class="syllabus-pill" title="View official KTU Syllabus, 50:50 Lab CIE/ESE scheme, and 17 Experiments list">📋 Official Syllabus & Scheme</a>
+        </div>
+        <span class="course-code">PCCSL507</span>
+      </div>
+      <div class="card-grid">
+        <a href="/PCCSL507/m0_00_course_syllabus_and_blueprint.html" class="card">
+          <div class="card-head">
+            <span class="module-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">🧪 Lab Manual</span>
+          </div>
+          <h2>17 Benchmark Lab Experiments</h2>
+          <p>Linux networking commands, Wireshark packet capture, C socket programming, and Cisco Packet Tracer topology simulations.</p>
+        </a>
+      </div>
+    </div>
+
+    <!-- PCCSL508: Machine Learning Lab -->
+    <div class="course-section">
+      <div class="course-header">
+        <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+          <a href="/PCCSL508/m0_00_course_syllabus_and_blueprint.html" class="course-title" style="text-decoration:none; color:inherit;">Machine Learning Lab</a>
+          <a href="/PCCSL508/m0_00_course_syllabus_and_blueprint.html" class="syllabus-pill" title="View official KTU Syllabus, 50:50 Lab CIE/ESE scheme, and 20 Experiments list">📋 Official Syllabus & Scheme</a>
+        </div>
+        <span class="course-code">PCCSL508</span>
+      </div>
+      <div class="card-grid">
+        <a href="/PCCSL508/m0_00_course_syllabus_and_blueprint.html" class="card">
+          <div class="card-head">
+            <span class="module-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">🧪 Lab Manual</span>
+          </div>
+          <h2>20 Machine Learning Experiments</h2>
+          <p>Linear & Logistic regression, SVM kernels, MLP neural networks, K-Means clustering, and AdaBoost ensemble models.</p>
         </a>
       </div>
     </div>
   </div>
+<script type="module" src="/shared.js"></script>
 </body>
 </html>

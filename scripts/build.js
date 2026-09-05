@@ -247,7 +247,7 @@ function renderNavTree(modules, currentMod, currentId, courseCode) {
         <div class="topic-list">`;
     for (const topic of mod.topics) {
       const isActive = topic.id === currentId;
-      const href = courseCode ? `/${courseCode}/${topic.filename}` : topic.filename;
+      const href = courseCode ? `../${courseCode}/${topic.filename}` : topic.filename;
       html += `
           <a href="${href}" class="topic-link ${isActive ? 'active' : ''}" id="topic-${topic.id}">
             <span class="topic-dot"></span>

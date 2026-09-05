@@ -32,8 +32,8 @@ Imagine a restaurant that has a dining room with **10 private booths**:
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Unit Conversion of Link Capacity (Mbps to bps)</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Unit Conversion of Link Capacity (Mbps to bps)</summary>
 
 **What are we doing?** We convert the total trunk line capacity $C = 1\text{ Mbps}$ into base units of bits per second ($\text{bps}$).
 
@@ -49,10 +49,10 @@ $$\text{Base} \xrightarrow{\times 10^3} \text{kilo (k)} \xrightarrow{\times 10^3
 
 **System State:**
 - Total Capacity: $C = 1{,}000{,}000\text{ bps}$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Unit Conversion of User Demand (kbps to bps)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Unit Conversion of User Demand (kbps to bps)</summary>
 
 **What changed from Step 1?** Total link capacity is now in bits per second. Now we must convert the per-user requirement $r = 100\text{ kbps}$ into the same unit.
 
@@ -66,10 +66,10 @@ $$\text{Base} \xrightarrow{\times 10^3} \text{kilo (k)} \xrightarrow{\times 10^3
 **System State:**
 - Total Link Capacity: $C = 1{,}000{,}000\text{ bps}$
 - Required Rate per User: $r = 100{,}000\text{ bps}$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Calculate the Maximum Number of Circuit Users</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Calculate the Maximum Number of Circuit Users</summary>
 
 **What changed from Step 2?** Both $C$ and $r$ are expressed in $\text{bps}$.
 
@@ -86,10 +86,10 @@ $$\text{Base} \xrightarrow{\times 10^3} \text{kilo (k)} \xrightarrow{\times 10^3
 
 **System State:**
 - The link is divided into exactly $10$ dedicated circuits (slots $1$ through $10$).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Trace Call Attempt by an 11th User (Blocking/Call Dropping)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Trace Call Attempt by an 11th User (Blocking/Call Dropping)</summary>
 
 **What changed from Step 3?** All $10$ slots are currently allocated to Users $1$ through $10$. An 11th user now dials a number.
 
@@ -107,10 +107,10 @@ $$\text{Base} \xrightarrow{\times 10^3} \text{kilo (k)} \xrightarrow{\times 10^3
 - Active Calls: $10$
 - Blocked Calls: $1$
 - Link Allocation: $100\%$ full
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Resource Underutilization during Silence Periods</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Resource Underutilization during Silence Periods</summary>
 
 **What are we doing?** We analyze human conversation patterns and examine what happens when active callers are not speaking.
 
@@ -123,17 +123,17 @@ $$\text{Base} \xrightarrow{\times 10^3} \text{kilo (k)} \xrightarrow{\times 10^3
    - However, their dedicated $100\text{ kbps}$ circuit slot remains locked to them.
    - That $100\text{ kbps}$ slot transmits empty dummy padding bits across the physical cable.
 4. **The Inefficiency:** Even though the actual information flowing across the link might only be $200\text{ kbps}$ or $300\text{ kbps}$ in total across all callers, the remaining $700\text{ kbps}$ is **wasted**. Nobody else can use those idle frequencies or time slots.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Conclusion for Level 1</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Conclusion for Level 1</summary>
 
 **What is the final answer?**
 Under Circuit Switching, a $1\text{ Mbps}$ link can support a hard maximum of **$10$ simultaneous users**.
 
 **Why does this answer make sense?**
 Circuit switching provides a **deterministic guarantee**: once your call is accepted, your $100\text{ kbps}$ stream never stutters, never slows down, and never encounters congestion, because the pipe has been physically reserved for you. The trade-off is extreme inefficiency: idle time is wasted, and the 11th user is turned away even if the other 10 users are sitting in total silence.
-</div>
+</details>
 
 </div>
 
@@ -170,8 +170,8 @@ Imagine an office with **35 employees** sharing **1 coffee machine**:
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: The Activity Factor of a User</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: The Activity Factor of a User</summary>
 
 **What are we doing?** We formally define how often a user actually transmits data.
 
@@ -186,10 +186,10 @@ Imagine an office with **35 employees** sharing **1 coffee machine**:
    - There is a **$9$ in $10$ chance** that they are doing nothing at all.
 
 **Where did this concept come from?** Real-world computer network traffic is **bursty**: users click a link, receive a page in a burst, and then spend seconds or minutes reading it.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Compare Circuit Switching vs. Packet Switching for 35 Users</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Compare Circuit Switching vs. Packet Switching for 35 Users</summary>
 
 **What changed from Step 1?** We know that each user is silent $90\%$ of the time. Now suppose our customer base grows to **$35$ users**.
 
@@ -211,10 +211,10 @@ Imagine an office with **35 employees** sharing **1 coffee machine**:
   $$\text{Average Link Utilization} = \frac{350\text{ kbps}}{1{,}000\text{ kbps}} = 35\%$$
 
 On average, the link is only **$35\%$ loaded**! The remaining $65\%$ of the link is free headroom.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: What Causes Congestion in Packet Switching?</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: What Causes Congestion in Packet Switching?</summary>
 
 **What changed from Step 2?** We know the link is safe on average ($350\text{ kbps} \ll 1{,}000\text{ kbps}$). But what happens during rare bursts?
 
@@ -232,10 +232,10 @@ On average, the link is only **$35\%$ loaded**! The remaining $65\%$ of the link
 **System State:**
 - No congestion if active users $\le 10$.
 - Queuing begins only if active users $\ge 11$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: The Intuition of Rare Overlap (Coin-Flip Analogy)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: The Intuition of Rare Overlap (Coin-Flip Analogy)</summary>
 
 **What are we doing?** We build an intuitive understanding of why having $11$ or more users active at the exact same instant is extraordinarily rare among $35$ people.
 
@@ -255,10 +255,10 @@ On average, the link is only **$35\%$ loaded**! The remaining $65\%$ of the link
   $$P(\text{Active Users} \ge 11) \approx 0.00042 = \mathbf{0.042\%}$$
   That is less than **$1$ chance in $2{,}000$**!
 - For $99.96\%$ of the time, the network runs smoothly with $10$ or fewer active users, requiring zero buffering.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary Comparison & Trade-Offs</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary Comparison & Trade-Offs</summary>
 
 **What is the final comparison?**
 
@@ -272,6 +272,6 @@ On average, the link is only **$35\%$ loaded**! The remaining $65\%$ of the link
 
 **Why does this answer make sense?**
 Packet switching wins by exploiting **Statistical Multiplexing**: because independent users rarely burst at the exact same instant, the network can safely overbook its resources, supporting more than **$3$ times as many users** on the exact same physical wire with minimal delay. This fundamental efficiency is why the entire modern Internet is built on packet switching rather than circuit switching.
-</div>
+</details>
 
 </div>

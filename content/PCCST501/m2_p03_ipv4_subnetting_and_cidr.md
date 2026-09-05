@@ -31,8 +31,8 @@ You have to feed four different families of different sizes: a huge family (100 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Understand the Base Block Structure (192.168.1.0/24)</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Understand the Base Block Structure (192.168.1.0/24)</summary>
 
 **What are we doing?** Analyzing the starting address space and determining the total number of raw IP addresses available.
 
@@ -51,10 +51,10 @@ These $256$ addresses span consecutively from:
 `192.168.1.0` through `192.168.1.255`.
 
 **Where did this formula/concept come from?** RFC 791 (IPv4 standard) and RFC 1519 (Classless Inter-Domain Routing - CIDR). Each bit can be either `0` or `1`, so $h$ binary bits yield $2^h$ unique combinations.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Understand the -2 Subtraction Rule in $2^h - 2 \ge \text{Hosts}$</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Understand the -2 Subtraction Rule in $2^h - 2 \ge \text{Hosts}$</summary>
 
 **What changed from Step 1?** We know each subnet gets a block of size $2^h$. Now we explain why usable devices cannot use all $2^h$ addresses.
 
@@ -71,10 +71,10 @@ Therefore, for any host requirement, we must satisfy:
 $$2^h - 2 \ge \text{Number of Required Hosts}$$
 
 **Where did this formula/concept come from?** RFC 950 ("Internet Standard Subnetting Procedure").
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Sort the Subnet Requirements from Largest to Smallest</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Sort the Subnet Requirements from Largest to Smallest</summary>
 
 **What changed from Step 2?** We understand the math constraint. Now we arrange our departmental needs into the mandatory execution sequence.
 
@@ -89,10 +89,10 @@ $$2^h - 2 \ge \text{Number of Required Hosts}$$
 
 **How do we do it?** The requirements are already sorted:  
 $$100 > 50 > 25 > 2$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Design Subnet 1 — Department A (100 Hosts)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Design Subnet 1 — Department A (100 Hosts)</summary>
 
 **What changed from Step 3?** We take the first and largest requirement ($100\text{ hosts}$) and allocate its subnet block from the very start of our address space (`192.168.1.0`).
 
@@ -123,10 +123,10 @@ $$100 > 50 > 25 > 2$$
    - **Last Usable Host IP:** `192.168.1.127 - 1` = `192.168.1.126`  
 
 *Department A Usable Range:* `192.168.1.1` to `192.168.1.126` (Capacity: $126$ hosts).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Design Subnet 2 — Department B (50 Hosts)</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Design Subnet 2 — Department B (50 Hosts)</summary>
 
 **What changed from Step 4?** Department A consumed addresses `0` through `127`. The very next available unallocated address in our pool is `192.168.1.128`. We now allocate space for Department B ($50\text{ hosts}$).
 
@@ -154,10 +154,10 @@ $$100 > 50 > 25 > 2$$
    - **Last Usable Host IP:** `192.168.1.191 - 1` = `192.168.1.190`  
 
 *Department B Usable Range:* `192.168.1.129` to `192.168.1.190` (Capacity: $62$ hosts).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 6: Design Subnet 3 — Department C (25 Hosts)</div>
+<details class="step-card">
+<summary class="step-badge">Step 6: Design Subnet 3 — Department C (25 Hosts)</summary>
 
 **What changed from Step 5?** Department B consumed addresses `128` through `191`. The next free address in line is `192.168.1.192`. We allocate space for Department C ($25\text{ hosts}$).
 
@@ -185,10 +185,10 @@ $$100 > 50 > 25 > 2$$
    - **Last Usable Host IP:** `192.168.1.223 - 1` = `192.168.1.222`  
 
 *Department C Usable Range:* `192.168.1.193` to `192.168.1.222` (Capacity: $30$ hosts).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 7: Design Subnet 4 — Router-to-Router Point-to-Point Link (2 Hosts)</div>
+<details class="step-card">
+<summary class="step-badge">Step 7: Design Subnet 4 — Router-to-Router Point-to-Point Link (2 Hosts)</summary>
 
 **What changed from Step 6?** Department C consumed addresses up to `223`. The next free address is `192.168.1.224`. We now allocate space for the point-to-point link between two router interfaces ($2\text{ hosts}$).
 
@@ -215,10 +215,10 @@ $$100 > 50 > 25 > 2$$
    - **Broadcast Address:** `192.168.1.227`  
 
 *Router Link Usable Range:* `192.168.1.225` to `192.168.1.226` (Capacity: exactly $2$ hosts).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Complete VLSM Master Table and Free Space Analysis</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Complete VLSM Master Table and Free Space Analysis</summary>
 
 **What is the final answer?** Here is the complete, non-overlapping VLSM allocation table:
 
@@ -235,7 +235,7 @@ $$100 > 50 > 25 > 2$$
 - Unused addresses = $256 - 228 = 28\text{ addresses}$ (spanning `192.168.1.228` through `192.168.1.255`), available for future expansion!
 
 **Why does this answer make sense?** Look at the network boundaries: `127` leads seamlessly to `128`; `191` leads seamlessly to `192`; `223` leads seamlessly to `224`; and `227` marks the boundary of the link. Zero addresses overlap, zero addresses are skipped, and every single department's host requirement is completely satisfied.
-</div>
+</details>
 
 </div>
 
@@ -269,8 +269,8 @@ Imagine you need to move a giant $4{,}000\text{-page}$ paper report across town,
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Calculate the Original Data Payload Size</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Calculate the Original Data Payload Size</summary>
 
 **What are we doing?** Separating the original datagram into its two fundamental components: the **IP Header** and the **Data Payload**.
 
@@ -285,10 +285,10 @@ Subtract header from total length:
 $$\text{Original Data Payload} = 4{,}000\text{ bytes} - 20\text{ bytes} = 3{,}980\text{ bytes}$$
 
 **Where did this formula/concept come from?** RFC 791 ("Internet Protocol"). The Total Length field in the IPv4 header measures the complete datagram size in bytes, including both header and data.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Understand the 8-Byte Alignment Rule for Fragment Offsets</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Understand the 8-Byte Alignment Rule for Fragment Offsets</summary>
 
 **What changed from Step 1?** We know we have $3{,}980\text{ bytes}$ of data to transport across an interface with $\text{MTU} = 1{,}500\text{ bytes}$. Now we derive the mathematical constraint on fragment payload sizing.
 
@@ -303,10 +303,10 @@ $$\text{Value Written in Offset Field} = \frac{\text{Byte Offset}}{8}$$
 Therefore, every fragment (except the very last one) **must carry a payload length that is evenly divisible by 8**. If it weren't, the starting byte offset of the next fragment would produce a fraction, which cannot be represented as an integer in the 13-bit header field!
 
 **Where did this formula/concept come from?** RFC 791 Section 3.2 ("Fragmentation and Reassembly").
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Calculate the Maximum Data Payload per Fragment ($P_{\text{max}}$)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Calculate the Maximum Data Payload per Fragment ($P_{\text{max}}$)</summary>
 
 **What changed from Step 2?** We know the formula and the 8-byte divisibility constraint. Now we calculate the maximum payload that fits within our $\text{MTU} = 1{,}500\text{ bytes}$.
 
@@ -322,10 +322,10 @@ Because $1{,}480$ is an exact multiple of 8, the maximum payload per fragment is
 $$P_{\text{max}} = 1{,}480\text{ bytes}$$
 
 *(Instructor Note: If the MTU were $1{,}505\text{ bytes}$, the raw space would be $1{,}485$. We would compute $\lfloor 1{,}485 / 8 \rfloor \times 8 = 185 \times 8 = 1{,}480\text{ bytes}$. The remaining $5\text{ bytes}$ would be left empty to satisfy the 8-byte rule).*
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Determine the Total Number of Fragments</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Determine the Total Number of Fragments</summary>
 
 **What changed from Step 3?** We know we must transport $3{,}980\text{ bytes}$ of payload, and each fragment can hold at most $1{,}480\text{ bytes}$. Now we find how many fragments are needed.
 
@@ -344,10 +344,10 @@ Let us see how the $3{,}980\text{ bytes}$ are divided across these 3 fragments:
 - **Fragment 3 Payload (The Remainder):**
   $$\text{Remaining Data} = 3{,}980 - 2{,}960 = 1{,}020\text{ bytes}$$  
 *(Note: The last fragment is allowed to have a payload that is NOT a multiple of 8, because no subsequent fragment follows it).*
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Trace Fragment 1 (First Slice)</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Trace Fragment 1 (First Slice)</summary>
 
 **What changed from Step 4?** We know the payload sizes: $1{,}480$, $1{,}480$, and $1{,}020\text{ bytes}$. Now we compute the exact header fields for Fragment 1.
 
@@ -360,10 +360,10 @@ Let us see how the $3{,}980\text{ bytes}$ are divided across these 3 fragments:
 3. **More Fragments (MF) Flag:** Are there more fragments coming after this one? **Yes.** $$\text{MF} = 1$$  
 4. **Fragment Offset Field:** The starting byte for this fragment is Byte $0$.  
    $$\text{Offset in Header} = \frac{\text{Starting Byte}}{8} = \frac{0}{8} = 0$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 6: Trace Fragment 2 (Middle Slice)</div>
+<details class="step-card">
+<summary class="step-badge">Step 6: Trace Fragment 2 (Middle Slice)</summary>
 
 **What changed from Step 5?** Fragment 1 covered bytes $0$ to $1{,}479$. Fragment 2 picks up immediately where Fragment 1 left off.
 
@@ -378,10 +378,10 @@ Let us see how the $3{,}980\text{ bytes}$ are divided across these 3 fragments:
 4. **Fragment Offset Field:** The starting byte for this fragment is Byte $1{,}480$.  
    $$\text{Offset in Header} = \frac{\text{Starting Byte}}{8} = \frac{1{,}480}{8} = 185$$  
    The value written into the $13\text{-bit}$ header offset field is **$185$**.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 7: Trace Fragment 3 (Final Slice / Tail)</div>
+<details class="step-card">
+<summary class="step-badge">Step 7: Trace Fragment 3 (Final Slice / Tail)</summary>
 
 **What changed from Step 6?** Fragment 2 covered bytes up to $2{,}959$. Fragment 3 carries the final remaining bytes.
 
@@ -398,10 +398,10 @@ Let us see how the $3{,}980\text{ bytes}$ are divided across these 3 fragments:
 4. **Fragment Offset Field:** The starting byte for this fragment is Byte $2{,}960$.  
    $$\text{Offset in Header} = \frac{\text{Starting Byte}}{8} = \frac{2{,}960}{8} = 370$$  
    The value written into the header offset field is **$370$**.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Complete Fragmentation Master Table and Reassembly Check</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Complete Fragmentation Master Table and Reassembly Check</summary>
 
 **What is the final answer?** Here is the complete fragmentation breakdown table:
 
@@ -422,7 +422,7 @@ Let us see how the $3{,}980\text{ bytes}$ are divided across these 3 fragments:
    - Fragment 3 has $\text{MF} = 0$, signaling the end of the stream.
 
 **Why does this answer make sense?** The router split the oversized $4{,}000\text{-byte}$ packet into two maximal $1{,}500\text{-byte}$ packets and one final $1{,}040\text{-byte}$ tail packet. By ensuring the payloads of Fragments 1 and 2 were multiples of 8, the starting byte offsets ($0$, $185$, $370$) fit cleanly into the 13-bit header offset field without rounding errors or fractional bytes.
-</div>
+</details>
 
 </div>
 

@@ -26,8 +26,8 @@ Imagine each clause is a 3-person committee.
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Vertex Set Construction</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Vertex Set Construction</summary>
 
 Each clause generates 3 vertices (one for each of its literals).
 Total vertices: $|V| = 3 \times m = 3 \times 3 = 9$.
@@ -38,10 +38,10 @@ Total vertices: $|V| = 3 \times m = 3 \times 3 = 9$.
   $$u_1 = (2, \overline{x_1}), \quad u_2 = (2, x_2), \quad u_3 = (2, x_3)$$
 * **Clause 3 ($C_3 = x_1 \lor \overline{x_2} \lor x_3$):**
   $$w_1 = (3, x_1), \quad w_2 = (3, \overline{x_2}), \quad w_3 = (3, x_3)$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Edge Connection Rules and Filtering</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Edge Connection Rules and Filtering</summary>
 
 An edge exists between vertex $a$ and vertex $b$ if and only if:
 1. $a$ and $b$ belong to **different clauses** ($C_r \ne C_s$).
@@ -56,10 +56,10 @@ An edge exists between vertex $a$ and vertex $b$ if and only if:
   * $u_2(x_2)$ and $w_2(\overline{x_2})$ $\implies$ NO EDGE.
   * $v_3(\overline{x_3})$ and $u_3(x_3)$ $\implies$ NO EDGE.
   * $v_3(\overline{x_3})$ and $w_3(x_3)$ $\implies$ NO EDGE.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Target Clique Parameter & Clique Discovery</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Target Clique Parameter & Clique Discovery</summary>
 
 * Target Clique Size:
   $$\mathbf{k = m = 3}$$
@@ -75,10 +75,10 @@ An edge exists between vertex $a$ and vertex $b$ if and only if:
 * The vertex set:
   $$\mathbf{V' = \{ (1, x_2), \; (2, x_2), \; (3, x_1) \}}$$
   forms a **complete triangle (clique of size 3)** in graph $G$!
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Truth Assignment Extraction and Verification</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Truth Assignment Extraction and Verification</summary>
 
 From our clique vertices:
 * $(1, x_2) \implies$ Set $x_2 = \mathbf{\text{True}}$.
@@ -93,7 +93,7 @@ From our clique vertices:
 
 All 3 clauses are satisfied!
 $$\mathbf{\phi(\text{True}, \text{True}, \text{True}) = \text{True}}$$
-</div>
+</details>
 
 </div>
 
@@ -113,8 +113,8 @@ $$E = \{ (1, 2), (2, 3), (3, 1), (1, 4), (2, 4), (3, 4), (4, 5) \}$$
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Identifying the Clique in G</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Identifying the Clique in G</summary>
 
 Inspect edges among vertices $\{1, 2, 3, 4\}$:
 * $(1, 2) \in E$, $(2, 3) \in E$, $(3, 1) \in E$ (Triangle $1-2-3$)
@@ -122,28 +122,28 @@ Inspect edges among vertices $\{1, 2, 3, 4\}$:
 * All $\binom{4}{2} = 6$ possible edges among $\{1, 2, 3, 4\}$ exist in $E$.
 * Therefore:
   $$\mathbf{V' = \{1, 2, 3, 4\} \text{ is a Clique of size } k = 4}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Constructing the Complement Graph \overline{G}</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Constructing the Complement Graph \overline{G}</summary>
 
 The complete graph on 5 vertices has $\binom{5}{2} = 10$ edges.
 * Original edges in $E$ ($7$ edges): $(1, 2), (2, 3), (3, 1), (1, 4), (2, 4), (3, 4), (4, 5)$.
 * Complement edges $\overline{E}$ (pairs NOT in $E$, total $10 - 7 = 3$ edges):
   $$\mathbf{\overline{E} = \{ (1, 5), \; (2, 5), \; (3, 5) \}}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Calculating Target Vertex Cover Parameter</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Calculating Target Vertex Cover Parameter</summary>
 
 * $|V| = 5$
 * Clique size $k = 4$
 * Target Vertex Cover size:
   $$\mathbf{k' = |V| - k = 5 - 4 = 1}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Extracting and Verifying Vertex Cover in \overline{G}</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Extracting and Verifying Vertex Cover in \overline{G}</summary>
 
 * Candidate Vertex Cover:
   $$\mathbf{V'' = V \setminus V' = \{1, 2, 3, 4, 5\} \setminus \{1, 2, 3, 4\} = \{ 5 \}}$$
@@ -155,6 +155,6 @@ The complete graph on 5 vertices has $\binom{5}{2} = 10$ edges.
 
 **Every edge in $\overline{G}$ is covered by vertex 5!**
 Hence, $\{5\}$ is a valid vertex cover of size $k' = 1$.
-</div>
+</details>
 
 </div>

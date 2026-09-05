@@ -30,18 +30,18 @@ In the Floyd-Warshall algorithm, we incrementally unlock new intermediate transi
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: The Floyd-Warshall Recurrence</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: The Floyd-Warshall Recurrence</summary>
 
 For step $k \in \{1, 2, 3, 4\}$:
 $$D^{(k)}[i, j] = \min\Big(D^{(k-1)}[i, j], \; D^{(k-1)}[i, k] + D^{(k-1)}[k, j]\Big)$$
 
 * **Row $k$ and Column $k$ never change** during iteration $k$ (since $D[k, k] = 0$).
 * The diagonal $D[i, i]$ remains $0$ (assuming no negative cycles).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Compute D^(1) (Intermediate Vertex 1)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Compute D^(1) (Intermediate Vertex 1)</summary>
 
 * **Pivot:** Row 1 (`[0, 3, ∞, 7]`) and Column 1 (`[0, 8, 5, 2]^T`).
 * Let's test non-pivot cells:
@@ -58,10 +58,10 @@ $$D^{(1)} = \begin{bmatrix}
 5 & \mathbf{8} & 0 & 1 \\
 2 & \mathbf{5} & \infty & 0
 \end{bmatrix}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Compute D^(2) (Intermediate Vertex 2)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Compute D^(2) (Intermediate Vertex 2)</summary>
 
 * **Pivot:** Row 2 (`[8, 0, 2, 15]`) and Column 2 (`[3, 0, 8, 5]^T`).
 * Test cells:
@@ -78,10 +78,10 @@ $$D^{(2)} = \begin{bmatrix}
 5 & 8 & 0 & 1 \\
 2 & 5 & \mathbf{7} & 0
 \end{bmatrix}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Compute D^(3) (Intermediate Vertex 3)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Compute D^(3) (Intermediate Vertex 3)</summary>
 
 * **Pivot:** Row 3 (`[5, 8, 0, 1]`) and Column 3 (`[5, 2, 0, 7]^T`).
 * Test cells:
@@ -98,10 +98,10 @@ $$D^{(3)} = \begin{bmatrix}
 5 & 8 & 0 & 1 \\
 2 & 5 & 7 & 0
 \end{bmatrix}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Compute D^(4) (Intermediate Vertex 4)</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Compute D^(4) (Intermediate Vertex 4)</summary>
 
 * **Pivot:** Row 4 (`[2, 5, 7, 0]`) and Column 4 (`[6, 3, 1, 0]^T`).
 * Test cells:
@@ -117,10 +117,10 @@ $$D^{(4)} = \begin{bmatrix}
 \mathbf{3} & \mathbf{6} & 0 & 1 \\
 2 & 5 & 7 & 0
 \end{bmatrix}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Final APSP Matrix & Verification</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Final APSP Matrix & Verification</summary>
 
 The final all-pairs shortest path matrix is:
 $$D = \begin{bmatrix}
@@ -133,6 +133,6 @@ $$D = \begin{bmatrix}
 Notice:
 * Diagonal entries remain 0 $\implies$ No negative cycle.
 * Every pair of vertices now possesses a finite shortest path distance.
-</div>
+</details>
 
 </div>

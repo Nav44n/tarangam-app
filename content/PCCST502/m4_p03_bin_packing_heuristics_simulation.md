@@ -25,18 +25,18 @@ Imagine you are packing grocery bags where each bag can carry up to 1.0 kg:
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Total Weight and Trivial Lower Bound</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Total Weight and Trivial Lower Bound</summary>
 
 Sum of all 10 item weights:
 $$\sum_{i=1}^{10} s_i = 0.4 + 0.8 + 0.2 + 0.2 + 0.7 + 0.1 + 0.5 + 0.6 + 0.1 + 0.4 = \mathbf{4.0}$$
 
 Since bin capacity $C = 1.0$:
 $$\mathbf{\text{OPT} \ge \left\lceil \frac{\sum s_i}{C} \right\rceil = \left\lceil \frac{4.0}{1.0} \right\rceil = 4 \text{ bins}}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Next Fit (NF) Execution Trace</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Next Fit (NF) Execution Trace</summary>
 
 * Maintain only 1 active bin. If item exceeds remaining space, close current bin and open a new one.
 1. Item 1 (0.4): Open Bin 1. [B1: 0.4, space: 0.6]
@@ -57,10 +57,10 @@ $$\mathbf{\text{OPT} \ge \left\lceil \frac{\sum s_i}{C} \right\rceil = \left\lce
 * $B_4: \{0.5\}$
 * $B_5: \{0.6, 0.1\}$
 * $B_6: \{0.4\}$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: First Fit (FF) Execution Trace</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: First Fit (FF) Execution Trace</summary>
 
 * Scan previously opened bins in order $1, 2, \dots$ and place item in first bin with sufficient room.
 1. Item 1 (0.4): Put in B1. [B1 fill: 0.4, space: 0.6]
@@ -80,10 +80,10 @@ $$\mathbf{\text{OPT} \ge \left\lceil \frac{\sum s_i}{C} \right\rceil = \left\lce
 * $B_3: \{0.7\}$ (Total: 0.7)
 * $B_4: \{0.5, 0.4\}$ (Total: 0.9)
 * $B_5: \{0.6\}$ (Total: 0.6)
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Best Fit (BF) Execution Trace</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Best Fit (BF) Execution Trace</summary>
 
 * Place each item in the open bin that minimizes remaining space ($C - \text{fill} - s_i \ge 0$).
 1. Item 1 (0.4): Put in B1. [B1 space: 0.6]
@@ -107,7 +107,7 @@ $$\mathbf{\text{OPT} \ge \left\lceil \frac{\sum s_i}{C} \right\rceil = \left\lce
 * $B_3: \{0.7, 0.1, 0.1\}$ (Total: 0.9)
 * $B_4: \{0.5\}$ (Total: 0.5)
 * $B_5: \{0.6\}$ (Total: 0.6)
-</div>
+</details>
 
 </div>
 
@@ -123,15 +123,15 @@ Execute **First Fit Decreasing (FFD)** and show whether it achieves the optimal 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Sort Items in Non-Increasing Order</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Sort Items in Non-Increasing Order</summary>
 
 Sorting the 10 elements in descending order:
 $$\mathbf{S_{\text{sorted}} = \langle 0.8, \; 0.7, \; 0.6, \; 0.5, \; 0.4, \; 0.4, \; 0.2, \; 0.2, \; 0.1, \; 0.1 \rangle}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Trace First Fit on Sorted Elements</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Trace First Fit on Sorted Elements</summary>
 
 1. Item 1 (0.8): Put in B1. [B1: 0.8, space: 0.2]
 2. Item 2 (0.7): Doesn't fit in B1. Open B2. [B2: 0.7, space: 0.3]
@@ -154,10 +154,10 @@ $$\mathbf{S_{\text{sorted}} = \langle 0.8, \; 0.7, \; 0.6, \; 0.5, \; 0.4, \; 0.
 10. Item 10 (0.1):
    * Scan B1 (0.0), B2 (0.0), B3 (0.0).
    * Fits in **B4**! ($0.9 + 0.1 = 1.0$). [B4: 1.0, space: 0.0]
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: FFD Results and Comparison</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: FFD Results and Comparison</summary>
 
 **FFD Total Bins Used:** **4 Bins (OPTIMAL!).**
 * $B_1: \{0.8, 0.2\}$ (Sum = 1.0)
@@ -167,6 +167,6 @@ $$\mathbf{S_{\text{sorted}} = \langle 0.8, \; 0.7, \; 0.6, \; 0.5, \; 0.4, \; 0.
 
 Every bin achieved **100% capacity utilization ($1.0 / 1.0$)**.
 FFD matched the theoretical lower bound $\text{OPT} = 4$.
-</div>
+</details>
 
 </div>

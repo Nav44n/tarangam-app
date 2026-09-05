@@ -33,8 +33,8 @@ Imagine a company CEO who has a budget of $n$ tasks. The CEO keeps $n$ tasks to 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Decompose the root node (Level 0)</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Decompose the root node (Level 0)</summary>
 **What are we doing?** We draw the top of the tree (Level $i = 0$).  
 **Why are we starting here?** Every recursion begins with the original problem of size $n$.  
 **How do we do it?** The recurrence says $T(n) = 2T(n/2) + n$.  
@@ -51,10 +51,10 @@ At Level 0:
 * Number of nodes: $2^0 = 1$
 * Size of each node's problem: $\frac{n}{2^0} = n$
 * Total work at Level 0: $1 \times n = n$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Expand to Level 1 and Level 2</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Expand to Level 1 and Level 2</summary>
 **What changed from Step 1?** We expand the children nodes by applying the recurrence formula to size $n/2$.  
 **How do we do it?** * For each $T(n/2)$ node, the non-recursive work is $\frac{n}{2}$, and it spawns two subproblems of size $\frac{n/2}{2} = \frac{n}{4}$:
 
@@ -71,10 +71,10 @@ Let us calculate the total work on each level explicitly:
   $$\text{Level 1 Cost} = 2 \times \left(\frac{n}{2}\right) = n$$
 * **Level 2:** There are $2^2 = 4$ nodes. Each node does work $\frac{n}{4}$.  
   $$\text{Level 2 Cost} = 4 \times \left(\frac{n}{4}\right) = n$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Express the general formula for Level $i$</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Express the general formula for Level $i$</summary>
 **What changed from Step 2?** We generalize the pattern to any arbitrary depth $i$ (where $i = 0, 1, 2, \dots$).  
 **How do we manipulate the equation?** * Number of nodes at level $i$: doubles at each tier $\implies 2^i$.
 * Size of subproblem at level $i$: halves at each tier $\implies \frac{n}{2^i}$.
@@ -84,10 +84,10 @@ Multiply (number of nodes) $\times$ (cost per node):
 $$\text{Cost of Level } i = 2^i \times \left(\frac{n}{2^i}\right) = n$$
 
 **Where did this result come from?** The $2^i$ in the numerator cancels the $2^i$ in the denominator! The cost per level is a constant $n$, completely independent of the level index $i$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Determine the height of the tree $h$</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Determine the height of the tree $h$</summary>
 **What are we doing?** We find how many levels exist before the subproblem size shrinks to the base case size $1$.  
 **Why are we doing this?** We need to know how many levels of cost $n$ to add together.  
 **How do we do it?** At the leaf level (call it level $h$), the subproblem size has shrunk down to $1$:
@@ -106,18 +106,18 @@ Thus, the tree levels are indexed from $i = 0$ to $i = \log_2(n)$.
 The total number of levels is:
 
 $$\text{Total Levels} = \text{height} + 1 = \log_2(n) + 1$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Calculate the leaf-level base-case work</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Calculate the leaf-level base-case work</summary>
 **What changed from Step 4?** We count how much work is done exclusively by the base-case leaves at level $h = \log_2 n$.  
 **How do we do it?** * Number of leaves: $2^h = 2^{\log_2 n} = n$.
 * Cost per leaf: $T(1) = 1$.  
 $$\text{Cost of all leaves} = n \times T(1) = n \times 1 = n$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 6: Sum the costs of all levels</div>
+<details class="step-card">
+<summary class="step-badge">Step 6: Sum the costs of all levels</summary>
 **What changed from Step 5?** We sum the cost from level $i = 0$ all the way down to level $i = \log_2 n$.  
 **How do we do it?** Total work $T(n)$ is the sum across all levels:
 
@@ -135,13 +135,13 @@ $$\text{Count} = \log_2 n - 0 + 1 = \log_2 n + 1$$
 Therefore:
 
 $$T(n) = n \cdot (\log_2 n + 1) = n \log_2 n + n$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: State the Asymptotic Complexity</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: State the Asymptotic Complexity</summary>
 **What is the final answer?** $T(n) = \Theta(n \log n)$.  
 **Why does this answer make sense?** The tree has $\log_2 n + 1$ horizontal floors. Every floor performs exactly $n$ operations. Multiplying (levels) $\times$ (work per level) yields $(n) \times (\log_2 n + 1) = \Theta(n \log n)$.
-</div>
+</details>
 
 </div>
 
@@ -159,15 +159,15 @@ Imagine a funnel where almost all water stays at the very top rim, with only a t
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Analyze Node Counts and Subproblem Sizes per Level</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Analyze Node Counts and Subproblem Sizes per Level</summary>
 **What are we doing?** We identify how the tree branches and how the subproblem sizes shrink.  
 **How do we do it?** * **Branching factor:** Each node splits into $3$ children. At level $i$, there are $3^i$ nodes.
 * **Subproblem size:** Divided by $4$ at each step. At level $i$, each node has size $\frac{n}{4^i}$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Calculate the work done at Level $i$</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Calculate the work done at Level $i$</summary>
 **What changed from Step 1?** We calculate the cost of a single node and multiply by the number of nodes at level $i$.  
 **How do we do it?** * Cost function: $f(k) = c \cdot k^2$.
 * Cost of one node at level $i$:
@@ -177,10 +177,10 @@ $$f\left(\frac{n}{4^i}\right) = c \cdot \left(\frac{n}{4^i}\right)^2 = c \cdot \
 * Total cost of Level $i$ (multiply by $3^i$ nodes):
 
 $$\text{Level } i \text{ Cost} = 3^i \times \left( c \cdot \frac{n^2}{16^i} \right) = c \cdot n^2 \cdot \left(\frac{3}{16}\right)^i$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Determine the tree height and leaf-level cost</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Determine the tree height and leaf-level cost</summary>
 **What are we doing?** Find the leaf level $h$ and total leaf work.  
 **How do we do it?** The leaves are reached when the size shrinks to $1$:
 
@@ -194,10 +194,10 @@ $$\text{Leaves} = 3^h = 3^{\log_4 n} = n^{\log_4 3}$$
 Since $\log_4 3 \approx 0.793$:
 
 $$\text{Cost of all leaves} = n^{\log_4 3} \times T(1) = d \cdot n^{\log_4 3} = \Theta(n^{0.793})$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Sum all internal levels using the Geometric Series Formula</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Sum all internal levels using the Geometric Series Formula</summary>
 **What changed from Step 3?** We sum the costs of all levels from $i = 0$ to $h - 1$:
 
 $$\text{Internal Cost} = \sum_{i=0}^{\log_4(n) - 1} c n^2 \left(\frac{3}{16}\right)^i = c n^2 \sum_{i=0}^{\log_4(n) - 1} \left(\frac{3}{16}\right)^i$$
@@ -213,10 +213,10 @@ $$\sum_{i=0}^{\log_4(n) - 1} \left(\frac{3}{16}\right)^i < \sum_{i=0}^{\infty} \
 Therefore:
 
 $$\text{Internal Cost} < cn^2 \left(\frac{16}{13}\right) = \frac{16}{13} c n^2$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Combine Internal Work and Leaf Work</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Combine Internal Work and Leaf Work</summary>
 **What is the final answer?** $T(n) = \Theta(n^2)$.  
 **Why does this answer make sense?** * Total work $= \text{Internal Work} + \text{Leaf Work}$.
 * Internal work $= \Theta(n^2)$.
@@ -224,7 +224,7 @@ $$\text{Internal Cost} < cn^2 \left(\frac{16}{13}\right) = \frac{16}{13} c n^2$$
 * Since $n^2$ grows dramatically faster than $n^{0.793}$, the top-level root work completely dominates the entire tree:
 
 $$T(n) = \Theta(n^2)$$
-</div>
+</details>
 
 </div>
 
@@ -248,8 +248,8 @@ Imagine an uneven tree where the left branches shrink very quickly (dividing by 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Draw the first three levels of the uneven tree</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Draw the first three levels of the uneven tree</summary>
 **What are we doing?** We draw the tree and compute the sum of costs row by row.  
 **How do we do it?** * Level 0: The root does work $n$. It spawns two children of sizes $n/3$ and $2n/3$.
 * Level 1: Left child does work $n/3$. Right child does work $2n/3$.  
@@ -269,10 +269,10 @@ Level 2:       [n/9]    [2n/9]   [2n/9]    [4n/9]       ---> Cost = n
                /   \     /   \   /    \    /    \
               ...  ...  ...  ... ...  ... ...   ...
 ```
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Calculate the Shortest Branch Depth ($h_{\min}$)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Calculate the Shortest Branch Depth ($h_{\min}$)</summary>
 **What are we doing?** We follow the most aggressive division path (always taking the $n/3$ branch) to find when the very first leaf appears.  
 **Why are we starting here?** Once the first leaf is reached, deeper levels will no longer be full, meaning the cost per level will begin to drop below $n$.  
 **How do we do it?** Along the extreme left path, the subproblem size after $k$ steps is $\frac{n}{3^k}$.  
@@ -281,10 +281,10 @@ Set this size to $1$:
 $$\frac{n}{3^{h_{\min}}} = 1 \implies 3^{h_{\min}} = n \implies h_{\min} = \log_3(n)$$
 
 Thus, all levels from $i = 0$ down to $i = \log_3(n)$ are **completely full**, and every single one of those levels costs exactly $n$!
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Calculate the Longest Branch Depth ($h_{\max}$)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Calculate the Longest Branch Depth ($h_{\max}$)</summary>
 **What changed from Step 2?** We follow the slowest division path (always taking the $2n/3$ branch) to find the absolute maximum depth of the tree.  
 **How do we do it?** Along the extreme right path, the size after $k$ steps is $n \cdot \left(\frac{2}{3}\right)^k = \frac{n}{(3/2)^k}$.  
 Set this size to $1$:
@@ -292,10 +292,10 @@ Set this size to $1$:
 $$\frac{n}{(3/2)^{h_{\max}}} = 1 \implies \left(\frac{3}{2}\right)^{h_{\max}} = n \implies h_{\max} = \log_{3/2}(n)$$
 
 Thus, the tree terminates completely at depth $\log_{3/2}(n)$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Establish the Lower Bound ($\Omega$)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Establish the Lower Bound ($\Omega$)</summary>
 **What are we doing?** We sum only the guaranteed full levels to establish a lower bound.  
 **How do we do it?** Every level from $i = 0$ to $i = \log_3(n)$ is 100% complete and costs exactly $n$:
 
@@ -304,10 +304,10 @@ $$T(n) \ge \sum_{i=0}^{\log_3(n)} n = n \cdot (\log_3(n) + 1)$$
 Using the base-change formula for logarithms $\log_3(n) = \frac{\log_2 n}{\log_2 3}$:
 
 $$T(n) \ge \frac{1}{\log_2 3} n \log_2 n \implies T(n) = \Omega(n \log n)$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Establish the Upper Bound ($O$)</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Establish the Upper Bound ($O$)</summary>
 **What changed from Step 4?** Beyond level $\log_3(n)$, leaves start terminating, so levels cost *strictly less* than $n$.  
 **How do we do it?** If we pretend every level all the way to the maximum depth $h_{\max}$ were completely full and cost $n$, we obtain an upper bound:
 
@@ -316,17 +316,17 @@ $$T(n) \le \sum_{i=0}^{\log_{3/2}(n)} n = n \cdot (\log_{3/2}(n) + 1)$$
 Using the base-change formula $\log_{3/2}(n) = \frac{\log_2 n}{\log_2(1.5)}$:
 
 $$T(n) \le \frac{1}{\log_2(1.5)} n \log_2 n \implies T(n) = O(n \log n)$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Combine into Big-$\Theta$ Conclusion</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Combine into Big-$\Theta$ Conclusion</summary>
 **What is the final answer?** $T(n) = \Theta(n \log n)$.  
 **Why does this answer make sense?** * Lower bound floor: $\Omega(n \log_3 n) = \Omega(n \log n)$.
 * Upper bound ceiling: $O(n \log_{3/2} n) = O(n \log n)$.
 * Since the floor and ceiling differ only by a constant ratio $\left(\frac{\log_2 3}{\log_2(1.5)}\right)$, the function is tightly bounded:
 
 $$T(n) = \Theta(n \log n)$$
-</div>
+</details>
 
 </div>
 
@@ -348,8 +348,8 @@ Think of unwrapping nested Russian nesting dolls. You open the outermost doll $T
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Perform the first three unrollings</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Perform the first three unrollings</summary>
 **What are we doing?** We repeatedly substitute the definition of $T(\dots)$ into itself.  
 **Why are we starting here?** Seeing 3 consecutive substitutions reveals the evolving mathematical pattern.  
 **How do we do it?** * Base formula: $T(n) = T(n - 1) + 2n$
@@ -361,20 +361,20 @@ Think of unwrapping nested Russian nesting dolls. You open the outermost doll $T
   $$T(n) = T(n - 3) + 2(n - 2) + 2(n - 1) + 2n$$
 * **3rd Unrolling:** Replace $T(n - 3)$ with $[T(n - 4) + 2(n - 3)]$:  
   $$T(n) = T(n - 4) + 2(n - 3) + 2(n - 2) + 2(n - 1) + 2n$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Express the pattern at iteration $k$</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Express the pattern at iteration $k$</summary>
 **What changed from Step 1?** We replace the specific step numbers ($1, 2, 3$) with an arbitrary variable $k$.  
 **How do we manipulate the equation?** Look at the indices after $k$ substitutions:
 * The subproblem is size $n - k$.
 * The sum contains terms starting from $2(n - (k - 1))$ up to $2n$.
 
 $$T(n) = T(n - k) + \sum_{j=0}^{k - 1} 2(n - j)$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Solve for the base case iteration $k$</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Solve for the base case iteration $k$</summary>
 **What are we doing?** We find the exact value of $k$ that reaches the base case $T(0)$.  
 **How do we do it?** We set the subproblem argument equal to the base case input:
 
@@ -383,10 +383,10 @@ $$n - k = 0 \implies k = n$$
 Substitute $k = n$ into our general formula from Step 2:
 
 $$T(n) = T(0) + \sum_{j=0}^{n - 1} 2(n - j)$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Evaluate the summation algebraically</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Evaluate the summation algebraically</summary>
 **What changed from Step 3?** We plug in $T(0) = 0$ and evaluate the arithmetic series.  
 **How do we do it?** Write out the terms of the sum $\sum_{j=0}^{n - 1} 2(n - j)$:
 * For $j = 0$: $2n$
@@ -403,13 +403,13 @@ $$T(n) = 2 \cdot [1 + 2 + 3 + \dots + n]$$
 Substitute Gauss's sum formula $\frac{n(n + 1)}{2}$:
 
 $$T(n) = 2 \cdot \left[ \frac{n(n + 1)}{2} \right] = n(n + 1) = n^2 + n$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: State Asymptotic Complexity</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: State Asymptotic Complexity</summary>
 **What is the final answer?** $T(n) = n^2 + n = \Theta(n^2)$.  
 **Why does this answer make sense?** The unrolling process expands into an arithmetic sequence with $n$ terms where the average term has magnitude $n$. Multiplying (number of terms) $\times$ (average value) produces $n \times n = n^2$.
-</div>
+</details>
 
 </div>
 
@@ -425,33 +425,33 @@ Here, each step doubles the number of subproblems but adds only a fixed flat cos
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Perform repeated substitutions</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Perform repeated substitutions</summary>
 **What are we doing?** We substitute $T(n/2)$ into the recurrence equation.  
 **How do we do it?** * Base equation: $T(n) = 2T(n/2) + c$
 * **1st Unrolling:** Replace $T(n/2)$ with $[2T(n/4) + c]$:  
   $$T(n) = 2[2T(n/4) + c] + c = 4T(n/4) + 2c + c = 2^2 T(n/2^2) + c(2^1 + 2^0)$$
 * **2nd Unrolling:** Replace $T(n/4)$ with $[2T(n/8) + c]$:  
   $$T(n) = 4[2T(n/8) + c] + 2c + c = 8T(n/8) + 4c + 2c + c = 2^3 T(n/2^3) + c(2^2 + 2^1 + 2^0)$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Express the state at step $k$</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Express the state at step $k$</summary>
 **What changed from Step 1?** Generalize the powers of 2 for step $k$:
 
 $$T(n) = 2^k T\left(\frac{n}{2^k}\right) + c \sum_{j=0}^{k - 1} 2^j$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Reach the base case size $1$</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Reach the base case size $1$</summary>
 **What are we doing?** Set $\frac{n}{2^k} = 1 \implies 2^k = n \implies k = \log_2 n$.  
 Substitute $2^k = n$ and $k = \log_2 n$:
 
 $$T(n) = n \cdot T(1) + c \sum_{j=0}^{\log_2(n) - 1} 2^j$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Solve the finite geometric series</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Solve the finite geometric series</summary>
 **What changed from Step 3?** We evaluate the sum $\sum_{j=0}^{\log_2(n) - 1} 2^j$.  
 **Where did this formula come from?** The standard finite sum of powers of 2:
 
@@ -464,14 +464,14 @@ $$\sum_{j=0}^{\log_2(n) - 1} 2^j = 2^{\log_2 n} - 1 = n - 1$$
 Substitute this back into our equation:
 
 $$T(n) = n \cdot d + c(n - 1) = (d + c)n - c$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: State Asymptotic Complexity</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: State Asymptotic Complexity</summary>
 **What is the final answer?** $T(n) = \Theta(n)$.  
 **Why does this answer make sense?** The total cost is a linear combination $(d + c)n - c$, which has leading term $n$. Thus:
 
 $$T(n) = \Theta(n)$$
-</div>
+</details>
 
 </div>

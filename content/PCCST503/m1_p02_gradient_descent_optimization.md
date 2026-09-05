@@ -42,8 +42,8 @@ Imagine you are blindfolded on a foggy mountain in the dark, trying to reach the
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Understand Data, Initial Weights, and Cost Function</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Understand Data, Initial Weights, and Cost Function</summary>
 
 **What are we doing?** Writing down the training examples, initial weights, and the mathematical formula for measuring model error.
 
@@ -65,10 +65,10 @@ Here $m = 3$, so the denominator is $2m = 2 \times 3 = 6$:
 $$J(\theta_0, \theta_1) = \frac{1}{6} \sum_{i=1}^{3} \big(h_\theta(x^{(i)}) - y^{(i)}\big)^2$$
 
 **Where did this formula/concept come from?** Gauss and Legendre's principle of least squares. The extra $\frac{1}{2}$ factor is introduced so that when we take the derivative with respect to the parameters, the power of $2$ cancels out cleanly ($2 \times \frac{1}{2} = 1$).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Calculate the Initial Cost J(0.0, 0.0)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Calculate the Initial Cost J(0.0, 0.0)</summary>
 
 **What changed from Step 1?** We have our cost equation. Now we plug in our initial predictions to establish a baseline error value.
 
@@ -88,10 +88,10 @@ Multiply by $\frac{1}{2m} = \frac{1}{6}$:
 $$J(0.0, 0.0) = \frac{14.0}{6} = \frac{7}{3} \approx 2.3333$$
 
 Our baseline cost at the start of training is **$2.3333$**.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Epoch 1 — Derive the Gradient Formulas</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Epoch 1 — Derive the Gradient Formulas</summary>
 
 **What changed from Step 2?** We know our starting error. Now we compute the direction of steepest ascent by calculating partial derivatives.
 
@@ -112,10 +112,10 @@ Our baseline cost at the start of training is **$2.3333$**.
    $$\frac{\partial J}{\partial \theta_1} = \frac{1}{m} \sum_{i=1}^{m} \big(h_\theta(x^{(i)}) - y^{(i)}\big) \cdot x^{(i)}$$
 
 Notice how the $2$ from the exponent cancelled with the $\frac{1}{2}$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Epoch 1 — Compute Gradients Numerically</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Epoch 1 — Compute Gradients Numerically</summary>
 
 **What changed from Step 3?** We have the formulas. Now we insert our numbers for Epoch 1.
 
@@ -134,10 +134,10 @@ Notice how the $2$ from the exponent cancelled with the $\frac{1}{2}$.
    Sum the products:
    $$\sum_{i=1}^{3} \big(h_\theta(x^{(i)}) - y^{(i)}\big) \cdot x^{(i)} = (-1.0) + (-6.0) + (-6.0) = -13.0$$
    $$\frac{\partial J}{\partial \theta_1} = \frac{1}{3} \times (-13.0) = -\frac{13}{3} \approx -4.3333$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Epoch 1 — Perform Simultaneous Parameter Updates</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Epoch 1 — Perform Simultaneous Parameter Updates</summary>
 
 **What changed from Step 4?** We have our gradients: $\frac{\partial J}{\partial \theta_0} = -2.0$ and $\frac{\partial J}{\partial \theta_1} = -\frac{13}{3}$. Now we update both weights.
 
@@ -157,10 +157,10 @@ with $\alpha = 0.1$.
 
 Our model parameters after Epoch 1 are:
 $$\theta_0^{(1)} = 0.2,\quad \theta_1^{(1)} = \frac{13}{30} \approx 0.4333$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 6: Epoch 1 — Verify Loss Reduction J(θ₀⁽¹⁾, θ₁⁽¹⁾)</div>
+<details class="step-card">
+<summary class="step-badge">Step 6: Epoch 1 — Verify Loss Reduction J(θ₀⁽¹⁾, θ₁⁽¹⁾)</summary>
 
 **What changed from Step 5?** We have new parameters. Now we calculate the new cost to confirm the model improved.
 
@@ -184,10 +184,10 @@ $$\theta_0^{(1)} = 0.2,\quad \theta_1^{(1)} = \frac{13}{30} \approx 0.4333$$
    $$J(0.2, 0.4333) = \frac{1}{6} \times \frac{371}{90} = \frac{371}{540} \approx \mathbf{0.6870}$$
 
 **Check:** Cost dropped from $2.3333 \to 0.6870$ (a $70.5\%$ reduction in error after a single epoch).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 7: Epoch 2 — Compute Predictions and Gradients</div>
+<details class="step-card">
+<summary class="step-badge">Step 7: Epoch 2 — Compute Predictions and Gradients</summary>
 
 **What changed from Step 6?** Epoch 1 is complete. Now we repeat the process for Epoch 2 starting from $\theta_0^{(1)} = 0.2$ and $\theta_1^{(1)} = \frac{13}{30}$.
 
@@ -209,10 +209,10 @@ $$\theta_0^{(1)} = 0.2,\quad \theta_1^{(1)} = \frac{13}{30} \approx 0.4333$$
    Sum the weighted errors:
    $$\sum_{i=1}^{3} e_i \cdot x^{(i)} = \frac{-11 - 116 - 45}{30} = -\frac{172}{30} \approx -5.7333$$
    $$\frac{\partial J}{\partial \theta_1} = \frac{1}{3} \times \left(-\frac{172}{30}\right) = -\frac{172}{90} = -\frac{86}{45} \approx \mathbf{-1.9111}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 8: Epoch 2 — Update Parameters to Obtain θ₀⁽²⁾ and θ₁⁽²⁾</div>
+<details class="step-card">
+<summary class="step-badge">Step 8: Epoch 2 — Update Parameters to Obtain θ₀⁽²⁾ and θ₁⁽²⁾</summary>
 
 **What changed from Step 7?** We computed the new gradients: $\frac{\partial J}{\partial \theta_0} \approx -0.9333$ and $\frac{\partial J}{\partial \theta_1} \approx -1.9111$.
 
@@ -229,10 +229,10 @@ $$\theta_0^{(1)} = 0.2,\quad \theta_1^{(1)} = \frac{13}{30} \approx 0.4333$$
 
 Our updated weights after Epoch 2 are:
 $$\theta_0^{(2)} \approx 0.2933,\quad \theta_1^{(2)} \approx 0.6244$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 9: Epoch 2 — Calculate Updated Cost J(θ₀⁽²⁾, θ₁⁽²⁾)</div>
+<details class="step-card">
+<summary class="step-badge">Step 9: Epoch 2 — Calculate Updated Cost J(θ₀⁽²⁾, θ₁⁽²⁾)</summary>
 
 **What changed from Step 8?** We updated our weights to $(0.2933, 0.6244)$. Now we verify that the cost continues to decrease.
 
@@ -256,10 +256,10 @@ $$\theta_0^{(2)} \approx 0.2933,\quad \theta_1^{(2)} \approx 0.6244$$
    $$J(0.2933, 0.6244) \approx \frac{2.1598}{6} \approx \mathbf{0.3600}$$
 
 **Check:** Cost dropped from $0.6870 \to 0.3600$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary of Two-Epoch Optimization Trace</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary of Two-Epoch Optimization Trace</summary>
 
 **What is the final answer?** The parameter trajectory and cost progression across both epochs:
 
@@ -270,7 +270,7 @@ $$\theta_0^{(2)} \approx 0.2933,\quad \theta_1^{(2)} \approx 0.6244$$
 | **2** | $0.2933$ | $0.6244$ | — | — | $0.3600$ | $-47.6\%$ |
 
 **Why does this answer make sense?** As the weights move toward the optimal solution, the predictions get closer to the true targets, so the errors shrink. Smaller errors make the gradients smaller (from $-4.33 \to -1.91$), which naturally reduces the step size as the model approaches the minimum.
-</div>
+</details>
 
 </div>
 
@@ -318,8 +318,8 @@ Imagine you are adjusting the water temperature in the shower:
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Understand the Contraction Factor (1 - 4α)</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Understand the Contraction Factor (1 - 4α)</summary>
 
 **What are we doing?** Finding the recurrence multiplier that dictates how $\theta$ evolves from one step to the next.
 
@@ -341,10 +341,10 @@ $$0 < \alpha < \frac{2}{4} \implies \mathbf{0 < \alpha < 0.5}$$
 - If $\alpha > 0.5$: The multiplier $|1 - 4\alpha| > 1$, so the distance grows exponentially on every step (Divergence).
 
 **Where did this formula/concept come from?** Fixed-point iteration and stability analysis of discrete-time linear dynamical systems.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Case A — α is Too Small (α = 0.01)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Case A — α is Too Small (α = 0.01)</summary>
 
 **What changed from Step 1?** We test our first concrete learning rate: $\alpha = 0.01$.
 
@@ -360,10 +360,10 @@ $$0 < \alpha < \frac{2}{4} \implies \mathbf{0 < \alpha < 0.5}$$
    - Iteration 3: $\theta^{(3)} = 0.96 \times 9.2160 = \mathbf{8.8474}$
 
 **Observation:** After 3 full iterations, $\theta$ has only moved from $10.0$ down to $8.85$. It will take roughly $100$ steps just to get close to the target $\theta^* = 0$. The descent is safe, but computationally slow.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Case B — α is Well-Tuned (α = 0.25)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Case B — α is Well-Tuned (α = 0.25)</summary>
 
 **What changed from Step 2?** We now test an optimal learning rate: $\alpha = 0.25$.
 
@@ -379,10 +379,10 @@ $$0 < \alpha < \frac{2}{4} \implies \mathbf{0 < \alpha < 0.5}$$
    - Iteration 3: $\theta^{(3)} = 0.0$
 
 **Observation:** Because $1 - 4\alpha = 0$, the algorithm lands directly on the exact minimum $\theta^* = 0$ on the very first step. While real-world high-dimensional loss surfaces are rarely this simple, a well-tuned $\alpha$ drives the error down efficiently without unnecessary oscillation.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Case C — α is Too Large / Divergent (α = 0.60)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Case C — α is Too Large / Divergent (α = 0.60)</summary>
 
 **What changed from Step 3?** We test an unstable learning rate: $\alpha = 0.60$, which violates our stability condition $\alpha < 0.5$.
 
@@ -407,10 +407,10 @@ $$0 < \alpha < \frac{2}{4} \implies \mathbf{0 < \alpha < 0.5}$$
    - After Step 3: $J(-27.44) = 2(-27.44)^2 = 1{,}505.90$
 
 The cost is diverging toward infinity ($J \to \infty$).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary of Learning Rate Regimes</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary of Learning Rate Regimes</summary>
 
 **What is the final answer?** The behavior of Gradient Descent is governed by the multiplier $(1 - \alpha \cdot \text{curvature})$:
 
@@ -421,7 +421,7 @@ The cost is diverging toward infinity ($J \to \infty$).
 | **Too Large** | $0.60$ | $-1.40$ | $10 \to -14 \to +19.6 \to -27.4$ | Bounces, explodes, and diverges to $\infty$ |
 
 **Why does this answer make sense?** The gradient tells us the slope at our current point, not how far the slope continues downward. If we take a step that is too large, we step completely over the valley and land higher up on the opposite ridge. Taking another step based on the even steeper slope on that ridge results in an even larger overshoot, triggering an explosive feedback loop.
-</div>
+</details>
 
 </div>
 

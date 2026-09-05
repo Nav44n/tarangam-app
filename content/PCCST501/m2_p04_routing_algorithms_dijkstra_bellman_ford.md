@@ -32,8 +32,8 @@ Think of routing algorithms like planning a road trip:
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Define Mathematical Notation and Initialization Rules</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Define Mathematical Notation and Initialization Rules</summary>
 
 **What are we doing?** Establishing the three foundational state variables used in Dijkstra's algorithm.
 
@@ -47,10 +47,10 @@ $$D(m), p(m)$$
 *(Example: "$2, u$" means the path to this node currently costs $2$, and the packet steps directly from $u$ to get there).*
 
 **Where did this formula/concept come from?** Edsger W. Dijkstra (1959), *"A Note on Two Problems in Connexion with Graphs"*. It is the classic greedy algorithm for the single-source shortest path problem on graphs with non-negative edge weights.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Initialization Step (Step 0)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Initialization Step (Step 0)</summary>
 
 **What changed from Step 1?** We have our definitions. Now we place our source node $u$ into the known set $N'$ and evaluate all its direct immediate neighbors.
 
@@ -80,10 +80,10 @@ $$N' = \{u\} \quad\big|\quad D(v),p(v) = 2,u \quad\big|\quad D(w),p(w) = 5,u \qu
 Now we find the node not in $N'$ with the absolute smallest $D$:  
 $$\min\{D(v)=2, D(w)=5, D(x)=1, D(y)=\infty, D(z)=\infty\} = D(x) = 1$$  
 Node **$x$** wins! We permanently lock node $x$ into $N'$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Iteration 1 — Expand from Node $x$</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Iteration 1 — Expand from Node $x$</summary>
 
 **What changed from Step 2?** Node $x$ has now been added to $N'$. We can now check if traveling through $x$ provides a faster detour to any remaining unfinalized nodes.
 
@@ -117,10 +117,10 @@ Currently, the cost to reach $x$ is $D(x) = 1$.
 $$D(v) = 2, \quad D(w) = 4, \quad D(y) = 2, \quad D(z) = \infty$$  
 There is a tie between $v$ and $y$ (both have cost $2$). By standard convention, we can break ties arbitrarily; let us choose node **$v$** (or $y$; choosing $y$ produces the exact same final costs). Let us pick **$y$** here because it directly connects to $z$ and opens new avenues.  
 *(Let us lock node **$y$**)*.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Iteration 2 — Expand from Node $y$</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Iteration 2 — Expand from Node $y$</summary>
 
 **What changed from Step 3?** Node $y$ is now permanently added to $N'$. We check whether going through $y$ offers faster routes to $\{v, w, z\}$.
 
@@ -146,10 +146,10 @@ $$N' = \{u, x, y\}$$
 $$D(v) = 2, \quad D(w) = 3, \quad D(z) = 4$$  
 Minimum is $D(v) = 2$.  
 Node **$v$** wins! We lock node $v$ into $N'$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Iteration 3 — Expand from Node $v$</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Iteration 3 — Expand from Node $v$</summary>
 
 **What changed from Step 4?** Node $v$ is now added to $N'$. We check whether paths through $v$ can improve our routes to the remaining nodes $\{w, z\}$.
 
@@ -169,10 +169,10 @@ $$N' = \{u, x, y, v\}$$
 $$D(w) = 3, \quad D(z) = 4$$  
 Minimum is $D(w) = 3$.  
 Node **$w$** wins! We lock node $w$ into $N'$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 6: Iteration 4 & 5 — Finalize Nodes $w$ and $z$</div>
+<details class="step-card">
+<summary class="step-badge">Step 6: Iteration 4 & 5 — Finalize Nodes $w$ and $z$</summary>
 
 **What changed from Step 5?** Node $w$ is locked. Only node $z$ remains unfinalized.
 
@@ -190,10 +190,10 @@ $$N' = \{u, x, y, v, w\}$$
 Node **$z$** is selected with cost $D(z) = 4$.  
 $$N' = \{u, x, y, v, w, z\}$$  
 All 6 nodes are now in $N'$. The algorithm terminates!
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 7: Master Dijkstra Execution Table</div>
+<details class="step-card">
+<summary class="step-badge">Step 7: Master Dijkstra Execution Table</summary>
 
 **What changed from Step 6?** We collect all rows from Step 0 through Step 4 into the standard academic examination table.
 
@@ -209,10 +209,10 @@ All 6 nodes are now in $N'$. The algorithm terminates!
 | **3** | $\{u, x, y, v\}$ | — | $\mathbf{3, y}$ | — | — | $4, y$ |
 | **4** | $\{u, x, y, v, w\}$ | — | — | — | — | $\mathbf{4, y}$ |
 | **Final** | $\{u, x, y, v, w, z\}$ | Locked ($2$) | Locked ($3$) | Locked ($1$) | Locked ($2$) | Locked ($4$) |
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 8: Construct the Shortest Path Tree and Forwarding Table</div>
+<details class="step-card">
+<summary class="step-badge">Step 8: Construct the Shortest Path Tree and Forwarding Table</summary>
 
 **What changed from Step 7?** We trace the predecessor pointers $p(m)$ backwards from each destination to root $u$ to build the routing paths.
 
@@ -249,17 +249,17 @@ Shortest Path Tree Rooted at u:
 | **$y$** | $2$ | $u \to x \to y$ | Link $(u, x)$ |
 | **$w$** | $3$ | $u \to x \to y \to w$ | Link $(u, x)$ |
 | **$z$** | $4$ | $u \to x \to y \to z$ | Link $(u, x)$ |
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Sanity Check and Verification</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Sanity Check and Verification</summary>
 
 **What is the final answer?**
 - Minimal costs from $u$: $D(x)=1$, $D(v)=2$, $D(y)=2$, $D(w)=3$, $D(z)=4$.  
 - All traffic destined for $x, y, w,$ and $z$ exits router $u$ via neighbor $x$. Traffic destined for $v$ exits directly via neighbor $v$.
 
 **Why does this answer make sense?** Even though node $w$ has a direct physical link to $u$ ($c(u,w) = 5$), taking the multi-hop detour through $x$ and $y$ ($u \to x \to y \to w$) only costs $1 + 1 + 1 = 3$. Dijkstra's algorithm discovered that the detour saves $40\%$ of the transmission cost compared to the direct link.
-</div>
+</details>
 
 </div>
 
@@ -289,8 +289,8 @@ Imagine three people standing in a line in a dark tunnel: **Alice ($X$)**, **Bob
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: The Bellman-Ford Equation Defined</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: The Bellman-Ford Equation Defined</summary>
 
 **What are we doing?** Stating and explaining the mathematical formula that governs all distance-vector protocols (such as RIP).
 
@@ -307,10 +307,10 @@ where the min is taken over all immediate physical neighbors $v$ of node $x$.
 - $c(x,v) + d_v(y)$: The total cost of traveling from $x$ to $y$ *if you choose neighbor $v$ as your next hop*.
 
 **Where did this formula/concept come from?** Richard Bellman (1958) and Lester Ford Jr. (1956). Dynamic programming formulation for shortest paths.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Trace Stable Converged State to Destination $X$</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Trace Stable Converged State to Destination $X$</summary>
 
 **What changed from Step 1?** We apply the equation to our linear network $X - Y - Z$ to see what the tables look like when the network is healthy and stable.
 
@@ -327,10 +327,10 @@ where the min is taken over all immediate physical neighbors $v$ of node $x$.
   $$d_Z(X) = \mathbf{2} \quad (\text{Next Hop: } Y)$$  
 
 Both nodes have accurate, stable routing information. Packets from $Z$ travel $Z \to Y \to X$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: The Link Failure Event ($c(X,Y) \to \infty$)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: The Link Failure Event ($c(X,Y) \to \infty$)</summary>
 
 **What changed from Step 2?** At time $t_0$, the cable connecting $X$ and $Y$ is cut.
 
@@ -350,10 +350,10 @@ $$d_Y(X) = \min(\infty, 3) = \mathbf{3}$$
 **The Fatal Error Occurs Here:** Router $Y$ updates its routing table:  
 *"To reach $X$, send the packet to neighbor $Z$ with total cost $3$!"* Node $Y$ does not know that $Z$'s path to $X$ originally depended on routing through $Y$ itself! A **Routing Loop** is now formed between $Y$ and $Z$:  
 $Y$ forwards to $Z$, and $Z$ forwards to $Y$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Step-by-Step Count-to-Infinity Trace</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Step-by-Step Count-to-Infinity Trace</summary>
 
 **What changed from Step 3?** Router $Y$ updated its cost to $3$. Now $Y$ broadcasts its new distance vector to its neighbor $Z$.
 
@@ -382,10 +382,10 @@ $Y$ forwards to $Z$, and $Z$ forwards to $Y$.
 - **Successive Rounds:** The values iterate relentlessly:  
 $$d_Y(X) = 7 \implies d_Z(X) = 8 \implies d_Y(X) = 9 \implies \dots$$  
 This loop continues counting up by $+1$ on every iteration until the cost reaches whatever value the protocol defines as "infinity" (for example, in the RIP protocol, $\infty = 16$). Only after reaching $16$ does the protocol finally declare destination $X$ unreachable!
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: The Poisoned Reverse Solution Explained</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: The Poisoned Reverse Solution Explained</summary>
 
 **What changed from Step 4?** We saw how the loop formed because $Z$ advertised a path to $Y$ that relied on $Y$. Now we introduce the heuristic designed to stop this: **Poisoned Reverse**.
 
@@ -409,10 +409,10 @@ Let us trace what happens when link $(X,Y)$ breaks with Poisoned Reverse enabled
    $$d_Y(X) = \min(\infty, \infty) = \mathbf{\infty}$$  
 4. Router $Y$ immediately discovers that $X$ is completely unreachable!  
    $Y$ does not select $Z$, no loop is formed, and the count-to-infinity problem is stopped on Step 1.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary Comparison between Link-State and Distance-Vector</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary Comparison between Link-State and Distance-Vector</summary>
 
 **What is the final answer?** A side-by-side comparison of the two routing paradigms:
 
@@ -426,7 +426,7 @@ Let us trace what happens when link $(X,Y)$ breaks with Poisoned Reverse enabled
 | **Loop Mitigation** | Not needed (Shortest Path Tree is loop-free by definition). | Split Horizon, Poisoned Reverse, and finite infinity caps ($\infty = 16$). |
 
 **Why does this answer make sense?** Link-State uses complete global visibility to build a single loop-free tree from the top down. Distance-Vector relies on distributed telephone-game gossip from immediate neighbors; without safeguards like Poisoned Reverse, nodes can easily confuse their own reflected echoes for new valid paths.
-</div>
+</details>
 
 </div>
 

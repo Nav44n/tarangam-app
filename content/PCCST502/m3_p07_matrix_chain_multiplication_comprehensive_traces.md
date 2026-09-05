@@ -27,8 +27,8 @@ We solve this by checking small pairs of boxes first (chains of length 2), then 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: The MCM Recurrence Relation</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: The MCM Recurrence Relation</summary>
 
 $$m[i, j] = \begin{cases}
 0 & \text{if } i = j, \\
@@ -37,10 +37,10 @@ $$m[i, j] = \begin{cases}
 
 Base cases ($l = 1$):
 $$m[1, 1] = 0, \quad m[2, 2] = 0, \quad m[3, 3] = 0, \quad m[4, 4] = 0$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Diagonal l = 2 (Chains of Length 2)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Diagonal l = 2 (Chains of Length 2)</summary>
 
 * **Cell $m[1, 2]$ ($A_1 A_2$):** $i = 1, j = 2, k = 1$.
   $$m[1, 2] = m[1, 1] + m[2, 2] + (p_0 \cdot p_1 \cdot p_2) = 0 + 0 + (5 \cdot 10 \cdot 3) = \mathbf{150}$$
@@ -51,10 +51,10 @@ $$m[1, 1] = 0, \quad m[2, 2] = 0, \quad m[3, 3] = 0, \quad m[4, 4] = 0$$
 * **Cell $m[3, 4]$ ($A_3 A_4$):** $i = 3, j = 4, k = 3$.
   $$m[3, 4] = m[3, 3] + m[4, 4] + (p_2 \cdot p_3 \cdot p_4) = 0 + 0 + (3 \cdot 12 \cdot 5) = \mathbf{180}$$
   $s[3, 4] = 3$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Diagonal l = 3 (Chains of Length 3)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Diagonal l = 3 (Chains of Length 3)</summary>
 
 * **Cell $m[1, 3]$ ($A_1 A_2 A_3$):** $i = 1, j = 3$, test $k \in \{1, 2\}$:
   * For $k = 1$: $m[1, 1] + m[2, 3] + (p_0 \cdot p_1 \cdot p_3) = 0 + 360 + (5 \cdot 10 \cdot 12) = 360 + 600 = 960$.
@@ -67,10 +67,10 @@ $$m[1, 1] = 0, \quad m[2, 2] = 0, \quad m[3, 3] = 0, \quad m[4, 4] = 0$$
   * For $k = 3$: $m[2, 3] + m[4, 4] + (p_1 \cdot p_3 \cdot p_4) = 360 + 0 + (10 \cdot 12 \cdot 5) = 360 + 600 = 960$.
   * Minimum: $\min(330, 960) = \mathbf{330}$ at $k = 2$.
   $$\mathbf{m[2, 4] = 330, \quad s[2, 4] = 2}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Diagonal l = 4 (Full Chain m[1, 4])</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Diagonal l = 4 (Full Chain m[1, 4])</summary>
 
 $i = 1, j = 4$, test $k \in \{1, 2, 3\}$:
 * For $k = 1$:
@@ -81,10 +81,10 @@ $i = 1, j = 4$, test $k \in \{1, 2, 3\}$:
   $$m[1, 3] + m[4, 4] + (p_0 \cdot p_3 \cdot p_4) = 330 + 0 + (5 \cdot 12 \cdot 5) = 330 + 300 = \mathbf{630}$$
 * Minimum: $\min(580, 405, 630) = \mathbf{405}$ at $k = 2$.
 $$\mathbf{m[1, 4] = 405, \quad s[1, 4] = 2}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Final Matrices M and S</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Final Matrices M and S</summary>
 
 **Matrix M:**
 
@@ -103,16 +103,16 @@ $$\mathbf{m[1, 4] = 405, \quad s[1, 4] = 2}$$
 | **$2$** | - | $2$ | $2$ |
 | **$3$** | - | - | $3$ |
 
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Reconstruct Optimal Parenthesization</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Reconstruct Optimal Parenthesization</summary>
 
 * Start at $s[1, 4] = 2 \implies (A_1 A_2) \times (A_3 A_4)$.
 * Left prefix $(1, 2)$: $s[1, 2] = 1 \implies (A_1 \times A_2)$.
 * Right postfix $(3, 4)$: $s[3, 4] = 3 \implies (A_3 \times A_4)$.
 * **Optimal Parenthesization:** $\mathbf{((A_1 A_2)(A_3 A_4))}$.
 * **Total Minimum Multiplications:** $\mathbf{405}$.
-</div>
+</details>
 
 </div>

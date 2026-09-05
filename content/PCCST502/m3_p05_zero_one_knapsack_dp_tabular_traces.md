@@ -26,8 +26,8 @@ For every item $i$ and every possible knapsack size $w \in \{0, 1, \dots, W\}$, 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Understand the Recurrence Relation</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Understand the Recurrence Relation</summary>
 
 **Where did the formula come from?** The 0/1 Knapsack Bellman optimality equation:
 
@@ -39,18 +39,18 @@ V[i-1, w] & \text{if } w_i > w \text{ (Item does not fit)}, \\
 
 * $V[i, w]$: Maximum profit achievable using a subset of the first $i$ items with weight capacity $w$.
 * Dimensions of table: $(n+1) \times (W+1) = 5 \times 6 = 30$ cells.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Base Cases (Row 0 and Column 0)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Base Cases (Row 0 and Column 0)</summary>
 
 **What are we doing?** Fill Row 0 ($i = 0$, zero items available) and Column 0 ($w = 0$, zero capacity).
 * For all $w \in \{0, \dots, 5\}$: $V[0, w] = 0$.
 * For all $i \in \{0, \dots, 4\}$: $V[i, 0] = 0$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Fill Row 1 (Item 1: w1 = 2, v1 = 12)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Fill Row 1 (Item 1: w1 = 2, v1 = 12)</summary>
 
 * For $w = 0$: $V[1, 0] = 0$.
 * For $w = 1$: $w_1 (2) > 1 \implies$ Doesn't fit: $V[1, 1] = V[0, 1] = 0$.
@@ -60,10 +60,10 @@ V[i-1, w] & \text{if } w_i > w \text{ (Item does not fit)}, \\
 * For $w = 5$: Fits! $\max(0, 12) = \mathbf{12}$.
 
 Row 1 entries: `[0, 0, 12, 12, 12, 12]`.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Fill Row 2 (Item 2: w2 = 1, v2 = 10)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Fill Row 2 (Item 2: w2 = 1, v2 = 10)</summary>
 
 * For $w = 1$: Fits! $\max(V[1, 1], V[1, 1-1] + 10) = \max(0, 0 + 10) = \mathbf{10}$.
 * For $w = 2$: Fits! $\max(V[1, 2], V[1, 2-1] + 10) = \max(12, 0 + 10) = \mathbf{12}$ (Better to keep Item 1!).
@@ -72,10 +72,10 @@ Row 1 entries: `[0, 0, 12, 12, 12, 12]`.
 * For $w = 5$: Fits! $\max(V[1, 5], V[1, 5-1] + 10) = \max(12, 12 + 10) = \mathbf{22}$.
 
 Row 2 entries: `[0, 10, 12, 22, 22, 22]`.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Fill Row 3 (Item 3: w3 = 3, v3 = 20)</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Fill Row 3 (Item 3: w3 = 3, v3 = 20)</summary>
 
 * For $w = 1$: $w_3 (3) > 1 \implies V[3, 1] = V[2, 1] = \mathbf{10}$.
 * For $w = 2$: $w_3 (3) > 2 \implies V[3, 2] = V[2, 2] = \mathbf{12}$.
@@ -84,10 +84,10 @@ Row 2 entries: `[0, 10, 12, 22, 22, 22]`.
 * For $w = 5$: Fits! $\max(V[2, 5], V[2, 5-3] + 20) = \max(22, V[2, 2] + 20) = \max(22, 12 + 20) = \mathbf{32}$ (Item 1 + Item 3!).
 
 Row 3 entries: `[0, 10, 12, 22, 30, 32]`.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 6: Fill Row 4 (Item 4: w4 = 2, v4 = 15)</div>
+<details class="step-card">
+<summary class="step-badge">Step 6: Fill Row 4 (Item 4: w4 = 2, v4 = 15)</summary>
 
 * For $w = 1$: $w_4 (2) > 1 \implies V[4, 1] = V[3, 1] = \mathbf{10}$.
 * For $w = 2$: Fits! $\max(V[3, 2], V[3, 2-2] + 15) = \max(12, 15) = \mathbf{15}$.
@@ -96,10 +96,10 @@ Row 3 entries: `[0, 10, 12, 22, 30, 32]`.
 * For $w = 5$: Fits! $\max(V[3, 5], V[3, 5-2] + 15) = \max(32, V[3, 3] + 15) = \max(32, 22 + 15) = \mathbf{37}^*$.
 
 Row 4 entries: `[0, 10, 15, 25, 30, 37]`.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 7: The Complete DP Table</div>
+<details class="step-card">
+<summary class="step-badge">Step 7: The Complete DP Table</summary>
 
 | $i$ \ $w$ | $w = 0$ | $w = 1$ | $w = 2$ | $w = 3$ | $w = 4$ | $w = 5$ |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -110,10 +110,10 @@ Row 4 entries: `[0, 10, 15, 25, 30, 37]`.
 | **$i = 4$** ($w=2, v=15$) | 0 | 10 | 15 | 25 | 30 | **37** |
 
 Maximum achievable profit is $V[4, 5] = \mathbf{37}$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 8: Backtracking to Reconstruct Selected Items</div>
+<details class="step-card">
+<summary class="step-badge">Step 8: Backtracking to Reconstruct Selected Items</summary>
 
 1. Start at cell $(4, 5)$: Value $= 37$.
    * Look at cell directly above $(3, 5)$: Value $= 32$.
@@ -134,14 +134,14 @@ Maximum achievable profit is $V[4, 5] = \mathbf{37}$.
    * Since $V[1, 2] \ne V[0, 2]$ ($12 \ne 0$), **Item 1 WAS INCLUDED!**
    * Deduct weight of Item 1 ($w_1 = 2$): New capacity $w = 2 - 2 = 0$.
    * Capacity is 0; trace finishes.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary of Optimal Items</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary of Optimal Items</summary>
 
 * **Optimal Item Subset:** $\{\text{Item 1}, \text{Item 2}, \text{Item 4}\}$
 * **Total Weight:** $w_1 + w_2 + w_4 = 2 + 1 + 2 = \mathbf{5} \le 5$.
 * **Total Value:** $v_1 + v_2 + v_4 = 12 + 10 + 15 = \mathbf{37}$.
-</div>
+</details>
 
 </div>

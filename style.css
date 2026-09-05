@@ -506,21 +506,25 @@ a:hover { text-decoration: underline; }
 details.step-card {
   /* Inherits from .step-card */
 }
-details.step-card summary.step-badge {
+details.step-card summary {
   cursor: pointer;
   user-select: none;
+  list-style: none;
+  outline: none;
 }
-details.step-card summary.step-badge::-webkit-details-marker {
+details.step-card summary::-webkit-details-marker {
   display: none;
 }
-details.step-card summary.step-badge::after {
+details.step-card summary::after {
   content: "▼";
   display: inline-block;
-  margin-left: 4px;
-  font-size: 9px;
+  float: right;
+  font-size: 12px;
   transition: transform 0.2s ease;
+  color: var(--accent);
+  margin-top: 5px;
 }
-details.step-card[open] summary.step-badge::after {
+details.step-card[open] summary::after {
   transform: rotate(-180deg);
 }
 

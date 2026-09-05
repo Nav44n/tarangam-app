@@ -30,8 +30,8 @@ Kruskal's strategy is simple:
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Sort All Edges by Non-Decreasing Weight</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Sort All Edges by Non-Decreasing Weight</summary>
 
 **What are we doing?** We create a sorted list of all $7$ edges in ascending order of their numeric weight.
 
@@ -50,10 +50,10 @@ Kruskal's strategy is simple:
 Initial DSU partition: $\{A\}, \{B\}, \{C\}, \{D\}, \{E\}$.
 Target edge count for MST: $|V| - 1 = 5 - 1 = 4$ edges.
 MST edge set $T = \emptyset$, Total weight = $0$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Evaluate Edge (A, B) with Weight 1</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Evaluate Edge (A, B) with Weight 1</summary>
 
 **What are we doing?** Find the set containing $A$ and the set containing $B$.
 * $\text{Find}(A) = \{A\}$
@@ -62,10 +62,10 @@ MST edge set $T = \emptyset$, Total weight = $0$.
 * **Action:** Accept edge $(A, B)$.
 * **DSU Update:** $\text{Union}(A, B) \implies \{A, B\}, \{C\}, \{D\}, \{E\}$.
 * $T = \{(A, B)\}$, Total weight $= 1$. Edges accepted $= 1 / 4$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Evaluate Edge (B, C) with Weight 2</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Evaluate Edge (B, C) with Weight 2</summary>
 
 * $\text{Find}(B) = \{A, B\}$
 * $\text{Find}(C) = \{C\}$
@@ -73,10 +73,10 @@ MST edge set $T = \emptyset$, Total weight = $0$.
 * **Action:** Accept edge $(B, C)$.
 * **DSU Update:** $\text{Union}(\{A, B\}, \{C\}) \implies \{A, B, C\}, \{D\}, \{E\}$.
 * $T = \{(A, B), (B, C)\}$, Total weight $= 1 + 2 = 3$. Edges accepted $= 2 / 4$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Evaluate Edge (C, D) with Weight 3</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Evaluate Edge (C, D) with Weight 3</summary>
 
 * $\text{Find}(C) = \{A, B, C\}$
 * $\text{Find}(D) = \{D\}$
@@ -84,10 +84,10 @@ MST edge set $T = \emptyset$, Total weight = $0$.
 * **Action:** Accept edge $(C, D)$.
 * **DSU Update:** $\text{Union}(\{A, B, C\}, \{D\}) \implies \{A, B, C, D\}, \{E\}$.
 * $T = \{(A, B), (B, C), (C, D)\}$, Total weight $= 3 + 3 = 6$. Edges accepted $= 3 / 4$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Evaluate Edge (B, D) with Weight 4 (Cycle Rejection!)</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Evaluate Edge (B, D) with Weight 4 (Cycle Rejection!)</summary>
 
 * **What changed from Step 4?** Both endpoints belong to the same component!
 * $\text{Find}(B) = \{A, B, C, D\}$
@@ -96,10 +96,10 @@ MST edge set $T = \emptyset$, Total weight = $0$.
 * **Action:** **REJECT edge $(B, D)$**.
 * DSU state unchanged: $\{A, B, C, D\}, \{E\}$.
 * Edges accepted remains $3 / 4$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 6: Evaluate Edge (D, E) with Weight 5</div>
+<details class="step-card">
+<summary class="step-badge">Step 6: Evaluate Edge (D, E) with Weight 5</summary>
 
 * $\text{Find}(D) = \{A, B, C, D\}$
 * $\text{Find}(E) = \{E\}$
@@ -109,14 +109,14 @@ MST edge set $T = \emptyset$, Total weight = $0$.
 * $T = \{(A, B), (B, C), (C, D), (D, E)\}$.
 * Total weight $= 6 + 5 = 11$. Edges accepted $= 4 / 4$.
 * **Stop condition reached:** Exactly $|V| - 1 = 4$ edges chosen. Remaining edges $(C, E)$ and $(A, C)$ are skipped.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: MST Summary & Verification</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: MST Summary & Verification</summary>
 
 * **Selected Edges:** $\{(A, B), (B, C), (C, D), (D, E)\}$
 * **Total MST Weight:** $1 + 2 + 3 + 5 = \mathbf{11}$.
 * **Verification:** The resulting subgraph connects all 5 vertices with 4 edges and contains zero cycles $\implies$ valid Spanning Tree.
-</div>
+</details>
 
 </div>

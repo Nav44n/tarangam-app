@@ -29,8 +29,8 @@ Imagine you are testing the capacity of an unfamiliar freeway on-ramp with a met
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Define Key Terms and Units</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Define Key Terms and Units</summary>
 
 **What are we doing?** Formally defining the units and control variables before doing any math.
 
@@ -45,10 +45,10 @@ Imagine you are testing the capacity of an unfamiliar freeway on-ramp with a met
 4. **$\text{RTT}$ (Round-Trip Time):** The time duration from when a batch of packets is transmitted until their acknowledgments (ACKs) return back to the sender.
 
 **Where did this formula/concept come from?** Van Jacobson's 1988 Congestion Control paper and RFC 5681 ("TCP Congestion Control").
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Understand the Micro-Rule for Slow Start Growth</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Understand the Micro-Rule for Slow Start Growth</summary>
 
 **What changed from Step 1?** We have defined the variables. Now we look at the exact mathematical rule that the sender's operating system executes every time a single ACK packet arrives during Slow Start.
 
@@ -69,10 +69,10 @@ $$\text{cwnd}_{\text{end}} = \text{cwnd}_{\text{start}} + W = W + W = 2W$$
 Because the window increases by its own size every RTT, the value doubles every single round!
 
 **Where did this formula/concept come from?** RFC 5681 Section 3.1.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Trace Round 1 through Round 4 (Pure Slow Start)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Trace Round 1 through Round 4 (Pure Slow Start)</summary>
 
 **What changed from Step 2?** We now execute the exact numbers starting from $\text{cwnd} = 1\text{ MSS}$ up through Round 4.
 
@@ -110,10 +110,10 @@ Because the window increases by its own size every RTT, the value doubles every 
   - **CRITICAL MILESTONE:** Notice that $\text{cwnd} = 16\text{ MSS}$, which **exactly equals** $\text{ssthresh} = 16\text{ MSS}$!
 
 **Where did this formula/concept come from?** The exponential formula: $\text{cwnd}(k) = \text{cwnd}(0) \times 2^k = 1 \times 2^k$ for round $k$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: The Transition Rule from Slow Start to Congestion Avoidance</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: The Transition Rule from Slow Start to Congestion Avoidance</summary>
 
 **What changed from Step 3?** $\text{cwnd}$ reached $\text{ssthresh} = 16\text{ MSS}$. The sender must now change its behavior.
 
@@ -131,10 +131,10 @@ $$\text{Total increase in 1 RTT} = W \times \left(\frac{1}{W}\text{ MSS}\right) 
 The micro-increments perfectly sum to $+1\text{ MSS}$ per RTT.
 
 **Where did this formula/concept come from?** RFC 5681 Section 3.1: Additive Increase Multiplicative Decrease (AIMD) algorithm.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Trace Round 5 and Round 6 (Congestion Avoidance)</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Trace Round 5 and Round 6 (Congestion Avoidance)</summary>
 
 **What changed from Step 4?** We now trace the next two rounds under the new Congestion Avoidance rules.
 
@@ -164,10 +164,10 @@ The micro-increments perfectly sum to $+1\text{ MSS}$ per RTT.
   - *End of $\text{RTT}_6$: $\text{cwnd} = 18\text{ MSS}$.*
 
 **Where did this formula/concept come from?** The linear equation for Additive Increase: $\text{cwnd}(t) = \text{cwnd}_{\text{initial}} + t$ where $t$ is the number of RTTs spent in Congestion Avoidance.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary Table of Window Evolution</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary Table of Window Evolution</summary>
 
 **What is the final answer?** The round-by-round progression of $\text{cwnd}$ over the first 6 RTTs is:
 
@@ -183,7 +183,7 @@ The micro-increments perfectly sum to $+1\text{ MSS}$ per RTT.
 **Why does this answer make sense?** The growth curve has two distinct phases:  
 1. **Exponential Phase ($\text{RTT } 1 \to 4$):** Window doubles every round ($1 \to 2 \to 4 \to 8 \to 16$) because the link is presumed completely clear and we need to fill the empty bandwidth-delay product as fast as mathematically possible.  
 2. **Linear Phase ($\text{RTT } 5 \to 6$):** Once the historical safe threshold ($\text{ssthresh} = 16$) is reached, the sender switches to linear crawling ($+1\text{ MSS}$ per RTT) to avoid congesting the intermediate bottleneck router.
-</div>
+</details>
 
 </div>
 
@@ -219,8 +219,8 @@ Imagine traffic on a three-lane highway:
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Understand What "3 Duplicate ACKs" Physically Means</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Understand What "3 Duplicate ACKs" Physically Means</summary>
 
 **What are we doing?** Explaining why exactly 3 duplicate ACKs are used to diagnose a lost packet.
 
@@ -238,10 +238,10 @@ Suppose the sender transmits packets $1, 2, 3, 4, 5$.
 **Key Insight:** If the sender receives 3 duplicate ACKs, it proves that at least 3 packets successfully reached the receiver *after* the missing packet! The pipeline is still functioning. Only one packet was lost.
 
 **Where did this formula/concept come from?** RFC 5681: The heuristic choice of $3$ duplicate ACKs prevents premature retransmissions caused by minor out-of-order packet delivery over multi-path internet routing.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Universal Multiplicative Decrease Rule for ssthresh</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Universal Multiplicative Decrease Rule for ssthresh</summary>
 
 **What changed from Step 1?** We understand the loss signal. Now we calculate how both protocols set the new threshold ($\text{ssthresh}$).
 
@@ -257,10 +257,10 @@ $$\text{ssthresh}_{\text{new}} = \left\lfloor \frac{17}{2} \right\rfloor = \lflo
 *(Note: Both TCP Tahoe and TCP Reno use this exact same formula for setting $\text{ssthresh}$).*
 
 **Where did this formula/concept come from?** Van Jacobson's principle of Multiplicative Decrease to ensure network stability and avoid congestion collapse.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Analyze Event A (3 Duplicate ACKs) — Tahoe vs. Reno Reaction</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Analyze Event A (3 Duplicate ACKs) — Tahoe vs. Reno Reaction</summary>
 
 **What changed from Step 2?** We know $\text{ssthresh}_{\text{new}} = 8\text{ MSS}$. Now we calculate the new $\text{cwnd}$ and state mode for both protocols under Event A.
 
@@ -283,10 +283,10 @@ $$\text{ssthresh}_{\text{new}} = \left\lfloor \frac{17}{2} \right\rfloor = \lflo
   4. Enters **Congestion Avoidance** directly (skipping Slow Start completely!).
 
 **Where did this formula/concept come from?** RFC 2001 and RFC 2581 (TCP Reno Fast Recovery standard).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Analyze Event B (Retransmission Timeout) — Tahoe vs. Reno Reaction</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Analyze Event B (Retransmission Timeout) — Tahoe vs. Reno Reaction</summary>
 
 **What changed from Step 3?** We analyzed the mild loss event (3 Duplicate ACKs). Now we examine the severe loss event: a complete **Retransmission Timeout (RTO)**.
 
@@ -303,10 +303,10 @@ When a timer expires, zero ACKs have returned for an entire RTO duration. The pi
 3. **Next State (both protocols):** Both enter **Slow Start** mode, growing exponentially from $1\text{ MSS}$ until they hit the new threshold of $8\text{ MSS}$, after which they grow linearly.
 
 **Where did this formula/concept come from?** RFC 6298 and RFC 5681: An RTO event represents severe network failure, demanding a total reset to single-packet injection.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Tabular Comparison and Pipeline Analysis</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Tabular Comparison and Pipeline Analysis</summary>
 
 **What changed from Step 4?** We now assemble all results into an exhaustive reference matrix and mathematically demonstrate why Reno achieves superior throughput.
 
@@ -328,10 +328,10 @@ Look at what happens in the next RTT after 3 Duplicate ACKs:
 - **Tahoe** sends only **$1$ single packet**. The pipeline is emptied, and the sender must wait through multiple RTT rounds ($1 \to 2 \to 4 \to 8$) just to get back to where it should be. The link sits idle and wasted.  
 - **Reno** immediately sends **$8$ packets**. The pipeline stays half full. Reno avoids the multi-round latency penalty of Slow Start and begins linear probing ($8 \to 9 \to 10 \dots$) right away.  
 This difference saves hundreds of milliseconds of idle stall time on modern high-speed broadband connections.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Complete Rule Summary for Beginners</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Complete Rule Summary for Beginners</summary>
 
 **What is the final answer?**
 - **Slow Start Growth:** Increases by $+1\text{ MSS}$ per received ACK $\implies$ doubles every round ($\text{cwnd} \leftarrow 2 \times \text{cwnd}$).  
@@ -343,7 +343,7 @@ This difference saves hundreds of milliseconds of idle stall time on modern high
   - **Both Tahoe & Reno:** $\text{ssthresh} = \lfloor \text{cwnd}/2 \rfloor$, $\text{cwnd} = 1\text{ MSS}$, enter **Slow Start**.
 
 **Why does this answer make sense?** Congestion control follows the principle of **conserving packet flow**. If duplicate ACKs arrive, data is still flowing through the pipes, so we only need to throttle back gently (Reno's Fast Recovery). But if a timeout occurs, all flow has ceased, requiring an immediate shutdown and careful reboot (Slow Start from $1\text{ MSS}$).
-</div>
+</details>
 
 </div>
 

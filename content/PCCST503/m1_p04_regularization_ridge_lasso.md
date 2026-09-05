@@ -25,8 +25,8 @@ Imagine you are packing luggage for a flight. The airline wants to discourage he
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Understand the Baseline OLS Cost Function</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Understand the Baseline OLS Cost Function</summary>
 
 **What are we doing?** We are writing down the mathematical equation for the model's error *before* we add any penalties.
 
@@ -43,10 +43,10 @@ $$J_{\text{ols}}(w) = \frac{1}{2}(w - 4.0)^2$$
 If we pick $w = 4.0$, the cost is $\frac{1}{2}(4.0 - 4.0)^2 = 0$. The model has zero error!
 
 **Where did this formula/concept come from?** The standard Mean Squared Error formula. The $\frac{1}{2}$ is a standard mathematical convention used in machine learning so that when we take a derivative (which brings down a multiplier of $2$), the fractions cancel out cleanly.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Formulate the Ridge (L2) Cost Function</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Formulate the Ridge (L2) Cost Function</summary>
 
 **What changed from Step 1?** We are now modifying the error equation by adding the Ridge (L2) penalty.
 
@@ -62,10 +62,10 @@ $$J_{\text{ridge}}(w) = \frac{1}{2}(w - 4.0)^2 + \frac{\lambda}{2}w^2$$
 - If $\lambda$ is large, the model will desperately try to make $w$ smaller to avoid a massive penalty score.
 
 **Where did this formula/concept come from?** "L2" refers to the $L_2$-norm (Euclidean distance) in mathematics, which involves squaring the values.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Solve for the Optimal Ridge Weight (w_ridge)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Solve for the Optimal Ridge Weight (w_ridge)</summary>
 
 **What changed from Step 2?** We have the formula for the cost. Now we need to find the specific value of $w$ that produces the absolute lowest cost (the bottom of the U-shaped curve).
 
@@ -86,10 +86,10 @@ $$J_{\text{ridge}}(w) = \frac{1}{2}(w - 4.0)^2 + \frac{\lambda}{2}w^2$$
    $$w_{\text{ridge}} = \frac{4.0}{1 + \lambda}$$
 
 **Where did this formula/concept come from?** In calculus, the bottom of a smooth convex curve is flat. A flat line has a slope of $0$. By setting the derivative to $0$, we pinpoint the exact minimum.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Compute Ridge Weights for Specific λ Values</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Compute Ridge Weights for Specific λ Values</summary>
 
 **What changed from Step 3?** We found the closed-form shrinkage equation: $w_{\text{ridge}} = \frac{4.0}{1 + \lambda}$. Now we plug in actual numbers.
 
@@ -102,10 +102,10 @@ $$J_{\text{ridge}}(w) = \frac{1}{2}(w - 4.0)^2 + \frac{\lambda}{2}w^2$$
 - **For $\lambda = 9$:** $w_{\text{ridge}} = \frac{4.0}{1 + 9} = \frac{4.0}{10} = \mathbf{0.4}$
 
 *Notice the pattern!* Even if $\lambda$ becomes one million ($\lambda = 1{,}000{,}000$), the math becomes $\frac{4.0}{1{,}000{,}001} \approx 0.000004$. It shrinks closer and closer to $0$, but mathematically, division by $(1 + \lambda)$ will **never** let it hit exactly $0.0$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Formulate the Lasso (L1) Cost Function</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Formulate the Lasso (L1) Cost Function</summary>
 
 **What changed from Step 4?** We are setting aside the L2 (squared) penalty and testing the L1 (absolute value) penalty instead.
 
@@ -118,10 +118,10 @@ We add this to our baseline OLS cost function:
 $$J_{\text{lasso}}(w) = \frac{1}{2}(w - 4.0)^2 + \lambda |w|$$
 
 **Where did this formula/concept come from?** "L1" refers to the $L_1$-norm (Manhattan distance), which uses absolute values instead of squares. The absolute value function creates a sharp "V" shape at $0$, unlike the smooth "U" shape of a square.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 6: Derive the Lasso Soft-Thresholding Operator</div>
+<details class="step-card">
+<summary class="step-badge">Step 6: Derive the Lasso Soft-Thresholding Operator</summary>
 
 **What changed from Step 5?** We need to find the minimum of this new Lasso cost function.
 
@@ -142,10 +142,10 @@ $$J_{\text{lasso}}(w) = \frac{1}{2}(w - 4.0)^2 + \lambda |w|$$
    This translates to: *"Take the original weight ($4.0$), subtract the penalty ($\lambda$). If the result falls below $0$, snap it to exactly $0$."*
 
 **Where did this formula/concept come from?** Subgradient optimization of convex, non-smooth functions. The sharp corner prevents the slope from smoothly crossing the zero line, creating an attractor that forces coefficients to exactly zero.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 7: Compute Lasso Weights for Specific λ Values</div>
+<details class="step-card">
+<summary class="step-badge">Step 7: Compute Lasso Weights for Specific λ Values</summary>
 
 **What changed from Step 6?** We have our Lasso formula: $w_{\text{lasso}} = \max(0, 4.0 - \lambda)$. Now we calculate.
 
@@ -158,10 +158,10 @@ $$J_{\text{lasso}}(w) = \frac{1}{2}(w - 4.0)^2 + \lambda |w|$$
 - **For $\lambda = 6$:** $w_{\text{lasso}} = \max(0, 4.0 - 6) = \max(0, -2.0) = \mathbf{0.0}$ *(Trapped at zero!)*
 
 **Where did this formula/concept come from?** The $\max(0, \text{value})$ function simply returns whichever number is higher. If the subtraction results in a negative number, $0$ is higher, so it outputs $0$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary of Ridge vs. Lasso Shrinkage</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary of Ridge vs. Lasso Shrinkage</summary>
 
 **What is the final answer?**
 - **Ridge (L2) weights** decay towards zero multiplicatively: $4.0 \rightarrow 2.0 \rightarrow 1.0 \rightarrow 0.4$. They approach $0$ asymptotically, but never hit $0.0$.
@@ -173,7 +173,7 @@ $$J_{\text{lasso}}(w) = \frac{1}{2}(w - 4.0)^2 + \lambda |w|$$
 | **Lasso (L1)** | $\max(0, w_{\text{ols}} - \lambda)$ | $3.0$ | $2.0$ | **$0.0$** | **Yes (sparse weights)** |
 
 **Why does this answer make sense?** Ridge divides the weight, while Lasso subtracts from the weight. If you keep dividing a positive number, it gets infinitesimally small but never reaches zero. If you keep subtracting from a positive number, it quickly hits zero. Because Lasso hits exactly $0.0$, it effectively **deletes** uninformative features from the model entirely. This is called **Automated Feature Selection**.
-</div>
+</details>
 
 </div>
 
@@ -208,8 +208,8 @@ Imagine an expanding puddle of water (representing your model's error) spreading
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: The L2 Ridge Constraint Boundary (The Circle)</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: The L2 Ridge Constraint Boundary (The Circle)</summary>
 
 **What are we doing?** Visualizing the Ridge penalty in a 2-dimensional space ($w_1$ on the x-axis, $w_2$ on the y-axis).
 
@@ -222,10 +222,10 @@ The equation $x^2 + y^2 = r^2$ is the equation for a **Circle**.
 Therefore, the Ridge constraint boundary is a smooth, perfectly round circle centered at zero $(0,0)$. There are absolutely no sharp corners on this boundary.
 
 **Where did this formula/concept come from?** The Karush-Kuhn-Tucker (KKT) and Lagrangian dual formulation of constrained quadratic optimization.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: The L1 Lasso Constraint Boundary (The Diamond)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: The L1 Lasso Constraint Boundary (The Diamond)</summary>
 
 **What changed from Step 1?** We are switching the squared penalty to an absolute value penalty.
 
@@ -242,10 +242,10 @@ Crucially, look at where the sharp, pointy corners of this diamond lie:
 - Left corner: $(-C, 0) \implies w_2$ is exactly $0$.
 
 Every single sharp corner of the Lasso diamond sits directly on a coordinate axis, forcing one of the feature weights to be exactly zero.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: The Tangency Proof (Why Contours Hit the Corners)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: The Tangency Proof (Why Contours Hit the Corners)</summary>
 
 **What changed from Step 2?** We have drawn our constraints (a Circle and a Diamond). Now we add the expanding "error puddle" (the cost function contours).
 
@@ -260,10 +260,10 @@ Every single sharp corner of the Lasso diamond sits directly on a coordinate axi
 6. Hitting a corner means landing on an axis, which guarantees one weight is exactly $0.0$.
 
 **Where did this formula/concept come from?** Robert Tibshirani's seminal 1996 paper introducing the Lasso to explain its feature selection properties.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: The Bias-Variance Tradeoff</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: The Bias-Variance Tradeoff</summary>
 
 **What changed from Step 3?** We understand the math and the geometry. Now we connect this to core machine learning theory.
 
@@ -280,10 +280,10 @@ By carefully tuning $\lambda$, we achieve optimal balance:
 
 **Where did this formula/concept come from?** The bias-variance decomposition of mean squared error:
 $$\mathbb{E}[\text{Error}] = \text{Bias}^2 + \text{Variance} + \sigma_{\text{irreducible}}^2$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary of Regularization Geometry</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary of Regularization Geometry</summary>
 
 **What is the final answer?**
 - Ridge uses a circular ($L_2$) constraint and smoothly shrinks weights without hitting zero.
@@ -291,7 +291,7 @@ $$\mathbb{E}[\text{Error}] = \text{Bias}^2 + \text{Variance} + \sigma_{\text{irr
 - Both methods prevent overfitting by increasing bias to reduce variance.
 
 **Why does this answer make sense?** Geometrically, smooth surfaces lead to smooth, continuous intersections. Sharp corners act like magnets for intersections. This perfectly matches the algebra we solved in Level 1, confirming that Lasso is the tool of choice when you want a simpler model that completely ignores useless features.
-</div>
+</details>
 
 </div>
 

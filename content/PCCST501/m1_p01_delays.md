@@ -28,8 +28,8 @@ $$\text{Total Time} = d_{\text{trans}} + d_{\text{prop}}$$
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Unit Conversion for Packet Size (Bytes to Bits)</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Unit Conversion for Packet Size (Bytes to Bits)</summary>
 
 **What are we doing?** We are converting the packet size $L$ from **bytes** into **bits**.
 
@@ -43,10 +43,10 @@ $$\text{Total Time} = d_{\text{trans}} + d_{\text{prop}}$$
 
 **Current Values for Calculation:**
 - $L = 8{,}000\text{ bits}$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Unit Conversion for Transmission Rate (Mbps to bps)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Unit Conversion for Transmission Rate (Mbps to bps)</summary>
 
 **What changed from Step 1?** We have our packet size in bits. Now we must convert our link speed $R$ into matching base units: **bits per second (bps)**.
 
@@ -66,10 +66,10 @@ $$\text{Total Time} = d_{\text{trans}} + d_{\text{prop}}$$
 **Current Values for Calculation:**
 - $L = 8{,}000\text{ bits}$
 - $R = 1{,}000{,}000\text{ bits/second}$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Calculate Transmission Delay (d_trans)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Calculate Transmission Delay (d_trans)</summary>
 
 **What changed from Step 2?** Both $L$ and $R$ are now expressed in standard units of bits and bits/second.
 
@@ -87,10 +87,10 @@ $$\text{Total Time} = d_{\text{trans}} + d_{\text{prop}}$$
 **Where did this formula come from?** Basic rate equation from elementary algebra:
 $$\text{Time} = \frac{\text{Amount of Work}}{\text{Rate of Work}}$$
 Here, "Amount of Work" is the total number of bits to push ($L$), and "Rate of Work" is the transmission speed of the network card in bits per second ($R$).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Unit Conversion for Distance (km to m)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Unit Conversion for Distance (km to m)</summary>
 
 **What changed from Step 3?** We have calculated the transmission delay ($8\text{ ms}$). Now we must calculate the propagation delay. Before doing so, we must align the units of distance $d$ and propagation speed $s$.
 
@@ -105,10 +105,10 @@ Here, "Amount of Work" is the total number of bits to push ($L$), and "Rate of W
 **Current Values for Calculation:**
 - $d = 10{,}000{,}000\text{ m} = 10^7\text{ m}$
 - $s = 200{,}000{,}000\text{ m/s} = 2 \times 10^8\text{ m/s}$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Calculate Propagation Delay (d_prop)</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Calculate Propagation Delay (d_prop)</summary>
 
 **What changed from Step 4?** Both physical distance $d$ and signal speed $s$ are in meters and meters/second.
 
@@ -126,10 +126,10 @@ Here, "Amount of Work" is the total number of bits to push ($L$), and "Rate of W
 **Where did this formula come from?** Classical physics:
 $$\text{Time} = \frac{\text{Distance}}{\text{Speed}}$$
 A bit traveling through a physical medium (copper wire, fiber glass, or air) travels at a finite speed $s$, which is typically around $2 \times 10^8\text{ m/s}$ in glass (roughly $\frac{2}{3}$ the speed of light in a vacuum).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Total Latency for Single-Link Arrival</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Total Latency for Single-Link Arrival</summary>
 
 **What is the final answer?**
 The total time elapsed from the instant the sender starts transmitting the first bit until the receiver finishes receiving the very last bit is:
@@ -143,7 +143,7 @@ $$\text{Total Delay} = d_{\text{trans}} + d_{\text{prop}} = 8\text{ ms} + 50\tex
 - Therefore, the last bit arrives at the destination at time:
 $$t = 8\text{ ms} + 50\text{ ms} = 58\text{ ms}$$
 Notice how transmission delay ($8\text{ ms}$) and propagation delay ($50\text{ ms}$) measure two completely distinct physical phenomena!
-</div>
+</details>
 
 </div>
 
@@ -187,8 +187,8 @@ Imagine sending a package by postal mail through a regional sorting warehouse:
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Calculate Transmission and Propagation on Link 1 (Host A to Router R)</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Calculate Transmission and Propagation on Link 1 (Host A to Router R)</summary>
 
 **What are we doing?** We calculate the time it takes for Host A to transmit the packet onto Link 1, and the time it takes for that packet to travel across Link 1 to Router R.
 
@@ -210,10 +210,10 @@ Imagine sending a package by postal mail through a regional sorting warehouse:
 **System State at Router R Arrival:**
 The entire packet has been completely received by Router R at timestamp:
 $$t_1 = d_{\text{trans1}} + d_{\text{prop1}} = 1.2\text{ ms} + 1.0\text{ ms} = \mathbf{2.2\text{ ms}}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Processing and Queuing Delays at Router R</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Processing and Queuing Delays at Router R</summary>
 
 **What changed from Step 1?** The entire packet has now entered Router R. The packet now experiences internal delays inside the router's hardware.
 
@@ -229,10 +229,10 @@ $$\text{Router Delay} = d_{\text{proc}} + d_{\text{queue}} = 0.5\text{ ms} + 1.5
 **System State when Packet Reaches Head of Queue:**
 $$t_2 = t_1 + \text{Router Delay} = 2.2\text{ ms} + 2.0\text{ ms} = \mathbf{4.2\text{ ms}}$$
 At $t = 4.2\text{ ms}$, the packet is ready to be transmitted out onto Link 2.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: The Store-and-Forward Rule Explained</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: The Store-and-Forward Rule Explained</summary>
 
 **What are we doing?** We explain why Router R could not begin transmitting bits onto Link 2 earlier (e.g., at $t = 1.5\text{ ms}$).
 
@@ -240,10 +240,10 @@ At $t = 4.2\text{ ms}$, the packet is ready to be transmitted out onto Link 2.
 - A router must receive ("store") **all $12{,}000$ bits** of the packet before it can begin transmitting ("forwarding") the first bit onto the outbound link.
 - Why? Because the error-checking checksum (CRC) is located in the packet trailer/header, and the destination address must be fully verified. If the packet arrived corrupted, the router must discard it immediately rather than wasting bandwidth on Link 2 sending bad data.
 - Therefore, Link 2 transmission cannot begin until the full packet is stored, processed, and cleared from the queue ($t = 4.2\text{ ms}$).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Calculate Transmission and Propagation on Link 2 (Router R to Host B)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Calculate Transmission and Propagation on Link 2 (Router R to Host B)</summary>
 
 **What changed from Step 3?** The packet has cleared the queue at Router R at $t = 4.2\text{ ms}$. Now Router R pushes the packet onto Link 2 toward Host B.
 
@@ -262,10 +262,10 @@ At $t = 4.2\text{ ms}$, the packet is ready to be transmitted out onto Link 2.
 
 **Hop 2 Total Delay:**
 $$\text{Hop 2 Time} = d_{\text{trans2}} + d_{\text{prop2}} = 0.12\text{ ms} + 0.5\text{ ms} = \mathbf{0.62\text{ ms}}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Total End-to-End Delay Calculation</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Total End-to-End Delay Calculation</summary>
 
 **What is the final answer?**
 Summing all delay components across the entire path:
@@ -285,7 +285,7 @@ d_{\text{end-to-end}} &= d_{\text{trans1}} + d_{\text{prop1}} + d_{\text{proc}} 
 - $t = 4.82\text{ ms}$: Last bit arrives at Host B ($d_{\text{prop2}}$ done).
 
 The packet is completely received at Host B at exactly $t = 4.82\text{ ms}$.
-</div>
+</details>
 
 </div>
 
@@ -321,8 +321,8 @@ Imagine a car manufacturing assembly line with two stations: Station 1 installs 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Trace Packet 1 Through the System</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Trace Packet 1 Through the System</summary>
 
 **What are we doing?** We establish the baseline timeline by tracking Packet 1 from Host A all the way to Host B.
 
@@ -339,10 +339,10 @@ Imagine a car manufacturing assembly line with two stations: Station 1 installs 
 
 **Packet 1 Completion:**
 Packet 1 is completely received at Host B at **$t = 30\text{ ms}$**.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Trace Packet 2 and Identify the Overlap</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Trace Packet 2 and Identify the Overlap</summary>
 
 **What changed from Step 1?** Host A does not wait for Packet 1 to reach Host B. The moment Host A finishes pushing the last bit of Packet 1 onto Link 1 at $t = 10\text{ ms}$, Link 1 becomes free!
 
@@ -368,10 +368,10 @@ Packet 1 is completely received at Host B at **$t = 30\text{ ms}$**.
 
 **Packet 2 Completion:**
 Packet 2 is completely received at Host B at **$t = 40\text{ ms}$**.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Trace Packet 3 Through the Pipeline</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Trace Packet 3 Through the Pipeline</summary>
 
 **What changed from Step 2?** Host A finished sending Packet 2 on Link 1 at $t = 20\text{ ms}$. Link 1 is free once more.
 
@@ -391,10 +391,10 @@ Packet 2 is completely received at Host B at **$t = 40\text{ ms}$**.
 
 **Packet 3 Completion:**
 Packet 3 is completely received at Host B at **$t = 50\text{ ms}$**.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Master Pipelining Schedule Chart</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Master Pipelining Schedule Chart</summary>
 
 **What are we doing?** We arrange all events on a unified time chart so the parallel execution is clearly visible.
 
@@ -413,10 +413,10 @@ Arrived:                 Pkt 1    Pkt 2    Pkt 3
   - Packet 2 arrives at $t = 40\text{ ms}$ ($+10\text{ ms}$)
   - Packet 3 arrives at $t = 50\text{ ms}$ ($+10\text{ ms}$)
 - This steady $10\text{ ms}$ arrival interval is determined entirely by the bottleneck transmission delay: $d_{\text{trans}} = 10\text{ ms}$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Pipelined vs. Non-Pipelined Comparison</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Pipelined vs. Non-Pipelined Comparison</summary>
 
 **What is the final answer?**
 With pipelining, all $3$ packets arrive at Host B in **$50\text{ ms}$**.
@@ -440,6 +440,6 @@ $$\text{Total Time} = \underbrace{N \times (d_{\text{trans}} + d_{\text{prop}})}
 Plugging in our values ($P = 3$, $N = 2$, $d_{\text{trans}} = 10$, $d_{\text{prop}} = 5$):
 $$\text{Total Time} = 2 \times (10 + 5) + (3 - 1) \times 10 = 2 \times 15 + 2 \times 10 = 30 + 20 = \mathbf{50\text{ ms}}$$
 The formula matches our step-by-step trace.
-</div>
+</details>
 
 </div>

@@ -49,8 +49,8 @@ Imagine you want to buy 3 separate books from a rare book dealer located across 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: The Three-Way Handshake for the Base HTML File</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: The Three-Way Handshake for the Base HTML File</summary>
 
 **What are we doing?** Before our web browser can request the webpage, it must establish a reliable TCP transport connection with the web server.
 
@@ -68,10 +68,10 @@ Imagine you want to buy 3 separate books from a rare book dealer located across 
 - $t = 0\text{ ms}$: User clicks link; Client sends `SYN`.
 - $t = 50\text{ ms}$: Server receives `SYN`; sends `SYN-ACK`.
 - $t = 100\text{ ms}$: Client receives `SYN-ACK`. TCP Connection 1 is open!
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Request and Receive the Base HTML File</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Request and Receive the Base HTML File</summary>
 
 **What changed from Step 1?** The TCP connection is open. The client can now ask for the actual webpage file.
 
@@ -95,10 +95,10 @@ Imagine you want to buy 3 separate books from a rare book dealer located across 
 - Client reads HTML and discovers: *"Oh! This page contains image1.png and image2.png!"*
 - Total time to obtain Base HTML:
   $$\text{Time}_{\text{HTML}} = 1\text{ RTT (Handshake)} + 1\text{ RTT (Data Request)} + d_{\text{trans}} = 2\text{ RTT} + d_{\text{trans}} = \mathbf{210\text{ ms}}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Fetch Image 1 (Entirely New TCP Connection)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Fetch Image 1 (Entirely New TCP Connection)</summary>
 
 **What changed from Step 2?** The first TCP connection was closed. The client knows it needs `image1.png`. Because this is sequential non-persistent HTTP, the client must open a brand-new connection specifically for Image 1.
 
@@ -119,10 +119,10 @@ Imagine you want to buy 3 separate books from a rare book dealer located across 
 - $t = 420\text{ ms}$: Last bit of `image1.png` arrives at client. TCP Connection 2 closed.
 - Additional time for Image 1:
   $$\text{Time}_{\text{Image1}} = 2\text{ RTT} + d_{\text{trans}} = 200\text{ ms} + 10\text{ ms} = \mathbf{210\text{ ms}}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Fetch Image 2 (Third Independent TCP Connection)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Fetch Image 2 (Third Independent TCP Connection)</summary>
 
 **What changed from Step 3?** Image 1 has arrived. Because operations are strictly sequential, the client only now begins fetching `image2.png`.
 
@@ -143,10 +143,10 @@ Imagine you want to buy 3 separate books from a rare book dealer located across 
 - $t = 630\text{ ms}$: Last bit of `image2.png` arrives at client. Entire page is now complete!
 - Additional time for Image 2:
   $$\text{Time}_{\text{Image2}} = 2\text{ RTT} + d_{\text{trans}} = 200\text{ ms} + 10\text{ ms} = \mathbf{210\text{ ms}}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Total Time for Sequential Non-Persistent HTTP</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Total Time for Sequential Non-Persistent HTTP</summary>
 
 **What is the final answer?**
 Summing all three sequential phases:
@@ -164,7 +164,7 @@ $$\text{Total Time} = 2(3) \times 100\text{ ms} + 3 \times 10\text{ ms} = 600\te
 
 **Why does this answer make sense?**
 Every single object costs $2\text{ RTT}$ ($1$ to say hello via TCP, $1$ to ask for the data). With $3$ objects fetched back-to-back, you pay $2 \times 3 = 6$ full round trips just waiting for network propagation!
-</div>
+</details>
 
 </div>
 
@@ -198,8 +198,8 @@ Imagine you read the bookstore catalog and realize you want Book 1 and Book 2:
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Fetch the Base HTML File</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Fetch the Base HTML File</summary>
 
 **What are we doing?** The client must fetch the Base HTML file first.
 
@@ -215,10 +215,10 @@ Imagine you read the bookstore catalog and realize you want Book 1 and Book 2:
 - $t = 100\text{ ms}$: TCP Connection 1 established; `HTTP GET /index.html` sent.
 - $t = 210\text{ ms}$: `index.html` arrives at client.
 $$\text{Time to receive HTML} = 2\text{ RTT} + d_{\text{trans}} = \mathbf{210\text{ ms}}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Simultaneous Parallel TCP Handshakes for Images 1 & 2</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Simultaneous Parallel TCP Handshakes for Images 1 & 2</summary>
 
 **What changed from Step 1?** At $t = 210\text{ ms}$, the client reads the HTML file and sees tags for both `image1.png` and `image2.png`.
 
@@ -235,10 +235,10 @@ $$\text{Time to receive HTML} = 2\text{ RTT} + d_{\text{trans}} = \mathbf{210\te
 **Timeline State:**
 - $t = 210\text{ ms}$: Both Connection 2 and Connection 3 send `SYN`.
 - $t = 310\text{ ms}$: Both Connection 2 and Connection 3 receive `SYN-ACK`. Both connections are now simultaneously open!
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Simultaneous Parallel Image Requests & Transmissions</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Simultaneous Parallel Image Requests & Transmissions</summary>
 
 **What changed from Step 2?** Both TCP connections are open at $t = 310\text{ ms}$.
 
@@ -260,10 +260,10 @@ $$\text{Time to receive HTML} = 2\text{ RTT} + d_{\text{trans}} = \mathbf{210\te
 
 **Timeline State:**
 - At $t = 430\text{ ms}$, the last bit of the second image arrives at the browser. All objects are fully downloaded!
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Total Time for Parallel Non-Persistent HTTP</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Total Time for Parallel Non-Persistent HTTP</summary>
 
 **What is the final answer?**
 $$\begin{aligned}
@@ -281,7 +281,7 @@ $$\begin{aligned}
 
 **Why did we save exactly 200 ms?**
 We saved exactly **$2\text{ RTT}$**! In Level 1, Image 2 had to wait for Image 1's handshake ($1\text{ RTT}$) and Image 1's request travel ($1\text{ RTT}$). By running them in parallel, those two round trips occurred concurrently.
-</div>
+</details>
 
 </div>
 
@@ -313,8 +313,8 @@ Imagine hiring a courier with a **standing daily contract**:
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: The One-and-Only TCP Handshake & Base HTML Fetch</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: The One-and-Only TCP Handshake & Base HTML Fetch</summary>
 
 **What are we doing?** We open the initial TCP connection and fetch `index.html`.
 
@@ -336,10 +336,10 @@ Imagine hiring a courier with a **standing daily contract**:
 - $t = 210\text{ ms}$: `index.html` arrives at client.
 - **Connection status:** OPEN.
 $$\text{Time to fetch HTML} = 2\text{ RTT} + d_{\text{trans}} = \mathbf{210\text{ ms}}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Requesting Both Images on the Open Connection</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Requesting Both Images on the Open Connection</summary>
 
 **What changed from Step 1?** At $t = 210\text{ ms}$, the client inspects the HTML file. It needs `image1.png` and `image2.png`.
 
@@ -352,10 +352,10 @@ $$\text{Time to fetch HTML} = 2\text{ RTT} + d_{\text{trans}} = \mathbf{210\text
    $$\text{Travel time} = \frac{1}{2}\text{ RTT} = 50\text{ ms}$$
 3. The server receives the requests at $t = 210 + 50 = \mathbf{260\text{ ms}}$.
    *(Notice that in Level 2, the server hadn't even finished the TCP handshakes by $t = 260\text{ ms}$!)*
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Server Transmits Both Images Back-to-Back</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Server Transmits Both Images Back-to-Back</summary>
 
 **What changed from Step 2?** The server has received the requests for both images on the existing connection at $t = 260\text{ ms}$.
 
@@ -373,10 +373,10 @@ $$\text{Time to fetch HTML} = 2\text{ RTT} + d_{\text{trans}} = \mathbf{210\text
 
 **Timeline State:**
 At $t = 330\text{ ms}$, all three objects are completely delivered to the client.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Grand Comparison Across All 3 Architectures</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Grand Comparison Across All 3 Architectures</summary>
 
 **What is the final answer for Persistent HTTP?**
 $$\begin{aligned}
@@ -402,6 +402,6 @@ $$\begin{aligned}
 1. It is almost **twice as fast** as traditional sequential non-persistent HTTP.
 2. It is **$100\text{ ms}$ faster** than parallel non-persistent HTTP, without opening extra sockets or flooding the server with connection state.
 3. Every referenced object after the base HTML is fetched at the theoretical minimum possible cost: **just the transmission time plus the physical propagation time of the wire**, with zero overhead wasted on handshakes!
-</div>
+</details>
 
 </div>

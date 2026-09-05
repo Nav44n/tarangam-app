@@ -33,8 +33,8 @@ A ripple expands outward at constant speed.
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Initialization</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Initialization</summary>
 
 **What are we doing?** Initialize distance estimates $d[u]$ to infinity, $d[S] = 0$, and predecessors $\pi[u] = \text{NIL}$.
 
@@ -47,10 +47,10 @@ A ripple expands outward at constant speed.
 | $D$ | $\infty$ | NIL | No |
 
 Unvisited set $Q = \{S, A, B, C, D\}$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Extract Min Vertex S (d[S] = 0)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Extract Min Vertex S (d[S] = 0)</summary>
 
 * Minimum vertex in $Q$ is $S$ with $d[S] = 0$.
 * Mark $S$ as finalized ($S \in \text{Visited}$).
@@ -60,10 +60,10 @@ Unvisited set $Q = \{S, A, B, C, D\}$.
 
 Table after Step 2:
 * $d$: $S: 0^*, A: 10, B: \infty, C: 5, D: \infty$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Extract Min Vertex C (d[C] = 5)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Extract Min Vertex C (d[C] = 5)</summary>
 
 * Minimum unvisited vertex is $C$ with $d[C] = 5$.
 * Mark $C$ as finalized.
@@ -74,10 +74,10 @@ Table after Step 2:
 
 Table after Step 3:
 * $d$: $S: 0^*, A: 8, B: 14, C: 5^*, D: 7$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Extract Min Vertex D (d[D] = 7)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Extract Min Vertex D (d[D] = 7)</summary>
 
 * Minimum unvisited vertex is $D$ with $d[D] = 7$.
 * Mark $D$ as finalized.
@@ -87,10 +87,10 @@ Table after Step 3:
 
 Table after Step 4:
 * $d$: $S: 0^*, A: 8, B: 13, C: 5^*, D: 7^*$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Extract Min Vertex A (d[A] = 8)</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Extract Min Vertex A (d[A] = 8)</summary>
 
 * Minimum unvisited vertex is $A$ with $d[A] = 8$.
 * Mark $A$ as finalized.
@@ -100,19 +100,19 @@ Table after Step 4:
 
 Table after Step 5:
 * $d$: $S: 0^*, A: 8^*, B: 9, C: 5^*, D: 7^*$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 6: Extract Min Vertex B (d[B] = 9)</div>
+<details class="step-card">
+<summary class="step-badge">Step 6: Extract Min Vertex B (d[B] = 9)</summary>
 
 * Minimum unvisited vertex is $B$ with $d[B] = 9$.
 * Mark $B$ as finalized.
 * Outgoing edge $(B, D)$: $7 \le 9 + 4 = 13$, no update.
 * All vertices are now finalized ($Q = \emptyset$). Algorithm terminates.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Complete Shortest Path Summary</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Complete Shortest Path Summary</summary>
 
 **Final Distances and Paths from Source $S$:**
 
@@ -124,7 +124,7 @@ Table after Step 5:
 | **$C$** | **5** | $S \to C$ |
 | **$D$** | **7** | $S \to C \to D$ |
 
-</div>
+</details>
 
 </div>
 
@@ -143,8 +143,8 @@ A negative edge acts like a "time machine" or a "rebate voucher." If you take a 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Graph Construction</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Graph Construction</summary>
 
 Consider the 3-vertex directed graph $V = \{A, B, C\}$:
 * $(A, B): 3$
@@ -160,10 +160,10 @@ Source vertex is $A$.
                    ( B ) <---- ( C )
                            -4
 ```
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Trace Dijkstra's Algorithm (Greedy Execution)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Trace Dijkstra's Algorithm (Greedy Execution)</summary>
 
 1. **Init:** $d[A] = 0$, $d[B] = \infty$, $d[C] = \infty$.
 2. **Extract $A$ ($0$):**
@@ -177,14 +177,14 @@ Source vertex is $A$.
    * Relax $(C, B)$: Dijkstra's standard invariant dictates that $B$ is already finalized and cannot be re-opened, or if checked:
      $$d[C] + w(C, B) = 5 + (-4) = 1 < d[B] (3)$$
    * Because $B$ was already closed, the greedy assumption that $d[B] = 3$ was optimal is **falsified**.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Comparative Conclusion</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Comparative Conclusion</summary>
 
 * **Dijkstra's Output:** $d[B] = \mathbf{3}$ via path $A \to B$.
 * **True Shortest Distance:** $d[B] = \mathbf{1}$ via path $A \to C \to B$ (Cost: $5 - 4 = 1$).
 * **Conclusion:** Dijkstra fails because greedy finalization breaks when edge weights can decrease total path cost. Negative edges require algorithms designed for them, such as **Bellman-Ford** ($O(V \cdot E)$).
-</div>
+</details>
 
 </div>

@@ -20,17 +20,17 @@ Imagine you are placing 4 guards on a $4 \times 4$ grid, one in each row.
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: The Diagonal and Column Conflict Rules</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: The Diagonal and Column Conflict Rules</summary>
 
 For a board representation $X = \langle x_1, x_2, \dots, x_k \rangle$ where $x_i$ is the column of the queen in row $i$:
 * **Column Conflict:** $x_k = x_j$ for some $j < k$.
 * **Diagonal Conflict:** $|x_k - x_j| = |k - j|$ for some $j < k$.
 * A placement is safe if and only if both checks pass for all $j \in \{1, \dots, k-1\}$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Subtree Under x1 = 1 (Tracing to Complete Dead-End)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Subtree Under x1 = 1 (Tracing to Complete Dead-End)</summary>
 
 1. Place $x_1 = 1$: Board $\langle 1 \rangle$.
 2. Row 2:
@@ -56,10 +56,10 @@ For a board representation $X = \langle x_1, x_2, \dots, x_k \rangle$ where $x_i
        * $x_3 = 3$: Diagonal with $x_2$ ($|3 - 4| = |3 - 2|$). Pruned.
        * $x_3 = 4$: Col conflict. Pruned.
 3. Subtree under $x_1 = 1$ is exhausted with **zero valid solutions**. Backtrack to Row 1!
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Subtree Under x1 = 2 (Reaching Solution 1)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Subtree Under x1 = 2 (Reaching Solution 1)</summary>
 
 1. Place $x_1 = 2$: Board $\langle 2 \rangle$.
 2. Row 2:
@@ -77,25 +77,25 @@ For a board representation $X = \langle x_1, x_2, \dots, x_k \rangle$ where $x_i
      * $x_3=1$: $|3-1|=2 \ne 1$. Safe!
    * **ALL CHECKS PASS!**
    * **SOLUTION 1 FOUND:** $\mathbf{X = \langle 2, \; 4, \; 1, \; 3 \rangle}$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Subtree Under x1 = 3 (Reaching Solution 2 via Symmetry)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Subtree Under x1 = 3 (Reaching Solution 2 via Symmetry)</summary>
 
 1. Place $x_1 = 3$: Board $\langle 3 \rangle$.
 2. Row 2: $x_2 = 1$ is safe! Board $\langle 3, 1 \rangle$.
 3. Row 3: $x_3 = 4$ is safe! Board $\langle 3, 1, 4 \rangle$.
 4. Row 4: $x_4 = 2$ is safe!
    * **SOLUTION 2 FOUND:** $\mathbf{X = \langle 3, \; 1, \; 4, \; 2 \rangle}$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Complete 4-Queens Solution Set</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Complete 4-Queens Solution Set</summary>
 
 The 4-Queens problem has exactly **2 distinct solutions**:
 1. Solution 1: $\mathbf{\langle 2, 4, 1, 3 \rangle}$
 2. Solution 2: $\mathbf{\langle 3, 1, 4, 2 \rangle}$
-</div>
+</details>
 
 </div>
 
@@ -112,16 +112,16 @@ Show which branches are pruned by:
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Setup and Initialization</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Setup and Initialization</summary>
 
 * Weights: $w_1 = 2, w_2 = 4, w_3 = 6, w_4 = 8$ (Sorted).
 * Target $M = 10$. Total weight $r = 2 + 4 + 6 + 8 = 20$.
 * Binary choice at each level $k$: $x_k = 1$ (include $w_k$) or $x_k = 0$ (exclude $w_k$).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Trace Path 1 (x1 = 1, include 2)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Trace Path 1 (x1 = 1, include 2)</summary>
 
 * Current sum $s = 2$, remaining $r = 20 - 2 = 18$.
 * **Include $w_2 = 4$ ($x_2 = 1$):**
@@ -139,10 +139,10 @@ Show which branches are pruned by:
     * Try include $w_4 = 8$ ($x_4 = 1$):
     * New sum: $s + w_4 = 2 + 8 = \mathbf{10 == M}$!
     * **SOLUTION 1 FOUND:** $x = \langle 1, 0, 0, 1 \rangle \implies \mathbf{\{2, 8\}}$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Trace Path 2 (x1 = 0, exclude 2)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Trace Path 2 (x1 = 0, exclude 2)</summary>
 
 * Current sum $s = 0$, remaining $r = 18$.
 * **Include $w_2 = 4$ ($x_2 = 1$):**
@@ -157,14 +157,14 @@ Show which branches are pruned by:
   * $s = 0, r = 14$.
   * Include $w_3 = 6$: $s = 6, r = 8$. If include $w_4 = 8 \implies 14 > 10$. If exclude $w_4 \implies 6 \ne 10$.
   * Exclude $w_3 = 6$: $s = 0, r = 8$. Even including $w_4 = 8$, sum is $8 < 10$. **PRUNED BY BOUND 2 ($s + r < M$)!**
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Complete Sum of Subsets Solutions</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Complete Sum of Subsets Solutions</summary>
 
 The valid subsets summing to $M = 10$ are:
 1. $\mathbf{\{2, 8\}}$ with vector $\langle 1, 0, 0, 1 \rangle$
 2. $\mathbf{\{4, 6\}}$ with vector $\langle 0, 1, 1, 0 \rangle$
-</div>
+</details>
 
 </div>

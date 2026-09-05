@@ -24,8 +24,8 @@ Imagine each student is standing in a room holding a piece of paper. On that pap
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Initialize Sets with MakeSet</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Initialize Sets with MakeSet</summary>
 
 **What are we doing?** We are creating an array called `parent` of size $4$ (indices $0$ to $3$). For every index $i$, we set `parent[i] = i`.
 
@@ -47,10 +47,10 @@ By pointing each item to itself, we create $4$ separate trees, each with height 
 | **`parent[i]`** | **0** | **1** | **2** | **3** |
 
 *Tree Structure:* $(0)$, $(1)$, $(2)$, $(3)$ (All isolated roots)
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Perform Union(0, 1)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Perform Union(0, 1)</summary>
 
 **What changed from Step 1?** We are connecting student $0$ and student $1$ for the first time.
 
@@ -78,10 +78,10 @@ $$\text{parent}[1] \leftarrow 0$$
   1
 ```
 Student $1$ points to $0$. Student $0$ still points to $0$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Perform Union(1, 2)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Perform Union(1, 2)</summary>
 
 **What changed from Step 2?** Student $1$ is now part of group $\{0, 1\}$. We now merge group of student $1$ with student $2$.
 
@@ -114,10 +114,10 @@ $$\text{parent}[2] \leftarrow 1$$
     |
     2
 ```
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Perform Union(2, 3)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Perform Union(2, 3)</summary>
 
 **What changed from Step 3?** We have a chain of length $3$ ($2 \to 1 \to 0$). We now bring student $3$ into the chain.
 
@@ -142,10 +142,10 @@ $$\text{parent}[3] = 2$$
       |
       3
 ```
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Trace Find(3) Step-by-Step</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Trace Find(3) Step-by-Step</summary>
 
 **What changed from Step 4?** All $4$ elements are now in one set. We now run the query `Find(3)` to find the representative.
 
@@ -167,10 +167,10 @@ $$\text{parent}[3] = 2$$
 
 **Where did this formula/concept come from?** The recursive or iterative definition of `Find`:
 $$\text{Find}(x) = \begin{cases} x & \text{if } \text{parent}[x] == x \\ \text{Find}(\text{parent}[x]) & \text{otherwise} \end{cases}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Conclusion & Complexity</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Conclusion & Complexity</summary>
 
 **What is the final answer?** `Find(3)` returns $0$.
 
@@ -179,7 +179,7 @@ $$\text{Find}(x) = \begin{cases} x & \text{if } \text{parent}[x] == x \\ \text{F
 **Complexity Warning:** Notice that to find the root of element $3$, we had to take $3$ hops across $4$ nodes. For $N$ elements arranged in a single line, a single `Find` takes:
 $$T(N) = O(N) \text{ operations (Linear Time)}$$
 This is inefficient. If we do $M$ queries on a chain of length $N$, the total time is $O(M \times N)$, which is as slow as an unindexed search.
-</div>
+</details>
 
 </div>
 
@@ -210,8 +210,8 @@ Think of **Rank** as the number of levels (floors) in a building.
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Initialize parent[] and rank[]</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Initialize parent[] and rank[]</summary>
 
 **What are we doing?** We initialize arrays `parent` and `rank` for elements $0, 1, 2, 3, 4, 5$.
 
@@ -228,10 +228,10 @@ Think of **Rank** as the number of levels (floors) in a building.
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **`parent[i]`** | 0 | 1 | 2 | 3 | 4 | 5 |
 | **`rank[i]`** | **0** | **0** | **0** | **0** | **0** | **0** |
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Trace Union(0, 1) - Equal Rank Merge</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Trace Union(0, 1) - Equal Rank Merge</summary>
 
 **What changed from Step 1?** We are joining elements $0$ and $1$. Both currently have `rank = 0`.
 
@@ -260,10 +260,10 @@ Think of **Rank** as the number of levels (floors) in a building.
   |
   1 (rank 0)
 ```
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Trace Union(2, 3) - Equal Rank Merge</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Trace Union(2, 3) - Equal Rank Merge</summary>
 
 **What changed from Step 2?** Now we merge $2$ and $3$, both of which are still untouched singletons with `rank = 0`.
 
@@ -285,10 +285,10 @@ Think of **Rank** as the number of levels (floors) in a building.
   |                 |
   1 (rank 0)        3 (rank 0)
 ```
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Trace Union(0, 2) - Merging Two Trees of Rank 1</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Trace Union(0, 2) - Merging Two Trees of Rank 1</summary>
 
 **What changed from Step 3?** We now merge the tree rooted at $0$ (which contains $\{0, 1\}$) with the tree rooted at $2$ (which contains $\{2, 3\}$).
 
@@ -322,10 +322,10 @@ Think of **Rank** as the number of levels (floors) in a building.
           |
           3  (rank 0)
 ```
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Trace Union(0, 4) - Unequal Rank Merge</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Trace Union(0, 4) - Unequal Rank Merge</summary>
 
 **What changed from Step 4?** We now merge the large tree (rooted at $0$, rank $2$) with a single node $4$ (rooted at $4$, rank $0$).
 
@@ -356,10 +356,10 @@ Think of **Rank** as the number of levels (floors) in a building.
              |
              3  (rank 0)
 ```
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Mathematical Guarantee of Union by Rank</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Mathematical Guarantee of Union by Rank</summary>
 
 **What is the final state?** The set $\{0, 1, 2, 3, 4\}$ has root $0$ with rank $2$.
 
@@ -372,7 +372,7 @@ $$N \ge 2^k \implies k \le \log_2(N)$$
 Because the height of the tree is bounded by $\log_2(N)$, the longest path any `Find` operation can ever traverse is:
 $$O(\log N)$$
 Without rank balancing, height could become $O(N)$. Union by rank reduces maximum depth from linear to logarithmic.
-</div>
+</details>
 
 </div>
 
@@ -416,8 +416,8 @@ Imagine a game of telephone in an office hierarchy:
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Initial State Before Find(4)</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Initial State Before Find(4)</summary>
 
 **What are we doing?** Inspecting our array before any search begins.
 
@@ -436,10 +436,10 @@ Imagine a game of telephone in an office hierarchy:
 *Tree Structure:*
 $$4 \longrightarrow 3 \longrightarrow 2 \longrightarrow 1 \longrightarrow 0$$
 Total tree depth to reach node $4$ is $4$ edges.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Recursive Forward Call Stack (Drilling Down)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Recursive Forward Call Stack (Drilling Down)</summary>
 
 **What changed from Step 1?** The program executes `Find(4)`. We dive deeper into recursion until we hit the root.
 
@@ -464,10 +464,10 @@ Total tree depth to reach node $4$ is $4$ edges.
 
 - **Call 5:** `Find(0)`  
   Check: `parent[0] == 0`? $\implies 0 == 0$ is **True!** **Base Case Reached!** This call immediately returns $0$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Unwinding Call 4 for Node 1</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Unwinding Call 4 for Node 1</summary>
 
 **What changed from Step 2?** `Find(0)` returned $0$ back to paused Call 4 (`Find(1)`).
 
@@ -485,10 +485,10 @@ Total tree depth to reach node $4$ is $4$ edges.
 | Index ($i$) | 0 | 1 | 2 | 3 | 4 |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **`parent[i]`** | 0 | **0** | 1 | 2 | 3 |
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Unwinding Call 3 for Node 2</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Unwinding Call 3 for Node 2</summary>
 
 **What changed from Step 3?** `Find(1)` finished and returned value $0$ back to paused Call 3 (`Find(2)`).
 
@@ -506,10 +506,10 @@ Total tree depth to reach node $4$ is $4$ edges.
 | Index ($i$) | 0 | 1 | 2 | 3 | 4 |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **`parent[i]`** | 0 | 0 | **0** | 2 | 3 |
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Unwinding Call 2 for Node 3</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Unwinding Call 2 for Node 3</summary>
 
 **What changed from Step 4?** `Find(2)` finished and returned value $0$ back to paused Call 2 (`Find(3)`).
 
@@ -527,10 +527,10 @@ Total tree depth to reach node $4$ is $4$ edges.
 | Index ($i$) | 0 | 1 | 2 | 3 | 4 |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **`parent[i]`** | 0 | 0 | 0 | **0** | 3 |
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 6: Unwinding Call 1 for Node 4</div>
+<details class="step-card">
+<summary class="step-badge">Step 6: Unwinding Call 1 for Node 4</summary>
 
 **What changed from Step 5?** `Find(3)` finished and returned value $0$ back to the original top-level call `Find(4)`.
 
@@ -556,10 +556,10 @@ Total tree depth to reach node $4$ is $4$ edges.
       1 2     3 4
 ```
 Every single node now points directly to root $0$!
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Time Complexity with Both Optimizations</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Time Complexity with Both Optimizations</summary>
 
 **What is the final answer?** `Find(4)` returned $0$, and every node along the path $\{4, 3, 2, 1\}$ was compressed into a direct child of root $0$.
 
@@ -575,6 +575,6 @@ Where $\alpha(N)$ is the **Inverse Ackermann Function**.
 **How small is $\alpha(N)$?** The Ackermann function grows so fast that for any input size $N$ conceivable in our physical universe (e.g., $N = 10^{80}$, the estimated number of atoms in the observable universe):
 $$\alpha(N) \le 4$$
 For all practical computer programs, $\alpha(N)$ is a constant $\le 4$. This means Disjoint Set Union operations run in **amortized nearly constant time, $O(1)$ per operation**.
-</div>
+</details>
 
 </div>

@@ -34,8 +34,8 @@ Imagine you have a rigid wooden ruler floating over a 2D scatter plot. Each data
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Identify the Dataset and Count Data Points</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Identify the Dataset and Count Data Points</summary>
 
 **What are we doing?** Listing the raw pairs and counting the total number of observations ($n$).
 
@@ -52,10 +52,10 @@ Total number of observations:
 $$n = 5$$
 
 **Where did this formula/concept come from?** Basic sample definition: $n$ represents the cardinal count of elements in a finite dataset.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Calculate the Sample Mean of X (x̄)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Calculate the Sample Mean of X (x̄)</summary>
 
 **What changed from Step 1?** We have our list of $X$ values. Now we calculate their arithmetic center.
 
@@ -71,10 +71,10 @@ $$\sum_{i=1}^{5} x_i = 1 + 2 + 3 + 4 + 5 = 15$$
 $$\bar{x} = \frac{15}{5} = 3.0$$
 
 **Where did this formula/concept come from?** The classical definition of arithmetic mean (average).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Calculate the Sample Mean of Y (ȳ)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Calculate the Sample Mean of Y (ȳ)</summary>
 
 **What changed from Step 2?** We computed the horizontal center $\bar{x} = 3.0$. Now we compute the vertical center $\bar{y}$.
 
@@ -92,10 +92,10 @@ $$\bar{y} = \frac{25}{5} = 5.0$$
 The centroid (center of mass) of our data is the point $(\bar{x}, \bar{y}) = (3.0, 5.0)$.
 
 **Where did this formula/concept come from?** Standard arithmetic mean of the target variable $Y$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Compute Individual Deviations (x_i - x̄) and (y_i - ȳ)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Compute Individual Deviations (x_i - x̄) and (y_i - ȳ)</summary>
 
 **What changed from Step 3?** We now know $\bar{x} = 3.0$ and $\bar{y} = 5.0$. Now we find how far each individual student sits from these center lines.
 
@@ -124,10 +124,10 @@ Notice a key property:
 $$\sum (x_i - \bar{x}) = (-2.0) + (-1.0) + 0.0 + 1.0 + 2.0 = 0.0$$
 $$\sum (y_i - \bar{y}) = (-3.0) + (-2.0) + 0.0 + 1.0 + 4.0 = 0.0$$
 The sum of deviations about the mean is always strictly zero.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Compute Cross-Products and Squared Deviations</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Compute Cross-Products and Squared Deviations</summary>
 
 **What changed from Step 4?** We have individual deviation columns. Now we multiply them together to measure shared movement (covariance) and input spread (variance).
 
@@ -166,10 +166,10 @@ Let us assemble these rows into the complete working deviations table:
 | 4 | 4 | 6 | $+1.0$ | $+1.0$ | $+1.0$ | $1.0$ |
 | 5 | 5 | 9 | $+2.0$ | $+4.0$ | $+8.0$ | $4.0$ |
 | **Sum ($\sum$)** | **15** | **25** | **0.0** | **0.0** | **+17.0** | **10.0** |
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 6: Calculate the Optimal Slope Coefficient (β₁)</div>
+<details class="step-card">
+<summary class="step-badge">Step 6: Calculate the Optimal Slope Coefficient (β₁)</summary>
 
 **What changed from Step 5?** We have summed our columns: $\sum(x_i - \bar{x})(y_i - \bar{y}) = 17.0$ and $\sum(x_i - \bar{x})^2 = 10.0$.
 
@@ -186,10 +186,10 @@ $$\beta_1 = \frac{17.0}{10.0} = 1.7$$
 **Where did this formula/concept come from?** Setting the partial derivative of the Residual Sum of Squares with respect to $\beta_1$ to zero:
 $$\frac{\partial}{\partial \beta_1} \sum_{i=1}^{n} \big(y_i - (\beta_0 + \beta_1 x_i)\big)^2 = 0$$
 Solving this calculus optimization problem yields this closed-form quotient.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 7: Calculate the Optimal Intercept Coefficient (β₀)</div>
+<details class="step-card">
+<summary class="step-badge">Step 7: Calculate the Optimal Intercept Coefficient (β₀)</summary>
 
 **What changed from Step 6?** We now have $\beta_1 = 1.7$, along with our known center point $(\bar{x}, \bar{y}) = (3.0, 5.0)$.
 
@@ -208,10 +208,10 @@ $$\beta_0 = 5.0 - 5.1 = -0.1$$
 **Where did this formula/concept come from?** Setting the partial derivative of the Residual Sum of Squares with respect to $\beta_0$ to zero:
 $$\frac{\partial}{\partial \beta_0} \sum_{i=1}^{n} \big(y_i - (\beta_0 + \beta_1 x_i)\big)^2 = 0 \implies \sum_{i=1}^{n} (y_i - \beta_0 - \beta_1 x_i) = 0$$
 Dividing across by $n$ produces $\bar{y} - \beta_0 - \beta_1 \bar{x} = 0$, which rearranges directly to $\beta_0 = \bar{y} - \beta_1 \bar{x}$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 8: Formulate the Regression Hypothesis Line and Make Predictions</div>
+<details class="step-card">
+<summary class="step-badge">Step 8: Formulate the Regression Hypothesis Line and Make Predictions</summary>
 
 **What changed from Step 7?** We now have both coefficients: $\beta_0 = -0.1$ and $\beta_1 = 1.7$.
 
@@ -232,10 +232,10 @@ $$\hat{y} = -0.1 + 1.7 x$$
    $$\hat{y} = -0.1 + 1.7(6.0)$$
    $$1.7 \times 6.0 = 10.2$$
    $$\hat{y} = -0.1 + 10.2 = 10.1\text{ points}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary of Level 1 Results</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary of Level 1 Results</summary>
 
 **What is the final answer?**
 - Sample Means: $\bar{x} = 3.0$, $\bar{y} = 5.0$
@@ -248,7 +248,7 @@ $$\hat{y} = -0.1 + 1.7 x$$
 - Predicted score at $6.0\text{ hours}$: $10.1$
 
 **Why does this answer make sense?** The slope of $+1.7$ means that for every $1$ additional hour a student studies, their exam score increases by an estimated $1.7$ points. The intercept of $-0.1$ indicates that if a student does zero studying ($x = 0$), their expected baseline score is roughly $0$.
-</div>
+</details>
 
 </div>
 
@@ -289,8 +289,8 @@ Think of a playground seesaw.
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Algebraic Proof of the Centroid Invariant</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Algebraic Proof of the Centroid Invariant</summary>
 
 **What are we doing?** Proving that plugging $x = \bar{x}$ into the regression equation always outputs $\hat{y} = \bar{y}$.
 
@@ -314,10 +314,10 @@ $$\hat{y}(\bar{x}) = \bar{y} + 0 = \bar{y}$$
 **Numerical Verification:**
 $$\hat{y}(3.0) = -0.1 + 1.7(3.0) = -0.1 + 5.1 = 5.0$$
 Since $\bar{y} = 5.0$, the line passes through $(3.0, 5.0)$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Calculate Fitted Values (ŷ_i) for All 5 Observations</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Calculate Fitted Values (ŷ_i) for All 5 Observations</summary>
 
 **What changed from Step 1?** We proved the center point is on the line. Now we find the predicted score $\hat{y}_i$ for each individual student.
 
@@ -336,10 +336,10 @@ Since $\bar{y} = 5.0$, the line passes through $(3.0, 5.0)$.
   $$\hat{y}_4 = -0.1 + 1.7(4) = -0.1 + 6.8 = 6.7$$
 - Student 5 ($x_5 = 5$):
   $$\hat{y}_5 = -0.1 + 1.7(5) = -0.1 + 8.5 = 8.4$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Compute Individual Residuals e_i = y_i - ŷ_i</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Compute Individual Residuals e_i = y_i - ŷ_i</summary>
 
 **What changed from Step 2?** We now have both the true observed scores $y_i$ and the model's fitted predictions $\hat{y}_i$.
 
@@ -358,10 +358,10 @@ Since $\bar{y} = 5.0$, the line passes through $(3.0, 5.0)$.
   $$e_4 = y_4 - \hat{y}_4 = 6 - 6.7 = -0.7$$
 - Student 5:
   $$e_5 = y_5 - \hat{y}_5 = 9 - 8.4 = +0.6$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Numerically Sum the Residuals</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Numerically Sum the Residuals</summary>
 
 **What changed from Step 3?** We calculated all 5 residual values: $+0.4, -0.3, 0.0, -0.7, +0.6$.
 
@@ -384,10 +384,10 @@ The sum of the residuals is **identically 0.0**.
 | 4 | 6 | 6.7 | $-0.7$ | Scored 0.7 points below line |
 | 5 | 9 | 8.4 | $+0.6$ | Scored 0.6 points above line |
 | **Sum** | **25.0** | **25.0** | **0.0** | **Perfect balance!** |
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: General Algebraic Proof that Σ e_i = 0 for ANY Linear Regression with Intercept</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: General Algebraic Proof that Σ e_i = 0 for ANY Linear Regression with Intercept</summary>
 
 **What changed from Step 4?** We verified the property on our 5-point dataset. Now we prove this is always true for any dataset of any size $n$.
 
@@ -412,10 +412,10 @@ $$y_i - (\beta_0 + \beta_1 x_i) = y_i - \hat{y}_i = e_i$$
 $$\sum_{i=1}^{n} e_i = 0$$
 
 **Where did this formula/concept come from?** First-order optimality condition (stationary point) in multivariate calculus.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary of Level 2 Invariants</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary of Level 2 Invariants</summary>
 
 **What is the final answer?**
 - The line passes through the centroid $(\bar{x}, \bar{y}) = (3.0, 5.0)$ because:
@@ -425,7 +425,7 @@ $$\sum_{i=1}^{n} e_i = 0$$
 - The sum of residuals $\sum e_i = 0$ because the first-order condition $\frac{\partial RSS}{\partial \beta_0} = 0$ requires the sum of errors to be zero.
 
 **Why does this answer make sense?** If the sum of residuals were not zero (say, $+2.5$), it would mean our line consistently underestimated the scores. By simply raising the intercept $\beta_0$ up by $2.5 / 5 = 0.5$, we could reduce the overall squared error. OLS shifts the line until the positive and negative errors cancel each other out.
-</div>
+</details>
 
 </div>
 

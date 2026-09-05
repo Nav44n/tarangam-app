@@ -24,8 +24,8 @@ Imagine you are standing at the edge of a deep canyon, mailing physical letters 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Convert Packet Size from Bytes to Bits</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Convert Packet Size from Bytes to Bits</summary>
 
 **What are we doing?** Converting the packet length $L$ from bytes into individual binary digits (bits).
 
@@ -35,10 +35,10 @@ Imagine you are standing at the edge of a deep canyon, mailing physical letters 
 $$L = 1{,}000\text{ bytes} \times \frac{8\text{ bits}}{1\text{ byte}} = 8{,}000\text{ bits}$$
 
 **Where did this formula/concept come from?** The basic definition of digital storage: 1 byte is a collection of 8 bits.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Convert Bandwidth from Megabits per Second to Bits per Second</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Convert Bandwidth from Megabits per Second to Bits per Second</summary>
 
 **What changed from Step 1?** In Step 1, we converted the numerator (the data size). Now we must convert the denominator (the transmission rate / bandwidth $B$) into base units of bits per second ($\text{bps}$).
 
@@ -50,10 +50,10 @@ $$L = 1{,}000\text{ bytes} \times \frac{8\text{ bits}}{1\text{ byte}} = 8{,}000\
 $$B = 2 \times 10^6\text{ bps} = 2{,}000{,}000\text{ bits/second}$$
 
 **Where did this formula/concept come from?** SI metric standard for bandwidth and data transmission speed ($1\text{ kbps} = 10^3\text{ bps}$, $1\text{ Mbps} = 10^6\text{ bps}$, $1\text{ Gbps} = 10^9\text{ bps}$).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Calculate the Transmission Delay ($T_t$)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Calculate the Transmission Delay ($T_t$)</summary>
 
 **What changed from Step 2?** We now have both the packet size ($L$) and the transmission rate ($B$) in matching units of bits. We can now find the exact time needed to push the packet onto the physical wire/channel.
 
@@ -67,10 +67,10 @@ To convert seconds to milliseconds ($\text{ms}$), multiply by $1{,}000\text{ ms/
 $$T_t = 0.004\text{ s} \times \frac{1{,}000\text{ ms}}{1\text{ s}} = 4.0\text{ ms}$$
 
 **Where did this formula/concept come from?** Classic physics rate formula: $\text{Time} = \frac{\text{Distance}}{\text{Speed}}$ or $\text{Time} = \frac{\text{Quantity of Work}}{\text{Rate of Work}} = \frac{\text{Packet Size}}{\text{Bandwidth}}$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Understand and Identify Propagation Delay ($T_p$)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Understand and Identify Propagation Delay ($T_p$)</summary>
 
 **What changed from Step 3?** $T_t$ measured how long the transmitter *pushed* the bits. Now we identify how long the signal *travels* through space.
 
@@ -82,10 +82,10 @@ $$T_t = 0.004\text{ s} \times \frac{1{,}000\text{ ms}}{1\text{ s}} = 4.0\text{ m
 $$T_p = 120\text{ ms}$$
 
 **Where did this formula/concept come from?** $T_p = \frac{\text{Physical Distance } (d)}{\text{Propagation Speed of Signal } (v)}$. For satellite communication in medium/geostationary orbit, distances range from hundreds to thousands of kilometers.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Calculate the Total Cycle Time ($T_{\text{total}}$) for Stop-and-Wait</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Calculate the Total Cycle Time ($T_{\text{total}}$) for Stop-and-Wait</summary>
 
 **What changed from Step 4?** We now combine all phases of a complete communication cycle: pushing the packet, the packet flying out, the receiver sending an ACK, and the ACK flying back.
 
@@ -106,10 +106,10 @@ $$T_{\text{total}} = T_t + 2 \times T_p = 4\text{ ms} + 240\text{ ms} = 244\text
 **Where did this formula/concept come from?** Stop-and-Wait protocol definition:  
 $$T_{\text{total}} = T_t + T_p + T_{\text{proc}} + T_{t,\text{ACK}} + T_p$$  
 With negligible ACK size and processing time, this simplifies to $T_{\text{total}} = T_t + 2T_p$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 6: Calculate Channel Sender Utilization ($\eta$)</div>
+<details class="step-card">
+<summary class="step-badge">Step 6: Calculate Channel Sender Utilization ($\eta$)</summary>
 
 **What changed from Step 5?** We know the useful working time ($T_t = 4\text{ ms}$) and the total wasted + working time ($T_{\text{total}} = 244\text{ ms}$). Now we compute efficiency.
 
@@ -124,10 +124,10 @@ Convert to percentage by multiplying by $100\%$:
 $$\eta \approx 0.0163934 \times 100\% \approx 1.64\%$$
 
 **Where did this formula/concept come from?** Standard definition of efficiency: $\text{Efficiency} = \frac{\text{Useful Work Time}}{\text{Total Time Taken}}$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 7: Derive the Dimensionless Propagation-to-Transmission Ratio ($a$)</div>
+<details class="step-card">
+<summary class="step-badge">Step 7: Derive the Dimensionless Propagation-to-Transmission Ratio ($a$)</summary>
 
 **What changed from Step 6?** Instead of working with raw milliseconds, we express the propagation delay as a multiple of the transmission delay.
 
@@ -140,10 +140,10 @@ Notice that we can also rewrite utilization $\eta$ using $a$:
 $$\eta = \frac{T_t}{T_t + 2T_p} = \frac{1}{1 + 2\left(\frac{T_p}{T_t}\right)} = \frac{1}{1 + 2a} = \frac{1}{1 + 2(30)} = \frac{1}{1 + 60} = \frac{1}{61} \approx 1.64\%$$
 
 **Where did this formula/concept come from?** Dividing the numerator and denominator of $\frac{T_t}{T_t + 2T_p}$ by $T_t$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 8: Calculate Minimum Window Size $N$ for $100\%$ Utilization</div>
+<details class="step-card">
+<summary class="step-badge">Step 8: Calculate Minimum Window Size $N$ for $100\%$ Utilization</summary>
 
 **What changed from Step 7?** We discovered that a window size of $1$ packet yields only $\frac{1}{1 + 2a} = \frac{1}{61}$ link utilization. We now calculate how many packets we must transmit consecutively without waiting for ACKs to achieve $\eta = 100\% = 1.0$.
 
@@ -160,10 +160,10 @@ $$N \ge 1 + 2(30) = 1 + 60 = 61$$
 
 **Where did this formula/concept come from?** The concept of the **Bandwidth-Delay Product (BDP)**:  
 The pipe holds $2 \times T_p \times B$ bits of data during one RTT. In packet units, this equals $\frac{2T_p}{T_t} = 2a$ packets in flight. Adding the $1$ packet currently being pushed onto the wire gives $1 + 2a$ total packets needed to keep the sender busy for the entire round trip.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary and Intuitive Sanity Check</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary and Intuitive Sanity Check</summary>
 
 **What is the final answer?**
 - Packet size in bits: $L = 8{,}000\text{ bits}$  
@@ -177,7 +177,7 @@ The pipe holds $2 \times T_p \times B$ bits of data during one RTT. In packet un
 
 **Why does this answer make sense?** It takes only $4\text{ ms}$ to push a packet into space, but it takes $240\text{ ms}$ for the round trip journey. That means for every $244\text{ ms}$ of time, the transmitter works for $4\text{ ms}$ and sleeps for $240\text{ ms}$.  
 $240 / 4 = 60$ packet-durations of empty silence. If we send $60$ more packets while waiting for that first ACK (giving a total window of $1 + 60 = 61$ packets), the sender will never have to pause, driving channel efficiency to $100\%$.
-</div>
+</details>
 
 </div>
 
@@ -201,8 +201,8 @@ If the numbers loop around too fast, the receiver cannot tell yesterday's ghost 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Understand How $k$ Bits Produce Sequence Numbers</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Understand How $k$ Bits Produce Sequence Numbers</summary>
 
 **What are we doing?** Determining the total pool of unique identification labels available when using $k$ bits in a binary header field.
 
@@ -219,10 +219,10 @@ For example:
 - If $k = 3$ bits: $2^3 = 8$ sequence numbers $\to \{0, 1, 2, 3, 4, 5, 6, 7\}$
 
 **Where did this formula/concept come from?** Basic combinatorics of binary representation: an ordered string of $k$ independent binary digits has $2 \times 2 \times \dots \times 2 = 2^k$ possible values.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Derive the Window Size Limit for Go-Back-N ($W_s \le 2^k - 1$)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Derive the Window Size Limit for Go-Back-N ($W_s \le 2^k - 1$)</summary>
 
 **What changed from Step 1?** We now connect the available sequence space $2^k$ to the window limits of the Go-Back-N protocol.
 
@@ -250,10 +250,10 @@ The data stream is now permanently corrupted!
 Therefore, $W_s$ cannot exceed $2^k - 1$.
 
 **Where did this formula/concept come from?** Sliding window correctness invariant: The sender's active window and the receiver's active window must never overlap in modulo $2^k$ space.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Calculate Minimum $k$ for Go-Back-N with $W_s = 61$</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Calculate Minimum $k$ for Go-Back-N with $W_s = 61$</summary>
 
 **What changed from Step 2?** We now apply the derived formula $W_s \le 2^k - 1$ to our satellite link requirement $W_s = 61$.
 
@@ -273,10 +273,10 @@ Taking the base-2 logarithm:
 $$k \ge \lceil \log_2(62) \rceil = \lceil 5.954 \rceil = 6\text{ bits}$$
 
 **Where did this formula/concept come from?** Algebraic inversion of powers of 2 using the ceiling function $\lceil \dots \rceil$ because bit counts in headers must be whole integers.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Derive the Window Size Limit for Selective Repeat ($W_s \le 2^{k-1}$)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Derive the Window Size Limit for Selective Repeat ($W_s \le 2^{k-1}$)</summary>
 
 **What changed from Step 3?** We now analyze **Selective Repeat (SR)**, where the receiver does *not* have a window of size 1. Instead, the receiver has an acceptance buffer of size $W_r = W_s$.
 
@@ -293,10 +293,10 @@ Divide both sides by 2:
 $$W_s \le \frac{2^k}{2} = 2^{k-1}$$
 
 **Where did this formula/concept come from?** In SR, the receiver window can advance by up to $W_s$ positions before the sender learns about it. If the ACKs are delayed or lost, the sender's window is still at the old positions while the receiver's window has slid forward by $W_s$. To guarantee that the old sender window and the new receiver window do not cover any identical sequence numbers, the sum of their widths cannot exceed the total circle size $2^k$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: The "Walkie-Talkie" Ambiguity Failure Demonstration</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: The "Walkie-Talkie" Ambiguity Failure Demonstration</summary>
 
 **What changed from Step 4?** Let us trace an explicit step-by-step failure to prove why $W_s > 2^{k-1}$ breaks Selective Repeat.
 
@@ -329,10 +329,10 @@ Assume we set $W_s = 3$ and $W_r = 3$.
    - The receiver accepts duplicate old data as new data! The file is corrupt.
 
 To prevent this overlap between the old sender window and the advanced receiver window, the window size $W_s$ can never be larger than half the sequence space: $W_s \le 2^{k-1}$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 6: Calculate Minimum $k$ for Selective Repeat with $W_s = 61$</div>
+<details class="step-card">
+<summary class="step-badge">Step 6: Calculate Minimum $k$ for Selective Repeat with $W_s = 61$</summary>
 
 **What changed from Step 5?** Now that we have proven $W_s \le 2^{k-1}$, we calculate the bits needed for our $W_s = 61$ requirement.
 
@@ -352,17 +352,17 @@ Since $2^5 = 32$ and $2^6 = 64$, $\lceil \log_2(61) \rceil = 6$.
 $$k - 1 \ge 6 \implies k \ge 6 + 1 = 7\text{ bits}$$
 
 **Where did this formula/concept come from?** Logarithmic inversion of the Selective Repeat window constraint inequality.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary and Comparison Table</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary and Comparison Table</summary>
 
 **What is the final answer?** For a required window size of $W_s = 61$:  
 - **Go-Back-N:** Requires $W_s \le 2^k - 1 \implies 2^k \ge 62 \implies \mathbf{k = 6\text{ bits}}$ (yielding sequence space $2^6 = 64$, with maximum allowed $W_s = 63$).  
 - **Selective Repeat:** Requires $W_s \le 2^{k-1} \implies 2^{k-1} \ge 61 \implies \mathbf{k = 7\text{ bits}}$ (yielding sequence space $2^7 = 128$, with maximum allowed $W_s = 64$).
 
 **Why does this answer make sense?** Selective Repeat needs an extra bit ($k = 7$ vs $k = 6$) because its receiver accepts packets out of order. To prevent the receiver's forward-sliding window from confusing retransmitted old packets with future packets that wrapped around the circle, the sequence number space must be at least twice as large as the window size.
-</div>
+</details>
 
 </div>
 
@@ -390,8 +390,8 @@ Imagine an assembly line building a bicycle:
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Understand the Key Protocol Rules of Go-Back-N (GBN)</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Understand the Key Protocol Rules of Go-Back-N (GBN)</summary>
 
 **What are we doing?** Establishing the operational rules for Go-Back-N before tracing its execution.
 
@@ -404,10 +404,10 @@ Imagine an assembly line building a bicycle:
 4. **Sender Timer:** The sender maintains a single timer for the oldest unacknowledged frame. If this timer expires, the sender must **go back and retransmit ALL unacknowledged frames currently in the window**, not just the lost one.
 
 **Where did this formula/concept come from?** The standard ARQ (Automatic Repeat reQuest) protocol definition designed for ultra-simple receivers with no memory buffers.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Trace Go-Back-N Execution (Timeline of Events)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Trace Go-Back-N Execution (Timeline of Events)</summary>
 
 **What changed from Step 1?** We now apply these 4 rules to our specific transmission: Frames 0, 1, 2, 3, 4 with Frame 2 lost.
 
@@ -460,10 +460,10 @@ Sender                                              Receiver (expected = 0)
 5. **Frame 4 arrives:** Receiver checks if $4 == \text{expected\_frame } (2)$. False! Receiver **discards** Frame 4. Generates another duplicate `ACK 1`.
 6. **Sender Timeout:** Sender has received `ACK 0` and `ACK 1`. Frames 0 and 1 are cleared from the window. The oldest unacknowledged frame is Frame 2. Its timer expires.
 7. **Retransmission:** Sender must retransmit every frame starting from 2 up to the end of the window: **Frame 2, Frame 3, and Frame 4** are all retransmitted.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Understand the Key Protocol Rules of Selective Repeat (SR)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Understand the Key Protocol Rules of Selective Repeat (SR)</summary>
 
 **What changed from Step 2?** We now examine the second protocol: **Selective Repeat**.
 
@@ -479,10 +479,10 @@ Sender                                              Receiver (expected = 0)
 5. **Retransmission Rule:** When a timer expires for frame $n$, the sender retransmits **ONLY frame $n$**.
 
 **Where did this formula/concept come from?** Advanced ARQ protocols designed to avoid wasting network bandwidth on noisy or high-latency links.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Trace Selective Repeat Execution (Timeline of Events)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Trace Selective Repeat Execution (Timeline of Events)</summary>
 
 **What changed from Step 3?** We now apply Selective Repeat rules to the identical scenario: Frames 0, 1, 2, 3, 4 sent, Frame 2 lost.
 
@@ -534,10 +534,10 @@ Sender                                              Receiver (Base = 0, Window: 
 7. **Sender Timeout:** Frame 2's timer expires.
 8. **Retransmission:** Sender retransmits **ONLY Frame 2**. Frames 3 and 4 are NOT retransmitted!
 9. **Arrival of Retransmitted Frame 2:** The receiver receives Frame 2. It now has contiguous frames: 2 (just arrived), 3 (buffered), and 4 (buffered). It delivers 2, 3, and 4 to the application layer in correct order, and advances its base pointer to 5. Receiver transmits `ACK 2`.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Comparative Side-by-Side Analysis</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Comparative Side-by-Side Analysis</summary>
 
 **What is the final answer?** Let us compare the resource utilization and network waste between the two protocols:
 
@@ -551,7 +551,7 @@ Sender                                              Receiver (Base = 0, Window: 
 | **Implementation Complexity** | Extremely simple logic and low memory. | Complex timer tracking, sorting buffers, and sequence logic. |
 
 **Why does this answer make sense?** Go-Back-N sacrifices network bandwidth to make receiver hardware as cheap and simple as possible (no memory buffers). Selective Repeat uses receiver memory and individual acknowledgments to ensure that not a single bit of wireless bandwidth is wasted on retransmitting packets that the receiver already has.
-</div>
+</details>
 
 </div>
 

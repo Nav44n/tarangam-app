@@ -32,8 +32,8 @@ Think of the cost matrix as a table of flight prices.
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Root Node Matrix Reduction (Node 1)</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Root Node Matrix Reduction (Node 1)</summary>
 
 * **Row Reductions:**
   * Row 1: $\min(\infty, 10, 15, 20) = \mathbf{10}$. Subtract $10 \implies [\infty, 0, 5, 10]$.
@@ -67,10 +67,10 @@ $$M_1 = \begin{bmatrix}
 0 & 7 & \infty & 1 \\
 0 & 0 & 0 & \infty
 \end{bmatrix}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Level 1 Branching from City 1</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Level 1 Branching from City 1</summary>
 
 We evaluate 3 outgoing edges from City 1: $(1, 2), (1, 3), (1, 4)$.
 
@@ -130,10 +130,10 @@ We evaluate 3 outgoing edges from City 1: $(1, 2), (1, 3), (1, 4)$.
 #### Priority Queue after Level 1:
 $$\text{Live Nodes} = \Big\{ \mathbf{\text{Node 2: } \hat{c}=35}, \; \text{Node 3: } \hat{c}=40, \; \text{Node 4: } \hat{c}=40 \Big\}$$
 **Next E-Node:** **Node 2 ($\hat{c} = 35$, Path: $1 \to 2$)**.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Level 2 Branching from Node 2 (Path 1 -> 2)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Level 2 Branching from Node 2 (Path 1 -> 2)</summary>
 
 From Node 2, unvisited cities are $\{3, 4\}$.
 
@@ -174,10 +174,10 @@ $$M_6 = \begin{bmatrix}
 0 & \infty & \infty & \infty \\
 \infty & \infty & 0 & \infty
 \end{bmatrix}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Path Completion from Node 6 (Path 1 -> 2 -> 4)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Path Completion from Node 6 (Path 1 -> 2 -> 4)</summary>
 
 The only remaining unvisited city is **City 3**.
 The path must proceed:
@@ -197,16 +197,16 @@ $$\mathbf{U \leftarrow 35}$$
 * Node 5 ($\hat{c} = 39 \ge 35$): **PRUNED!**
 * Node 3 ($\hat{c} = 40 \ge 35$): **PRUNED!**
 * Node 4 ($\hat{c} = 40 \ge 35$): **PRUNED!**
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Verification and Final Tour</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Verification and Final Tour</summary>
 
 Original cost verification from matrix $A$:
 $$\text{Cost} = A[1, 2] + A[2, 4] + A[4, 3] + A[3, 1] = 10 + 10 + 9 + 6 = \mathbf{35}$$
 
 * **Optimal Tour:** $\mathbf{1 \to 2 \to 4 \to 3 \to 1}$
 * **Minimum Tour Cost:** $\mathbf{35}$
-</div>
+</details>
 
 </div>

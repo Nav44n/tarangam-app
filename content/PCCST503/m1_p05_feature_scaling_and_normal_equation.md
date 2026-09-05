@@ -36,8 +36,8 @@ Imagine you are trying to find the absolute lowest point of a bowl (the minimum 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Transpose the Matrix X</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Transpose the Matrix X</summary>
 
 **What are we doing?** We are flipping the matrix $X$ over its diagonal to create the transpose $X^T$.
 
@@ -51,10 +51,10 @@ The transposed matrix $X^T$ is a $2 \times 3$ matrix:
 $$X^T = \begin{bmatrix} \mathbf{1} & \mathbf{1} & \mathbf{1} \\ \mathit{1} & \mathit{2} & \mathit{3} \end{bmatrix}$$
 
 **Where did this formula/concept come from?** Matrix transposition is a foundational operation in linear algebra required to align the dimensions of matrices so they can be multiplied together to form square covariance matrices.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Multiply X^T by X</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Multiply X^T by X</summary>
 
 **What changed from Step 1?** We now have both $X^T$ (size $2 \times 3$) and $X$ (size $3 \times 2$).
 
@@ -73,10 +73,10 @@ $$X^T X = \begin{bmatrix} 1 & 1 & 1 \\ 1 & 2 & 3 \end{bmatrix} \begin{bmatrix} 1
   $$(1 \times 1) + (2 \times 2) + (3 \times 3) = 1 + 4 + 9 = \mathbf{14}$$
 
 $$X^T X = \begin{bmatrix} 3 & 6 \\ 6 & 14 \end{bmatrix}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Calculate the Matrix Inverse (X^T X)⁻¹</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Calculate the Matrix Inverse (X^T X)⁻¹</summary>
 
 **What changed from Step 2?** We now have the $2 \times 2$ square matrix $X^T X$.
 
@@ -90,10 +90,10 @@ $$\text{Inverse} = \frac{1}{(a \times d) - (b \times c)} \begin{bmatrix} d & -b 
 $$(X^T X)^{-1} = \frac{1}{6} \begin{bmatrix} 14 & -6 \\ -6 & 3 \end{bmatrix}$$
 
 *(Note: We will leave the factor $1/6$ on the outside for now to keep the arithmetic exact and clean).*
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Multiply X^T by y</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Multiply X^T by y</summary>
 
 **What changed from Step 3?** We finished the left side of our Normal Equation $(X^T X)^{-1}$. Now we calculate the right side: $X^T y$.
 
@@ -108,10 +108,10 @@ $$X^T y = \begin{bmatrix} 1 & 1 & 1 \\ 1 & 2 & 3 \end{bmatrix} \begin{bmatrix} 2
   $$(1 \times 2) + (2 \times 3) + (3 \times 5) = 2 + 6 + 15 = \mathbf{23}$$
 
 $$X^T y = \begin{bmatrix} 10 \\ 23 \end{bmatrix}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Solve for Parameter Vector θ</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Solve for Parameter Vector θ</summary>
 
 **What changed from Step 4?** We now have both components of the Normal Equation: $(X^T X)^{-1}$ and $(X^T y)$. 
 
@@ -126,10 +126,10 @@ Let's multiply the matrix by the vector first (leaving the scalar $1/6$ outside)
 
 The product is $\begin{bmatrix} 2 \\ 9 \end{bmatrix}$. Now multiply by $\frac{1}{6}$:
 $$\theta = \frac{1}{6} \begin{bmatrix} 2 \\ 9 \end{bmatrix} = \begin{bmatrix} 2/6 \\ 9/6 \end{bmatrix} = \begin{bmatrix} 1/3 \\ 3/2 \end{bmatrix} \approx \begin{bmatrix} 0.333 \\ 1.500 \end{bmatrix}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary and Time Complexity Comparison</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary and Time Complexity Comparison</summary>
 
 **What is the final answer?**
 - The exact intercept is $\theta_0 = \frac{1}{3} \approx \mathbf{0.333}$.
@@ -143,7 +143,7 @@ If we test $x_1 = 2$, our model predicts $\hat{y} = 0.333 + 1.5(2) = 3.333$, whi
 - **Normal Equation:** Inverting the $X^T X$ matrix takes roughly $O(d^3)$ time (where $d$ is the number of features). If you have $d = 10$ features, $10^3 = 1{,}000$ operations (instant). If you have $d = 100{,}000$ features (e.g., in genomics or computer vision), $100{,}000^3 = 10^{15}$ operations, which exhausts memory and compute.
 - **Gradient Descent:** Takes $O(k \cdot n \cdot d)$ time, where $k$ is the number of epochs and $n$ is the number of samples. It scales smoothly.
 **Rule:** Use the Normal Equation for smaller feature sets ($d < 10{,}000$). Use Gradient Descent for large-scale feature sets.
-</div>
+</details>
 
 </div>
 
@@ -182,8 +182,8 @@ If you try to walk straight to the bottom, every time you move the giant leg, yo
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Apply Min-Max Normalization to House Area (x₁)</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Apply Min-Max Normalization to House Area (x₁)</summary>
 
 **What are we doing?** We are shrinking the large house area numbers into a standardized range from $0.0$ to $1.0$.
 
@@ -202,10 +202,10 @@ Calculations:
 - House 3: $\frac{3000 - 1000}{2000} = \frac{2000}{2000} = \mathbf{1.0}$
 
 **Where did this formula/concept come from?** A standard linear transformation mapping any finite interval $[a, b]$ onto $[0, 1]$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Apply Min-Max Normalization to Bedrooms (x₂)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Apply Min-Max Normalization to Bedrooms (x₂)</summary>
 
 **What changed from Step 1?** We finished scaling Area. Now we scale Bedrooms using the exact same logic.
 
@@ -221,10 +221,10 @@ Calculations:
 - House 3: $\frac{3 - 1}{2} = \frac{2}{2} = \mathbf{1.0}$
 
 Notice that after Min-Max scaling, $x_1$ and $x_2$ have the **exact same normalized values** (`[0.0, 0.5, 1.0]`)! The model no longer sees one feature as 1,000 times larger than the other.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Apply Z-Score Standardization to House Area (x₁)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Apply Z-Score Standardization to House Area (x₁)</summary>
 
 **What changed from Step 2?** Min-Max is bounded, but sensitive to extreme outliers. We now apply a statistically robust method: Z-Score Standardization.
 
@@ -249,10 +249,10 @@ Now calculate Z-scores:
 - House 3: $z = \frac{3000 - 2000}{816.5} = \frac{1000}{816.5} \approx \mathbf{+1.22}$
 
 **Where did this formula/concept come from?** Standard normal distribution ($Z$-transform in statistical theory).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Apply Z-Score Standardization to Bedrooms (x₂)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Apply Z-Score Standardization to Bedrooms (x₂)</summary>
 
 **What changed from Step 3?** We standardized Area. Now we standardize Bedrooms.
 
@@ -273,10 +273,10 @@ Now calculate Z-scores:
 - House 3: $z = \frac{3 - 2}{0.8165} = \frac{1}{0.8165} \approx \mathbf{+1.22}$
 
 Both standardized features now have matching ranges: `[-1.22, 0.00, +1.22]`.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Geometric Explanation of Cost Function Contours</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Geometric Explanation of Cost Function Contours</summary>
 
 **What is the final answer?** By standardizing the features, we transformed their disparate ranges (`[1000 to 3000]` vs. `[1 to 3]`) into an identical distribution (`[-1.22 to +1.22]`).
 
@@ -284,7 +284,7 @@ Both standardized features now have matching ranges: `[-1.22, 0.00, +1.22]`.
 Imagine looking at the "bowl" of the cost function from above:
 - **Unscaled Data (Elongated Ellipse):** Because Area is 1,000 times larger than Bedrooms, a tiny change in the weight for Area ($\theta_1$) causes the error to explode, while a huge change in the weight for Bedrooms ($\theta_2$) barely changes the error. The bird's eye view of the bowl looks like a drastically stretched out, skinny oval. The gradient path bounces violently side-to-side off the narrow canyon walls, taking many iterations to reach the center.
 - **Scaled Data (Spherical Circles):** Because both features now have identical standard deviations ($\sigma = 1$), changing $\theta_1$ affects the error the same amount as changing $\theta_2$. The contours form symmetrical, round circles. The negative gradient vector points **directly straight to the center**, allowing gradient descent to converge in a fraction of the steps!
-</div>
+</details>
 
 </div>
 

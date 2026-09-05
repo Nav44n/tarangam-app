@@ -28,8 +28,8 @@ Think of matrix multiplication as a "Row meets Column" handshake:
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Compute Entry c11 (Top-Left)</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Compute Entry c11 (Top-Left)</summary>
 
 **What are we doing?** We calculate the value that goes into the first row and first column of the output matrix $C$.
 
@@ -49,10 +49,10 @@ For $i=1, j=1$, and $n=2$, the sum expands to $a_{11}b_{11} + a_{12}b_{21}$.
 **Operation Count for this entry:**
 - Multiplications: $2$ (specifically: $a_{11} \cdot b_{11}$ and $a_{12} \cdot b_{21}$)
 - Additions: $1$ (the $+$ between them)
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Compute Entry c12 (Top-Right)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Compute Entry c12 (Top-Right)</summary>
 
 **What changed from Step 1?** We stay on Row 1 of matrix $A$, but shift our focus to **Column 2** of matrix $B$.
 
@@ -69,10 +69,10 @@ For $i=1, j=1$, and $n=2$, the sum expands to $a_{11}b_{11} + a_{12}b_{21}$.
 **Operation Count for this entry:**
 - Multiplications: $2$
 - Additions: $1$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Compute Entry c21 (Bottom-Left)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Compute Entry c21 (Bottom-Left)</summary>
 
 **What changed from Step 2?** We move down to **Row 2** of matrix $A$, and look at **Column 1** of matrix $B$.
 
@@ -89,10 +89,10 @@ For $i=1, j=1$, and $n=2$, the sum expands to $a_{11}b_{11} + a_{12}b_{21}$.
 **Operation Count for this entry:**
 - Multiplications: $2$
 - Additions: $1$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Compute Entry c22 (Bottom-Right)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Compute Entry c22 (Bottom-Right)</summary>
 
 **What changed from Step 3?** We stay on **Row 2** of matrix $A$, and move to **Column 2** of matrix $B$.
 
@@ -109,10 +109,10 @@ For $i=1, j=1$, and $n=2$, the sum expands to $a_{11}b_{11} + a_{12}b_{21}$.
 **Operation Count for this entry:**
 - Multiplications: $2$
 - Additions: $1$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Tally All Operations & Set Up Recurrence</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Tally All Operations & Set Up Recurrence</summary>
 
 **What are we doing?** We count all the arithmetic operations we just performed across all $4$ cells and analyze how this scales up to larger matrices.
 
@@ -131,10 +131,10 @@ To compute the $4$ sub-blocks of $C$, the naive block algorithm performs:
 
 This yields the classic recurrence relation:
 $$T(n) = 8T\left(\frac{n}{2}\right) + O(n^2)$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Solving the Recurrence via Master Theorem</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Solving the Recurrence via Master Theorem</summary>
 
 **What is the runtime of the standard divide-and-conquer approach?**
 We apply the Master Theorem to $T(n) = aT(n/b) + O(n^d)$:
@@ -150,7 +150,7 @@ $$T(n) = \Theta\left(n^{\log_b a}\right) = \Theta\left(n^{\log_2 8}\right) = \ma
 **Why does this matter?**
 Even though we divided the problem using divide-and-conquer, the runtime did not improve at all! It is still $O(n^3)$, identical to three nested `for` loops.  
 The **bottleneck** is the number of recursive multiplications ($a = 8$). If we could somehow compute the product using fewer than $8$ multiplications, the exponent $\log_2(a)$ would drop below $3$!
-</div>
+</details>
 
 </div>
 
@@ -183,8 +183,8 @@ $$\text{Burger} + \text{Fries}$$
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: The 7 Magic Products (M1 through M7)</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: The 7 Magic Products (M1 through M7)</summary>
 
 **What are we doing?** We state the $7$ specific multiplication formulas designed by Strassen.
 
@@ -206,10 +206,10 @@ Once these $7$ values are computed, the final output entries are assembled purel
 - $c_{12} = M_3 + M_5$
 - $c_{21} = M_2 + M_4$
 - $c_{22} = M_1 - M_2 + M_3 + M_6$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Choose c22 and Expand M1, M2, M3, M6 Individually</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Choose c22 and Expand M1, M2, M3, M6 Individually</summary>
 
 **What changed from Step 1?** We will now prove that Strassen's formula for $c_{22}$ actually works. We select the target equation:
 $$c_{22} = M_1 - M_2 + M_3 + M_6$$
@@ -233,10 +233,10 @@ $$c_{22}^{\text{target}} = a_{21}b_{12} + a_{22}b_{22}$$
 4. **Expand $M_6$:**
    $$M_6 = (a_{21} - a_{11})(b_{11} + b_{12})$$
    $$M_6 = a_{21}b_{11} + a_{21}b_{12} - a_{11}b_{11} - a_{11}b_{12}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Substitute the Expansions into (M1 - M2 + M3 + M6)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Substitute the Expansions into (M1 - M2 + M3 + M6)</summary>
 
 **What changed from Step 2?** We now assemble all $4$ expanded pieces into one single, comprehensive algebraic expression.
 
@@ -260,10 +260,10 @@ c_{22} = &\phantom{+} a_{11}b_{11} + a_{11}b_{22} + a_{22}b_{11} + a_{22}b_{22} 
 &+ a_{21}b_{11} + a_{21}b_{12} - a_{11}b_{11} - a_{11}b_{12}
 \end{aligned}$$
 There are $12$ individual terms in this expression.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Cancel Every Unwanted Term Step-by-Step</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Cancel Every Unwanted Term Step-by-Step</summary>
 
 **What changed from Step 3?** We have $12$ terms laid out in front of us. We will now hunt down and pair up opposite terms $(+X \text{ and } -X)$ so they cancel to zero.
 
@@ -302,10 +302,10 @@ Let us gather the survivors that had no negative partners to cancel them:
 Putting them together:
 $$c_{22} = a_{21}b_{12} + a_{22}b_{22}$$
 This matches the exact standard formula for $c_{22}$ from Level 1! The identity is algebraically verified.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Formulate Strassen's Recurrence Relation</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Formulate Strassen's Recurrence Relation</summary>
 
 **What are we doing?** We write down the recursive equation for Strassen's algorithm when dividing an $n \times n$ matrix into $\frac{n}{2} \times \frac{n}{2}$ sub-matrices.
 
@@ -321,10 +321,10 @@ This matches the exact standard formula for $c_{22}$ from Level 1! The identity 
 
 Combining both parts gives the complete recurrence relation:
 $$T(n) = 7T\left(\frac{n}{2}\right) + O(n^2)$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Solve Strassen's Recurrence via Master Theorem</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Solve Strassen's Recurrence via Master Theorem</summary>
 
 **What is the final time complexity of Strassen's Algorithm?**
 We apply the Master Theorem to:
@@ -356,6 +356,6 @@ For a matrix of dimension $n = 1024 = 2^{10}$:
 - $n^{2.807} \approx (2^{10})^{2.807} = 2^{28.07} \approx 280,000,000$ operations
 
 Strassen's algorithm does nearly **$4$ times fewer operations** on a $1024 \times 1024$ matrix than the traditional method, mathematically breaking the cubic barrier for the first time in history!
-</div>
+</details>
 
 </div>

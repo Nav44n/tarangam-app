@@ -25,8 +25,8 @@ To walk away with the most valuable bag, you must prioritize the most expensive 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Calculate Value-to-Weight Densities</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Calculate Value-to-Weight Densities</summary>
 
 **What are we doing?** We calculate the value density $r_i = \frac{v_i}{w_i}$ for each item.
 
@@ -48,19 +48,19 @@ $$\max \sum_{i=1}^n \left(\frac{v_i}{w_i}\right) (w_i x_i) \quad \text{subject t
 | 2 | $20\text{ kg}$ | $\$100$ | **$5.0$** |
 | 3 | $30\text{ kg}$ | $\$120$ | **$4.0$** |
 
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Sort Items in Non-Increasing Order of Density</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Sort Items in Non-Increasing Order of Density</summary>
 
 **What changed from Step 1?** We establish the processing order based on density values:
 $$r_1 (6.0) > r_2 (5.0) > r_3 (4.0)$$
 The sorted sequence is $\langle \text{Item 1}, \text{Item 2}, \text{Item 3} \rangle$.
 Initial available capacity: $W_{\text{rem}} = 50\text{ kg}$. Total profit: $P = \$0$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Evaluate Item 1 (Highest Density)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Evaluate Item 1 (Highest Density)</summary>
 
 **What are we doing?** Check if Item 1 fits completely into the remaining capacity.
 
@@ -71,10 +71,10 @@ Initial available capacity: $W_{\text{rem}} = 50\text{ kg}$. Total profit: $P = 
   $$x_1 = 1.0$$
 * Deduct weight: $W_{\text{rem}} \leftarrow 50 - 10 = 40\text{ kg}$.
 * Add profit: $P \leftarrow 0 + (1.0 \times 60) = \$60$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Evaluate Item 2</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Evaluate Item 2</summary>
 
 **What are we doing?** Check if Item 2 fits into the remaining $40\text{ kg}$.
 
@@ -85,10 +85,10 @@ Initial available capacity: $W_{\text{rem}} = 50\text{ kg}$. Total profit: $P = 
   $$x_2 = 1.0$$
 * Deduct weight: $W_{\text{rem}} \leftarrow 40 - 20 = 20\text{ kg}$.
 * Add profit: $P \leftarrow 60 + (1.0 \times 100) = \$160$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Evaluate Item 3 (Fractional Inclusion)</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Evaluate Item 3 (Fractional Inclusion)</summary>
 
 **What are we doing?** Check if Item 3 fits into the remaining $20\text{ kg}$.
 
@@ -100,10 +100,10 @@ Initial available capacity: $W_{\text{rem}} = 50\text{ kg}$. Total profit: $P = 
   $$x_3 = \frac{W_{\text{rem}}}{w_3} = \frac{20}{30} = \frac{2}{3} \approx 0.667$$
 * Deduct weight: $W_{\text{rem}} \leftarrow 20 - \left(\frac{2}{3} \times 30\right) = 20 - 20 = 0\text{ kg}$.
 * Add profit: $P \leftarrow 160 + \left(\frac{2}{3} \times 120\right) = 160 + 80 = \$240$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Conclusion & Results</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Conclusion & Results</summary>
 
 **What is the final answer?**
 * Fraction vector: $\mathbf{X = \langle x_1 = 1.0, \; x_2 = 1.0, \; x_3 = 0.667 \rangle}$
@@ -112,7 +112,7 @@ Initial available capacity: $W_{\text{rem}} = 50\text{ kg}$. Total profit: $P = 
 
 **Why does this answer make sense?**
 Any alternative selection that takes less of Item 1 or Item 2 to make room for more of Item 3 would replace higher-density value ($\$6/\text{kg}$ or $\$5/\text{kg}$) with lower-density value ($\$4/\text{kg}$), reducing total profit.
-</div>
+</details>
 
 </div>
 
@@ -136,8 +136,8 @@ When two items have the exact same price-per-kilogram ratio, you can take either
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Compute Densities and Identify Ties</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Compute Densities and Identify Ties</summary>
 
 * $r_1 = \frac{36}{6} = 6.0\text{ \$/kg}$
 * $r_2 = \frac{60}{10} = 6.0\text{ \$/kg}$
@@ -146,10 +146,10 @@ When two items have the exact same price-per-kilogram ratio, you can take either
 
 Notice that $r_1 = r_2 = 6.0\text{ \$/kg}$. A tie occurs between Item 1 and Item 2.
 Sorted order (tie broken arbitrarily): $\langle \text{Item 1}, \text{Item 2}, \text{Item 3}, \text{Item 4} \rangle$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Pack Items Greedily</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Pack Items Greedily</summary>
 
 * **Item 1:** $w_1 = 6 \le 16 \implies x_1 = 1.0$.
   $W_{\text{rem}} = 16 - 6 = 10\text{ kg}$. Profit $= \$36$.
@@ -157,14 +157,14 @@ Sorted order (tie broken arbitrarily): $\langle \text{Item 1}, \text{Item 2}, \t
   $W_{\text{rem}} = 10 - 10 = 0\text{ kg}$. Profit $= 36 + 60 = \$96$.
 * Capacity is completely exhausted ($W_{\text{rem}} = 0$).
 * **Item 3 & Item 4:** Cannot be taken ($x_3 = 0, x_4 = 0$).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Solution Summary</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Solution Summary</summary>
 
 * **Selection Vector:** $\mathbf{X = \langle 1.0, \; 1.0, \; 0, \; 0 \rangle}$
 * **Total Weight:** $6 + 10 = 16\text{ kg}$.
 * **Total Maximum Profit:** $\mathbf{\$96}$.
-</div>
+</details>
 
 </div>

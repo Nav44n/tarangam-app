@@ -35,8 +35,8 @@ Imagine an archery contest where targets represent actual house prices ($y$), an
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Construct the Individual Error and Residual Table</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Construct the Individual Error and Residual Table</summary>
 
 **What are we doing?** Computing the raw prediction errors, their absolute values, and their squared values for each of the $n = 4$ observations.
 
@@ -79,10 +79,10 @@ Let us assemble these calculations into a clean working table:
 | **Sum ($\sum$)** | **11.5** | **12.5** | **-1.0** | **2.0** | **1.50** |
 
 **Where did this formula/concept come from?** The definition of a residual: the vertical distance between the observed data point and the model's fitted prediction surface.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Calculate Mean Absolute Error (MAE)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Calculate Mean Absolute Error (MAE)</summary>
 
 **What changed from Step 1?** We have the sum of absolute errors ($\sum |y_i - \hat{y}_i| = 2.0$). Now we compute their average across the $n = 4$ observations.
 
@@ -99,10 +99,10 @@ Let us assemble these calculations into a clean working table:
 **Interpretation:** On average, the model's predictions miss the true house prices by $0.50$ units ($50{,}000$ dollars).
 
 **Where did this formula/concept come from?** $L_1$-norm loss formulation in statistical estimation.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Calculate Mean Squared Error (MSE)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Calculate Mean Squared Error (MSE)</summary>
 
 **What changed from Step 2?** Instead of averaging absolute values, we now average the squared errors from Step 1.
 
@@ -119,10 +119,10 @@ Let us assemble these calculations into a clean working table:
 **Interpretation:** The Mean Squared Error is $0.375\text{ units}^2$. Notice the units are "squared units," which are not directly comparable to raw dollars.
 
 **Where did this formula/concept come from?** $L_2$-norm loss formulation, foundational to Gauss's classical least squares regression.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Calculate Root Mean Squared Error (RMSE)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Calculate Root Mean Squared Error (RMSE)</summary>
 
 **What changed from Step 3?** We have $\text{MSE} = 0.375\text{ units}^2$. Now we convert the metric back into the original target units by taking the square root.
 
@@ -139,10 +139,10 @@ Let us assemble these calculations into a clean working table:
    $$\text{RMSE} = \frac{2.4494897}{4} \approx \mathbf{0.6124}$$
 
 **Where did this formula/concept come from?** Standard deviation and Euclidean ($L_2$) distance in vector spaces.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Compare MAE vs. RMSE (Outlier Penalty Dynamics)</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Compare MAE vs. RMSE (Outlier Penalty Dynamics)</summary>
 
 **What changed from Step 4?** We now have two unit-aligned metrics: $\text{MAE} = 0.50$ and $\text{RMSE} \approx 0.6124$. Notice that $\text{RMSE} > \text{MAE}$.
 
@@ -166,10 +166,10 @@ Let us assemble these calculations into a clean working table:
 **Rule of Thumb:**
 - Use **MAE** when you want a robust metric that is not overly influenced by rare, extreme anomalies.
 - Use **RMSE** when large mistakes are catastrophic (e.g., medical dosage prediction, flight autopilot control) and must be heavily penalized.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 6: Compute Target Mean (ȳ) and Total Sum of Squares (SST)</div>
+<details class="step-card">
+<summary class="step-badge">Step 6: Compute Target Mean (ȳ) and Total Sum of Squares (SST)</summary>
 
 **What changed from Step 5?** We have evaluated absolute model error. Now we prepare to compute $R^2$, which requires measuring the baseline variation of the raw target data itself.
 
@@ -191,10 +191,10 @@ Let us assemble these calculations into a clean working table:
    $$SST = \sum_{i=1}^{4} (y_i - \bar{y})^2 = 0.015625 + 11.390625 + 0.765625 + 17.015625 = \mathbf{29.1875}$$
 
 **Where did this formula/concept come from?** Analysis of Variance (ANOVA). $SST$ is proportional to the sample variance of the target variable: $\text{Var}(Y) = \frac{SST}{n-1}$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 7: Identify Sum of Squared Errors (SSE)</div>
+<details class="step-card">
+<summary class="step-badge">Step 7: Identify Sum of Squared Errors (SSE)</summary>
 
 **What changed from Step 6?** We have $SST = 29.1875$. Now we compute the unmodelled error of our smart model ($SSE$).
 
@@ -207,10 +207,10 @@ $$SSE = \sum_{i=1}^{4} (y_i - \hat{y}_i)^2 = 0.25 + 0.25 + 0.00 + 1.00 = \mathbf
 
 Notice the relationship between MSE and SSE:
 $$\text{MSE} = \frac{SSE}{n} \implies SSE = n \times \text{MSE} = 4 \times 0.375 = 1.50$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 8: Compute Explained Sum of Squares (SSR)</div>
+<details class="step-card">
+<summary class="step-badge">Step 8: Compute Explained Sum of Squares (SSR)</summary>
 
 **What changed from Step 7?** We have total variation $SST = 29.1875$ and unexplained variation $SSE = 1.50$. Now we compute the variation explained by the model ($SSR$).
 
@@ -230,10 +230,10 @@ $$\text{Total Variation } (SST) = \text{Explained Variation } (SSR) + \text{Unex
    $$SSR = \sum_{i=1}^{4} (\hat{y}_i - \bar{y})^2 = 0.140625 + 8.265625 + 0.765625 + 26.265625 = \mathbf{35.4375}$$
 
 *(Note: The Pythagorean identity $SST = SSR + SSE$ strictly holds if predictions come from an OLS-fitted line with an intercept where $\sum e_i = 0$ and $\sum e_i \hat{y}_i = 0$. For general machine learning models—such as Neural Networks, Random Forests, or arbitrary test values—the universal definition of $R^2$ is strictly $1 - \frac{SSE}{SST}$).*
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 9: Compute the R² Score and Interpret the Result</div>
+<details class="step-card">
+<summary class="step-badge">Step 9: Compute the R² Score and Interpret the Result</summary>
 
 **What changed from Step 8?** We have $SST = 29.1875$ and $SSE = 1.50$. Now we compute the formal $R^2$ score.
 
@@ -250,10 +250,10 @@ $$\text{Total Variation } (SST) = \text{Explained Variation } (SSR) + \text{Unex
    $$R^2 = 1.0 - 0.05139 = \mathbf{0.94861} \approx 94.86\%$$
 
 **Interpretation:** The model achieves an $R^2$ score of approximately **$0.9486$**. This means that the model's predictions successfully explain **$94.86\%$** of the total variance in home prices, eliminating nearly $95\%$ of the error that a naive mean-predictor would have made.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Complete Metric Summary Table</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Complete Metric Summary Table</summary>
 
 **What is the final answer?** The full suite of regression evaluation metrics for this dataset:
 
@@ -267,7 +267,7 @@ $$\text{Total Variation } (SST) = \text{Explained Variation } (SSR) + \text{Unex
 | **$R^2$ Score (Variance Explained)** | $1 - \frac{SSE}{SST}$ | **$0.9486$** | Dimensionless ($94.86\%$) |
 
 **Why does this answer make sense?** The true values range from $-0.5$ to $7.0$ (a total spread of $7.5$ units). The model's largest single error is only $1.0$ unit, and two of its predictions miss by just $0.5$ units (with one exact hit). Because the errors are small compared to the overall data spread ($SST = 29.1875$), the $R^2$ score is very close to $1.0$.
-</div>
+</details>
 
 </div>
 
@@ -310,8 +310,8 @@ Think of $R^2$ as an efficiency rating for a weather forecaster compared to a br
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Prove that the Baseline Mean Model Yields R² = 0.0</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Prove that the Baseline Mean Model Yields R² = 0.0</summary>
 
 **What are we doing?** Evaluating the performance of the trivial baseline model $\hat{y}_i = \bar{y}$.
 
@@ -330,10 +330,10 @@ Think of $R^2$ as an efficiency rating for a weather forecaster compared to a br
    $$R^2 = 1 - \frac{SSE}{SST} = 1 - \frac{SST}{SST} = 1 - 1 = \mathbf{0.0}$$
 
 **Conclusion:** A model that simply outputs the mean of the training data has an $R^2$ of exactly $0.0$. It explains $0\%$ of the target variance beyond the baseline average.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Calculate SST for the Flawed Scenario Dataset</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Calculate SST for the Flawed Scenario Dataset</summary>
 
 **What changed from Step 1?** We established that the baseline model gives $R^2 = 0$. Now we evaluate our concrete test dataset:
 $$y = [10.0, 20.0, 30.0]$$
@@ -353,10 +353,10 @@ $$y = [10.0, 20.0, 30.0]$$
 
 3. Sum the squared deviations:
    $$SST = 100.0 + 0.0 + 100.0 = \mathbf{200.0}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Calculate SSE for Flawed Model Predictions</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Calculate SSE for Flawed Model Predictions</summary>
 
 **What changed from Step 2?** We know $SST = 200.0$. Now we evaluate the errors of the flawed model:
 $$\hat{y} = [50.0, 60.0, 70.0]$$
@@ -375,10 +375,10 @@ $$\hat{y} = [50.0, 60.0, 70.0]$$
 
 Sum the squared errors:
 $$SSE = 1{,}600.0 + 1{,}600.0 + 1{,}600.0 = \mathbf{4{,}800.0}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Compute the Resulting R² Score</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Compute the Resulting R² Score</summary>
 
 **What changed from Step 3?** We have $SST = 200.0$ and $SSE = 4{,}800.0$. Notice that $SSE > SST$!
 
@@ -395,10 +395,10 @@ $$SSE = 1{,}600.0 + 1{,}600.0 + 1{,}600.0 = \mathbf{4{,}800.0}$$
    $$R^2 = 1 - 24.0 = \mathbf{-23.0}$$
 
 **Interpretation:** An $R^2$ of **$-23.0$** means that the model's squared error is **24 times larger** than the error you would get by simply predicting the mean $\bar{y} = 20.0$ for every single sample!
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: General Algebraic Condition for Negative R²</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: General Algebraic Condition for Negative R²</summary>
 
 **What changed from Step 4?** We proved it with numbers. Now we state the universal algebraic rule that dictates when $R^2 < 0$.
 
@@ -418,10 +418,10 @@ $$SSE = 1{,}600.0 + 1{,}600.0 + 1{,}600.0 = \mathbf{4{,}800.0}$$
 - In **simple linear regression on training data** fitted via OLS with an intercept, $R^2$ is mathematically guaranteed to equal the square of Pearson's correlation ($r^2$), so it is constrained to the interval $[0, 1]$.
 - In **all other contexts**—including evaluating on a test set, using non-linear models (Decision Trees, Neural Networks), or models without an intercept—$R^2$ is defined by $1 - \frac{SSE}{SST}$ and has the range:
 $$(-\infty, 1.0]$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary of the R² Spectrum</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary of the R² Spectrum</summary>
 
 **What is the final answer?** The universal scale of the $R^2$ metric across all machine learning models:
 
@@ -433,7 +433,7 @@ $$(-\infty, 1.0]$$
 | **$< 0.0$** | $SSE > SST$. Model performs **worse** than predicting $\bar{y}$. | Flawed / completely untrustworthy |
 
 **Why does this answer make sense?** The baseline benchmark for any regression problem is predicting the constant average $\bar{y}$. If a complex machine learning model makes mistakes larger than the natural spread of the data itself ($SSE > SST$), it has added noise rather than extracting signal, producing a negative score.
-</div>
+</details>
 
 </div>
 

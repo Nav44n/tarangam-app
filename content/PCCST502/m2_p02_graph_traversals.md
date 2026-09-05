@@ -52,8 +52,8 @@ Imagine dropping a pebble into a calm pond at point $A$.
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Initialization & Enqueue Start Node A</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Initialization & Enqueue Start Node A</summary>
 
 **What are we doing?** We initialize an empty queue, an empty visited set, and an empty output list. Then, we mark our starting vertex $A$ as visited and push it into the queue.
 
@@ -70,10 +70,10 @@ Imagine dropping a pebble into a calm pond at point $A$.
 - **Queue [front ... back]:** `[A]`
 - **Visited Set:** `{A}`
 - **Output:** `[]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Dequeue A and Inspect Neighbors</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Dequeue A and Inspect Neighbors</summary>
 
 **What changed from Step 1?** We enter the main loop: `while Queue is not empty`. We remove the front item from the queue.
 
@@ -96,10 +96,10 @@ Imagine dropping a pebble into a calm pond at point $A$.
 - **Queue [front ... back]:** `[B, C]` (These represent Distance $1$ from $A$)
 - **Visited Set:** `{A, B, C}`
 - **Output:** `[A]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Dequeue B and Inspect Neighbors</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Dequeue B and Inspect Neighbors</summary>
 
 **What changed from Step 2?** Node $A$ is completely finished. Node $B$ is now at the front of the queue.
 
@@ -123,10 +123,10 @@ Imagine dropping a pebble into a calm pond at point $A$.
 - **Queue [front ... back]:** `[C, D, E]`
 - **Visited Set:** `{A, B, C, D, E}`
 - **Output:** `[A, B]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Dequeue C and Inspect Neighbors</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Dequeue C and Inspect Neighbors</summary>
 
 **What changed from Step 3?** Node $B$ is finished. Node $C$ is now at the front of the queue.
 
@@ -145,10 +145,10 @@ Imagine dropping a pebble into a calm pond at point $A$.
 - **Queue [front ... back]:** `[D, E, F]` (All nodes here are at Distance $2$ from $A$)
 - **Visited Set:** `{A, B, C, D, E, F}`
 - **Output:** `[A, B, C]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Dequeue D, E, and F (Leaves of the BFS Tree)</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Dequeue D, E, and F (Leaves of the BFS Tree)</summary>
 
 **What changed from Step 4?** All remaining items in the queue ($D, E, F$) have no unvisited neighbors.
 
@@ -170,10 +170,10 @@ Imagine dropping a pebble into a calm pond at point $A$.
 - **Queue [front ... back]:** `[]` (Empty $\implies$ while loop terminates)
 - **Visited Set:** `{A, B, C, D, E, F}`
 - **Output:** `[A, B, C, D, E, F]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Conclusion & Complexity</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Conclusion & Complexity</summary>
 
 **What is the final BFS traversal order?**
 $$[A, B, C, D, E, F]$$
@@ -189,7 +189,7 @@ BFS processed every vertex at distance $d$ strictly before any vertex at distanc
 $$\text{Total Time} = O(V + E)$$
 **Space Complexity:** Storing `Queue` and `Visited` requires memory proportional to the number of vertices:  
 $$\text{Total Space} = O(V)$$
-</div>
+</details>
 
 </div>
 
@@ -217,8 +217,8 @@ Imagine exploring a dark labyrinth with a ball of string and a piece of chalk:
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Call DFS(A) - The Root Call</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Call DFS(A) - The Root Call</summary>
 
 **What are we doing?** We initiate the recursion by invoking `DFS(A)`.
 
@@ -237,10 +237,10 @@ Imagine exploring a dark labyrinth with a ball of string and a piece of chalk:
 **State:**
 - **Visited:** `{A}`
 - **Discovery Order:** `[A]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Call DFS(B) - Diving Deeper</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Call DFS(B) - Diving Deeper</summary>
 
 **What changed from Step 1?** A new stack frame `DFS(B)` is pushed on top of `DFS(A)`.
 
@@ -260,10 +260,10 @@ Imagine exploring a dark labyrinth with a ball of string and a piece of chalk:
 **State:**
 - **Visited:** `{A, B}`
 - **Discovery Order:** `[A, B]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Call DFS(D) & Hit First Dead End</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Call DFS(D) & Hit First Dead End</summary>
 
 **What changed from Step 2?** `DFS(D)` is pushed onto the stack.
 
@@ -283,10 +283,10 @@ Imagine exploring a dark labyrinth with a ball of string and a piece of chalk:
 **State:**
 - **Visited:** `{A, B, D}`
 - **Discovery Order:** `[A, B, D]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Resume DFS(B) and Call DFS(E)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Resume DFS(B) and Call DFS(E)</summary>
 
 **What changed from Step 3?** We backtracked to `DFS(B)`. Its neighbor list was $\text{Adj}[B] = [A, D, E]$. We checked $A$ (visited), finished $D$, and now check $E$.
 
@@ -312,10 +312,10 @@ Imagine exploring a dark labyrinth with a ball of string and a piece of chalk:
 **State:**
 - **Visited:** `{A, B, D, E}`
 - **Discovery Order:** `[A, B, D, E]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Resume DFS(A) and Explore Right Subtree (C and F)</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Resume DFS(A) and Explore Right Subtree (C and F)</summary>
 
 **What changed from Step 4?** Entire branch under $B$ is fully explored. `DFS(A)` resumes and looks at its next neighbor from $\text{Adj}[A] = [B, C]$, which is $C$.
 
@@ -337,10 +337,10 @@ Imagine exploring a dark labyrinth with a ball of string and a piece of chalk:
   - `DFS(A)` has no more neighbors $\implies$ pops $\implies$ Stack is empty!
 
 **Call Stack State:** `[]` (Empty $\implies$ traversal complete)
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Comparison with BFS</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Comparison with BFS</summary>
 
 **What is the final DFS discovery order?**
 $$[A, B, D, E, C, F]$$
@@ -352,7 +352,7 @@ $$[A, B, D, E, C, F]$$
 **Complexity:**
 - **Time:** $O(V + E)$ (visits every vertex once, checks every adjacency edge once).
 - **Space:** $O(h)$ where $h$ is the maximum depth of the call stack (in worst-case linear graph, $h = V \implies O(V)$).
-</div>
+</details>
 
 </div>
 
@@ -390,8 +390,8 @@ Imagine a family ancestry tree where time moves forward:
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: The 3-Color Vertex Classification</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: The 3-Color Vertex Classification</summary>
 
 **What are we doing?** Defining the three colors used to track node status in cycle detection.
 
@@ -415,10 +415,10 @@ Imagine a family ancestry tree where time moves forward:
 | **3** | WHITE | Unvisited |
 
 **Call Stack:** `[]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Start DFS(0) - Mark Gray</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Start DFS(0) - Mark Gray</summary>
 
 **What changed from Step 1?** We begin traversal at node $0$.
 
@@ -441,10 +441,10 @@ Imagine a family ancestry tree where time moves forward:
 | **3** | WHITE | Unvisited |
 
 **Call Stack (Bottom $\to$ Top):** `[0]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Execute DFS(1) and DFS(2) - Tree Edges</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Execute DFS(1) and DFS(2) - Tree Edges</summary>
 
 **What changed from Step 2?** We dive forward down the chain $0 \to 1 \to 2$.
 
@@ -474,10 +474,10 @@ Imagine a family ancestry tree where time moves forward:
 | **3** | WHITE | About to be visited |
 
 **Call Stack (Bottom $\to$ Top):** `[0, 1, 2]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Execute DFS(3) & Encounter the Back Edge</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Execute DFS(3) & Encounter the Back Edge</summary>
 
 **What changed from Step 3?** Node $3$ is reached.
 
@@ -496,10 +496,10 @@ By following the directed path, we started at $1 \to 2 \to 3$, and from $3$ we a
 
 **Action:** **Cycle Confirmed!** Cycle path:
 $$1 \longrightarrow 2 \longrightarrow 3 \longrightarrow 1$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary of All Edge Types & Cycle Rule</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary of All Edge Types & Cycle Rule</summary>
 
 **What are the formal edge types in DFS?**
 1. **Tree Edge:** An edge $(u, v)$ where $v$ was WHITE (a child discovered for the first time).
@@ -511,6 +511,6 @@ $$1 \longrightarrow 2 \longrightarrow 3 \longrightarrow 1$$
 $$\text{If neighbor is WHITE} \implies \text{Tree Edge (Recurse)}$$
 $$\text{If neighbor is GRAY} \implies \text{Back Edge (CYCLE DETECTED!)}$$
 $$\text{If neighbor is BLACK} \implies \text{Forward or Cross Edge (Safe, ignore)}$$
-</div>
+</details>
 
 </div>

@@ -22,8 +22,8 @@ Think of Big-$O$ as an adjustable "ceiling" or "speed limit". We want to find a 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Write down the formal mathematical definition</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Write down the formal mathematical definition</summary>
 **What are we doing?** We write down the target inequality we must satisfy to prove Big-$O$.  
 **Why are we starting here?** A mathematical proof requires a clear target. We cannot claim a statement is true until we know the precise conditions that define truth.  
 **How do we do it?** We plug our specific functions $f(n) = 3n + 8$ and $g(n) = n$ into the definition of Big-$O$.  
@@ -34,10 +34,10 @@ $$0 \le f(n) \le c \cdot g(n)$$
 Plugging in our functions gives:
 
 $$0 \le 3n + 8 \le c \cdot n \quad \text{for all } n \ge n_0$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Replace the loose constant term with a term in $n$</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Replace the loose constant term with a term in $n$</summary>
 **What changed from Step 1?** We need to simplify $3n + 8$ into a single term of the form $(\text{number}) \cdot n$. Right now, the $+ 8$ has no $n$ attached to it, making it hard to compare directly with $c \cdot n$.  
 **Why are we starting here?** If every term in the expression has $n$ attached, we can combine like terms using simple addition.  
 **How do we do it?** Notice what happens when $n \ge 1$:
@@ -50,20 +50,20 @@ $$8 \le 8n$$
 Now, replace the standalone $+ 8$ with the larger quantity $+ 8n$:
 
 $$3n + 8 \le 3n + 8n$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Combine like terms algebraically</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Combine like terms algebraically</summary>
 **What changed from Step 2?** We now have two terms that both contain $n$, so we can add their coefficients.  
 **How do we manipulate the equation?** Apply the distributive law: $3n + 8n = (3 + 8)n = 11n$.
 
 $$3n + 8 \le 11n$$
 
 This inequality is guaranteed to be true for all $n \ge 1$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Identify the witnesses $(c, n_0)$ and state the conclusion</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Identify the witnesses $(c, n_0)$ and state the conclusion</summary>
 **What is the final answer?** We choose $c = 11$ and $n_0 = 1$.  
 **Why does this answer make sense?** * Checking $n = 1$: $f(1) = 3(1) + 8 = 11$. Upper bound: $11(1) = 11$. ($11 \le 11$ holds).
 * Checking $n = 2$: $f(2) = 3(2) + 8 = 14$. Upper bound: $11(2) = 22$. ($14 \le 22$ holds).
@@ -72,7 +72,7 @@ This inequality is guaranteed to be true for all $n \ge 1$.
 Because we found specific positive constants $c = 11$ and $n_0 = 1$ where $3n + 8 \le c \cdot n$ holds for every $n \ge n_0$, the proof is complete:
 
 $$3n + 8 = O(n)$$
-</div>
+</details>
 
 </div>
 
@@ -90,8 +90,8 @@ Big-$\Omega$ is a "floor" or "safety net". We want to show that our function nev
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Write down the formal mathematical definition</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Write down the formal mathematical definition</summary>
 **What are we doing?** We write down the exact inequality required for Big-$\Omega$.  
 **Why are we starting here?** Big-$\Omega$ flips the inequality direction compared to Big-$O$. We must establish our target before doing algebra.  
 **How do we do it?** State the definition: $f(n) = \Omega(g(n))$ means there exist positive constants $c > 0$ and $n_0 \ge 1$ such that:
@@ -101,10 +101,10 @@ $$f(n) \ge c \cdot g(n) \quad \text{for all } n \ge n_0$$
 Plugging in $f(n) = 3n + 8$ and $g(n) = n$:
 
 $$3n + 8 \ge c \cdot n \quad \text{for all } n \ge n_0$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Drop the positive constant term</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Drop the positive constant term</summary>
 **What changed from Step 1?** We observe the standalone $+ 8$.  
 **Why are we starting here?** When trying to make an expression *smaller* (to establish a lower floor), removing a positive number makes the expression smaller.  
 **How do we do it?** Because $8 > 0$, subtracting $8$ leaves us with a strictly smaller value:
@@ -114,10 +114,10 @@ $$3n + 8 > 3n$$
 Therefore, for all $n \ge 1$:
 
 $$3n + 8 \ge 3n$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Extract the constants and verify</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Extract the constants and verify</summary>
 **What is the final answer?** We choose $c = 3$ and $n_0 = 1$.  
 **Why does this answer make sense?** * At $n = 1$: $3(1) + 8 = 11 \ge 3(1) = 3$.
 * At $n = 5$: $3(5) + 8 = 23 \ge 3(5) = 15$.
@@ -125,7 +125,7 @@ $$3n + 8 \ge 3n$$
 The function $3n + 8$ will always stay above the floor $3n$. Thus, with $c = 3$ and $n_0 = 1$:
 
 $$3n + 8 = \Omega(n)$$
-</div>
+</details>
 
 </div>
 
@@ -143,17 +143,17 @@ Big-$\Theta$ is a "sandwich". A function is $\Theta(g(n))$ if it can be trapped 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Write down the sandwich inequality definition</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Write down the sandwich inequality definition</summary>
 **What are we doing?** We write down the formal two-sided inequality for Big-$\Theta$.  
 **Why are we starting here?** A tight bound requires simultaneously satisfying both a lower bound and an upper bound.  
 **How do we do it?** By definition, $f(n) = \Theta(g(n))$ means there exist positive constants $c_1 > 0$, $c_2 > 0$, and an integer $n_0 \ge 1$ such that:
 
 $$c_1 \cdot g(n) \le f(n) \le c_2 \cdot g(n) \quad \text{for all } n \ge n_0$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Combine the findings from Problems 1.1 and 1.2</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Combine the findings from Problems 1.1 and 1.2</summary>
 **What changed from Step 1?** We already proved the lower bound and upper bound individually. Now we join them into a single compound inequality.  
 **How do we manipulate the equation?**
 * From Problem 1.2, we established the lower bound:
@@ -163,15 +163,15 @@ $$c_1 \cdot g(n) \le f(n) \le c_2 \cdot g(n) \quad \text{for all } n \ge n_0$$
 * Combining both into one continuous chain:
 
 $$3n \le 3n + 8 \le 11n \quad \text{for all } n \ge 1$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Declare the witnesses and state conclusion</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Declare the witnesses and state conclusion</summary>
 **What is the final answer?** The constants are $c_1 = 3$, $c_2 = 11$, and $n_0 = 1$.  
 **Why does this answer make sense?** The function $f(n) = 3n + 8$ is permanently trapped between the lines $3n$ and $11n$ for every integer $n \ge 1$. Since both the upper and lower envelopes grow at rate $n$, the function itself grows at rate $n$:
 
 $$3n + 8 = \Theta(n)$$
-</div>
+</details>
 
 </div>
 
@@ -195,27 +195,27 @@ When finding a ceiling (Big-$O$), having a term subtracted (like $-4n$) is actua
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Set up the Big-O inequality target</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Set up the Big-O inequality target</summary>
 **What are we doing?** We state the target condition: find $c > 0$ and $n_0 \ge 1$ such that:
 
 $$5n^2 - 4n + 12 \le c \cdot n^2 \quad \text{for all } n \ge n_0$$
 
 **Why are we starting here?** To remind ourselves that all terms must ultimately be bounded by the highest power, which is $n^2$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Eliminate the subtracted term $-4n$</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Eliminate the subtracted term $-4n$</summary>
 **What changed from Step 1?** We analyze the term $-4n$.  
 **How do we do it?** For any integer $n \ge 1$, $4n$ is a positive number. When you subtract a positive number from an expression, you make it smaller. Therefore, omitting the subtraction creates an upper bound:
 
 $$5n^2 - 4n + 12 \le 5n^2 + 12 \quad \text{for all } n \ge 1$$
 
 **Where did this rule come from?** Basic arithmetic: for any $A$ and positive $B$, $A - B \le A$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Convert the constant $+12$ to an $n^2$ term</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Convert the constant $+12$ to an $n^2$ term</summary>
 **What changed from Step 2?** We now have $5n^2 + 12$. We need all terms to look like $n^2$.  
 **How do we do it?** Since $n \ge 1$, squaring both sides gives $n^2 \ge 1^2 = 1$.  
 Multiply both sides of $1 \le n^2$ by $12$:
@@ -225,10 +225,10 @@ $$12 \le 12n^2 \quad \text{for all } n \ge 1$$
 Now substitute this into our inequality:
 
 $$5n^2 + 12 \le 5n^2 + 12n^2$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Combine coefficients</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Combine coefficients</summary>
 **What changed from Step 3?** Both terms now share the identical variable factor $n^2$.  
 **How do we manipulate the equation?** Add the coefficients $5$ and $12$:
 
@@ -237,15 +237,15 @@ $$5n^2 + 12n^2 = (5 + 12)n^2 = 17n^2$$
 Chaining all inequalities together:
 
 $$5n^2 - 4n + 12 \le 5n^2 + 12 \le 17n^2 \quad \text{for all } n \ge 1$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Select witnesses and conclude</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Select witnesses and conclude</summary>
 **What is the final answer?** Constants $c = 17$ and $n_0 = 1$.  
 **Why does this answer make sense?** Testing $n = 1$: $f(1) = 5(1) - 4(1) + 12 = 13$. The bound is $17(1)^2 = 17$. Since $13 \le 17$, the bound holds. As $n$ grows larger, $17n^2$ grows dramatically faster than $5n^2 - 4n + 12$. Therefore:
 
 $$5n^2 - 4n + 12 = O(n^2)$$
-</div>
+</details>
 
 </div>
 
@@ -263,27 +263,27 @@ Lower bounds with negative terms are dangerous. You cannot simply drop $-4n$, be
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Set up the Big-$\Omega$ inequality target</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Set up the Big-$\Omega$ inequality target</summary>
 **What are we doing?** We need to find $c > 0$ and $n_0 \ge 1$ such that:
 
 $$5n^2 - 4n + 12 \ge c \cdot n^2 \quad \text{for all } n \ge n_0$$
 
 **Why are we starting here?** We want to build a floor below $f(n)$ using a fraction of $n^2$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Drop the positive constant term $+12$</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Drop the positive constant term $+12$</summary>
 **What changed from Step 1?** We look at the $+12$.  
 **Why are we starting here?** To establish a lower bound, dropping a positive number safely makes the expression smaller:
 
 $$5n^2 - 4n + 12 \ge 5n^2 - 4n$$
 
 This leaves us with the harder challenge: how to handle the $-4n$ without violating the $\ge$ direction.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Sacrifice a small portion of $5n^2$ to neutralize $-4n$</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Sacrifice a small portion of $5n^2$ to neutralize $-4n$</summary>
 **What changed from Step 2?** We need to find when the negative term $4n$ is smaller than a piece of our quadratic term.  
 **How do we do it?** Let us break $5n^2$ into two parts: $4n^2 + 1n^2$.  
 We ask: when is $1n^2 \ge 4n$?  
@@ -295,10 +295,10 @@ This means that as long as $n \ge 4$, the term $n^2$ is guaranteed to be greater
 Equivalently:
 
 $$-4n \ge -n^2 \quad \text{for all } n \ge 4$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Substitute the bound into the expression</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Substitute the bound into the expression</summary>
 **What changed from Step 3?** We replace $-4n$ with the smaller quantity $-n^2$:
 
 $$5n^2 - 4n \ge 5n^2 - n^2 \quad \text{for all } n \ge 4$$
@@ -310,10 +310,10 @@ $$5n^2 - n^2 = (5 - 1)n^2 = 4n^2$$
 Connecting the chain:
 
 $$5n^2 - 4n + 12 \ge 5n^2 - 4n \ge 4n^2 \quad \text{for all } n \ge 4$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Declare the witnesses and state conclusion</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Declare the witnesses and state conclusion</summary>
 **What is the final answer?** Constants $c = 4$ and $n_0 = 4$.  
 **Why does this answer make sense?** * At $n = 4$: $f(4) = 5(16) - 4(4) + 12 = 80 - 16 + 12 = 76$. The floor is $4(4^2) = 4(16) = 64$. Since $76 \ge 64$, the floor holds.
 * For any $n > 4$, the quadratic growth of $5n^2$ crushes the linear $-4n$ even more severely.
@@ -321,7 +321,7 @@ $$5n^2 - 4n + 12 \ge 5n^2 - 4n \ge 4n^2 \quad \text{for all } n \ge 4$$
 Since $5n^2 - 4n + 12 \ge 4n^2$ for all $n \ge 4$:
 
 $$5n^2 - 4n + 12 = \Omega(n^2)$$
-</div>
+</details>
 
 </div>
 
@@ -345,8 +345,8 @@ Powers inside a logarithm do not create exponential growth. A logarithm measures
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Recall the fundamental power law of logarithms</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Recall the fundamental power law of logarithms</summary>
 **What are we doing?** We simplify the expression inside the logarithm before trying to set up bounds.  
 **Why are we starting here?** Never perform asymptotic analysis on an unsimplified algebraic expression if standard logarithm laws apply.  
 **Where did this formula come from?** The fundamental property of logarithms:
@@ -356,33 +356,33 @@ $$\log_b(A^k) = k \cdot \log_b(A)$$
 Applying this rule to $f(n) = \log_2(n^{100})$:
 
 $$\log_2(n^{100}) = 100 \cdot \log_2(n)$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Compare against the Big-O definition</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Compare against the Big-O definition</summary>
 **What changed from Step 1?** We now match the simplified expression directly against the definition: $f(n) \le c \cdot g(n)$.  
 **How do we do it?** Here, $f(n) = 100 \log_2 n$ and $g(n) = \log_2 n$.  
 We must find $c > 0$ and $n_0 \ge 1$ such that:
 
 $$100 \log_2 n \le c \cdot \log_2 n \quad \text{for all } n \ge n_0$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Choose the constants carefully avoiding $\log_2(1) = 0$</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Choose the constants carefully avoiding $\log_2(1) = 0$</summary>
 **What changed from Step 2?** Notice what happens at $n = 1$: $\log_2(1) = 0$. While $0 \le 0$ is true, standard computer science definitions typically require $g(n) > 0$ to avoid trivial zero cases.  
 **How do we do it?** We pick $n_0 = 2$, where $\log_2(2) = 1 > 0$.  
 For the constant $c$, since both sides have $\log_2 n$, we can pick $c = 100$:
 
 $$100 \log_2 n \le 100 \log_2 n \quad \text{for all } n \ge 2$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: State conclusion</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: State conclusion</summary>
 **What is the final answer?** Constants $c = 100$ and $n_0 = 2$.  
 **Why does this answer make sense?** Even though $n^{100}$ looks enormous, the logarithm compresses it completely. An exponent inside a logarithm is merely a constant factor outside:
 
 $$\log_2(n^{100}) = O(\log_2 n)$$
-</div>
+</details>
 
 </div>
 
@@ -401,8 +401,8 @@ Adding to an exponent is just multiplying by a fixed constant ($2^{n+5} = 2^5 \c
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Apply the exponent addition rule</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Apply the exponent addition rule</summary>
 **What are we doing?** Split the exponent into a constant base and a variable base.  
 **Where did this rule come from?** The exponent product rule: $a^{x + y} = a^x \cdot a^y$.
 
@@ -411,23 +411,23 @@ $$2^{n + 5} = 2^n \cdot 2^5$$
 Calculate $2^5 = 2 \cdot 2 \cdot 2 \cdot 2 \cdot 2 = 32$:
 
 $$2^{n + 5} = 32 \cdot 2^n$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Match with Big-O target inequality</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Match with Big-O target inequality</summary>
 **What changed from Step 1?** We compare $32 \cdot 2^n$ against $c \cdot 2^n$.  
 **How do we do it?** Set $c = 32$:
 
 $$32 \cdot 2^n \le 32 \cdot 2^n \quad \text{for all } n \ge 1$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Conclusion for Part A</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Conclusion for Part A</summary>
 **What is the final answer?** Constants $c = 32$ and $n_0 = 1$.  
 **Why does this answer make sense?** The function $2^{n+5}$ is simply $2^n$ multiplied by 32. In asymptotic notation, constant multipliers are absorbed by $c$. Therefore:
 
 $$2^{n + 5} = O(2^n)$$
-</div>
+</details>
 
 </div>
 
@@ -435,16 +435,16 @@ $$2^{n + 5} = O(2^n)$$
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Assume the opposite (Proof by Contradiction)</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Assume the opposite (Proof by Contradiction)</summary>
 **What are we doing?** We assume that $2^{3n} = O(2^n)$ is true, and show that this assumption leads to an impossible contradiction.  
 **How do we do it?** If $2^{3n} = O(2^n)$, then by definition there must exist some fixed finite positive numbers $c > 0$ and $n_0 \ge 1$ such that:
 
 $$2^{3n} \le c \cdot 2^n \quad \text{for all } n \ge n_0$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Divide both sides by $2^n$</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Divide both sides by $2^n$</summary>
 **What changed from Step 1?** We isolate the constant $c$.  
 **Why are we doing this?** If $c$ is a fixed constant, isolating it allows us to test if the other side stays below it.  
 **How do we do it?** Because $2^n > 0$ for all $n$, we can divide both sides by $2^n$ without changing the inequality sign:
@@ -454,10 +454,10 @@ $$\frac{2^{3n}}{2^n} \le c$$
 Using exponent subtraction $\frac{a^x}{a^y} = a^{x - y}$:
 
 $$2^{3n - n} \le c \implies 2^{2n} \le c \implies 4^n \le c \quad \text{for all } n \ge n_0$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Expose the contradiction</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Expose the contradiction</summary>
 **What changed from Step 2?** We examine the statement: $4^n \le c$ for all $n \ge n_0$.  
 **Why does this fail?** $c$ is supposed to be a fixed, unchanging number (like $100$, $10^6$, or $10^{12}$). But $4^n$ grows without bound as $n \to \infty$:
 * If $n = 1$: $4^1 = 4$
@@ -465,14 +465,14 @@ $$2^{3n - n} \le c \implies 2^{2n} \le c \implies 4^n \le c \quad \text{for all 
 * If $n = 50$: $4^{50} \approx 1.26 \times 10^{30}$
 
 No single finite number $c$ can be greater than or equal to $4^n$ for all values of $n$. We can always pick an $n$ large enough such that $4^n > c$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: State conclusion for Part B</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: State conclusion for Part B</summary>
 **What is the final answer?** Since the assumption that $2^{3n} = O(2^n)$ leads to the mathematical impossibility $4^n \le c$, the assumption is false. Therefore:
 
 $$2^{3n} \ne O(2^n)$$
-</div>
+</details>
 
 </div>
 
@@ -494,8 +494,8 @@ $n!$ is $1 \times 2 \times 3 \times \dots \times n$. Taking the logarithm turns 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Expand the factorial definition</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Expand the factorial definition</summary>
 **What are we doing?** Write out the components of $n!$.  
 **Where did this formula come from?** Definition of factorial:
 
@@ -504,10 +504,10 @@ $$n! = 1 \cdot 2 \cdot 3 \cdots n$$
 Take $\log_2$ of both sides. Using the logarithm product rule $\log(a \cdot b) = \log a + \log b$:
 
 $$\log_2(n!) = \sum_{i=1}^n \log_2(i) = \log_2(1) + \log_2(2) + \log_2(3) + \dots + \log_2(n)$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Replace every individual term with the maximum term $\log_2(n)$</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Replace every individual term with the maximum term $\log_2(n)$</summary>
 **What changed from Step 1?** Every index $i$ in the sum satisfies $i \le n$.  
 **How do we do it?** Because the logarithm is a strictly increasing function, if $i \le n$, then $\log_2(i) \le \log_2(n)$.  
 Replace every term in the sum with $\log_2(n)$:
@@ -520,10 +520,10 @@ $$\log_2(n) \le \log_2(n)$$
 Adding all $n$ inequalities together:
 
 $$\log_2(n!) \le \underbrace{\log_2(n) + \log_2(n) + \dots + \log_2(n)}_{n \text{ times}} = n \log_2(n)$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Extract Big-O witnesses for Part A</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Extract Big-O witnesses for Part A</summary>
 **What is the final answer?** With $c = 1$ and $n_0 = 1$:
 
 $$\log_2(n!) \le 1 \cdot n \log_2(n) \quad \text{for all } n \ge 1$$
@@ -531,7 +531,7 @@ $$\log_2(n!) \le 1 \cdot n \log_2(n) \quad \text{for all } n \ge 1$$
 Thus:
 
 $$\log_2(n!) = O(n \log_2 n)$$
-</div>
+</details>
 
 </div>
 
@@ -539,27 +539,27 @@ $$\log_2(n!) = O(n \log_2 n)$$
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Truncate the first half of the sum</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Truncate the first half of the sum</summary>
 **What are we doing?** We discard the smaller numbers in the sum to create an clean lower bound.  
 **Why are we starting here?** The numbers from $1$ to $n/2$ are small and messy to bound. Dropping them makes the remaining sum strictly smaller:
 
 $$\log_2(n!) = \sum_{i=1}^n \log_2(i) \ge \sum_{i=\lceil n/2 \rceil}^n \log_2(i)$$
 
 **Where did this rule come from?** Since $\log_2(i) \ge 0$ for all $i \ge 1$, dropping non-negative terms from a sum makes the total smaller or equal.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Bound each remaining term by the smallest element in the upper half</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Bound each remaining term by the smallest element in the upper half</summary>
 **What changed from Step 1?** In the range from $n/2$ to $n$, the smallest value is at least $n/2$.  
 **How do we do it?** For every $i \ge n/2$, we have $\log_2(i) \ge \log_2(n/2)$.  
 How many terms are in this upper half? There are at least $\frac{n}{2}$ terms. Therefore:
 
 $$\sum_{i=\lceil n/2 \rceil}^n \log_2(i) \ge \frac{n}{2} \cdot \log_2\left(\frac{n}{2}\right)$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Simplify using logarithm division rules</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Simplify using logarithm division rules</summary>
 **What changed from Step 2?** We need the right-hand side to look like a multiple of $n \log_2 n$.  
 **How do we manipulate the equation?** Use the logarithm quotient rule $\log_2(a/b) = \log_2 a - \log_2 b$:
 
@@ -568,10 +568,10 @@ $$\log_2\left(\frac{n}{2}\right) = \log_2(n) - \log_2(2) = \log_2(n) - 1$$
 Substitute this back into the lower bound:
 
 $$\log_2(n!) \ge \frac{n}{2} (\log_2(n) - 1) = \frac{1}{2} n \log_2(n) - \frac{n}{2}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Bound the subtracted term for sufficiently large $n$</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Bound the subtracted term for sufficiently large $n$</summary>
 **What changed from Step 3?** We have a trailing subtraction $-\frac{n}{2}$. We must absorb it.  
 **How do we do it?** When $n \ge 4$, we know that $\log_2(n) \ge \log_2(4) = 2$.  
 If $\log_2(n) \ge 2$, then:
@@ -585,10 +585,10 @@ $$\log_2(n) - 1 \ge \log_2(n) - \frac{1}{2}\log_2(n) = \frac{1}{2} \log_2(n) \qu
 Now plug this into our Step 2 expression:
 
 $$\log_2(n!) \ge \frac{n}{2} \cdot \left(\frac{1}{2} \log_2(n)\right) = \frac{1}{4} n \log_2(n) \quad \text{for all } n \ge 4$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Combine bounds into the Big-$\Theta$ conclusion</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Combine bounds into the Big-$\Theta$ conclusion</summary>
 **What is the final answer?** * From Part A: $\log_2(n!) \le 1 \cdot n \log_2(n)$ for $n \ge 1$ (Upper bound constant $c_2 = 1$).
 * From Part B: $\log_2(n!) \ge \frac{1}{4} \cdot n \log_2(n)$ for $n \ge 4$ (Lower bound constant $c_1 = \frac{1}{4}$).
 
@@ -599,6 +599,6 @@ $$\frac{1}{4} n \log_2(n) \le \log_2(n!) \le 1 \cdot n \log_2(n)$$
 **Why does this answer make sense?** With $c_1 = \frac{1}{4}$, $c_2 = 1$, and $n_0 = 4$, $\log_2(n!)$ is trapped tightly between two scalar multiples of $n \log_2(n)$. Therefore:
 
 $$\log_2(n!) = \Theta(n \log_2 n)$$
-</div>
+</details>
 
 </div>

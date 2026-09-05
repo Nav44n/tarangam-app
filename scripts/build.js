@@ -92,14 +92,14 @@ function transformCustomWidgets(markdownText, pageData) {
       const trimmedTitle = (title || '').trim();
       const renderedBody = marked.parse(rawBody.trim());
       const header = trimmedTitle ? `${icon}: ${trimmedTitle}` : icon;
-      const isOpen = type !== 'intuition'; // All intuitions are clickable dropdowns (closed by default)
+      const isOpen = false; // All intuitions are clickable dropdowns (closed by default)
       const openAttr = isOpen ? ' open' : '';
       return `<details class="callout callout-${type}"${openAttr}><summary class="callout-header"><span class="callout-title">${header}</span><span class="callout-toggle-wrap"><span class="callout-hint"></span><span class="callout-chevron">&#9662;</span></span></summary><div class="callout-body">${renderedBody}</div></details>`;
     });
   }
 
   // 2. Interactive Quizzes with Clickable Dropdown Insight
-  const quizPattern = /::: quiz ([\s\S]*?)\n([\s\S]*?)\n::: explanation\n([\s\S]*?)\n:::/g;
+  const quizPattern = /::: quiz ([\s\S]*?)\r?\n([\s\S]*?)\r?\n::: explanation\r?\n([\s\S]*?)\r?\n:::/g;
   markdownText = markdownText.replace(quizPattern, (match, qHeader, body, explanation) => {
     const lines = body.split('\n');
     let prompt = '';
@@ -169,7 +169,7 @@ function transformCustomWidgets(markdownText, pageData) {
   const stepPattern = /::: step \[(.*?)\] (.*?)\n([\s\S]*?)\n:::/g;
   markdownText = markdownText.replace(stepPattern, (match, badge, title, rawContent) => {
     const renderedContent = marked.parse(rawContent.trim());
-    return `<div class="step-card"><div class="step-badge">${badge.trim()}</div><div class="step-title">${title.trim()}</div><div class="step-content">${renderedContent}</div></div>`;
+    return `<details class="step-card"><summary class="step-badge">${badge.trim()}</summary><div class="step-title">${title.trim()}</div><div class="step-content">${renderedContent}</div></details>`;
   });
 
   // 4. Interactive Toggles

@@ -42,8 +42,8 @@ How much water can possibly come out of the final hose each minute?
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Identify the Bottleneck Link</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Identify the Bottleneck Link</summary>
 
 **What are we doing?** We examine the transmission capacities of all three links along the path and select the minimum value to find the end-to-end throughput.
 
@@ -63,10 +63,10 @@ How much water can possibly come out of the final hose each minute?
 **System State:**
 - **Bottleneck Link:** Link 2 ($R_1 \to R_2$)
 - **Sustained End-to-End Throughput:** $T = 10\text{ Mbps}$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: File Size Conversion (Megabytes to Bits)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: File Size Conversion (Megabytes to Bits)</summary>
 
 **What changed from Step 1?** We know our data rate ($10\text{ Mbps}$). Now we must express our file size $F = 50\text{ MB}$ in units of **bits** so that it matches the bits in $\text{Mbps}$.
 
@@ -90,10 +90,10 @@ How much water can possibly come out of the final hose each minute?
 
 **System State:**
 - Total Data to Transfer: $F = 400{,}000{,}000\text{ bits}$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Throughput Conversion (Mbps to bps)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Throughput Conversion (Mbps to bps)</summary>
 
 **What changed from Step 2?** We have $F$ in raw bits. Now we convert the bottleneck throughput $T = 10\text{ Mbps}$ into raw **bits per second (bps)**.
 
@@ -111,10 +111,10 @@ $$\frac{\text{bits}}{\text{bits/second}} = \text{seconds}$$
 **System State:**
 - Data Volume: $F = 400{,}000{,}000\text{ bits}$
 - Bottleneck Speed: $T = 10{,}000{,}000\text{ bits/second}$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Calculate Transfer Time</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Calculate Transfer Time</summary>
 
 **What changed from Step 3?** Both the numerator (file size in bits) and the denominator (throughput in bits per second) are now in identical base units.
 
@@ -130,10 +130,10 @@ $$\frac{\text{bits}}{\text{bits/second}} = \text{seconds}$$
 **Where did this formula come from?** The fundamental kinematic equation of work and rate:
 $$\text{Time} = \frac{\text{Total Quantity}}{\text{Rate of Flow}}$$
 Because Link 2 can only emit $10{,}000{,}000$ bits each second, pumping all $400{,}000{,}000$ bits through that link requires exactly $40$ seconds.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Conclusion & Physical Verification</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Conclusion & Physical Verification</summary>
 
 **What is the final answer?**
 - The bottleneck link is **Link 2** with a capacity of $10\text{ Mbps}$.
@@ -149,7 +149,7 @@ Because Link 2 can only emit $10{,}000{,}000$ bits each second, pumping all $400
 - Transferring $50\text{ MB}$ at $1.25\text{ MB/s}$:
   $$\frac{50\text{ MB}}{1.25\text{ MB/s}} = 40\text{ seconds}$$
 Both calculation methods confirm the exact same result!
-</div>
+</details>
 
 </div>
 
@@ -208,8 +208,8 @@ Imagine a 3-lane highway that passes through a narrow single-lane construction z
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Calculate Fair-Share Bandwidth on the Backbone</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Calculate Fair-Share Bandwidth on the Backbone</summary>
 
 **What are we doing?** We calculate how much transmission bandwidth the shared backbone link grants to each individual download session.
 
@@ -226,10 +226,10 @@ Imagine a 3-lane highway that passes through a narrow single-lane construction z
 
 **System State:**
 - Every session is granted at most $8\text{ Mbps}$ across the backbone link ($R_A \to R_B$).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Trace Path & Throughput for Client 1</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Trace Path & Throughput for Client 1</summary>
 
 **What changed from Step 1?** We now have the effective capacity of the middle hop ($8\text{ Mbps}$). We inspect all three hops along Client 1's path.
 
@@ -249,10 +249,10 @@ The bottleneck is the **Shared Backbone Link** ($8\text{ Mbps}$). Even though Cl
 **System State:**
 - Client 1 Throughput: $T_1 = 8\text{ Mbps}$
 - Client 1 Bottleneck: Shared Backbone
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Trace Path & Throughput for Client 2</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Trace Path & Throughput for Client 2</summary>
 
 **What changed from Step 2?** We move to the second client, whose local access link has different physical characteristics.
 
@@ -274,10 +274,10 @@ The bottleneck is **Client 2's own local Access Link (the "Last Mile")**!
 **System State:**
 - Client 2 Throughput: $T_2 = 5\text{ Mbps}$
 - Client 2 Bottleneck: Client Access Link ($R_{C2}$)
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Trace Path & Throughput for Client 3</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Trace Path & Throughput for Client 3</summary>
 
 **What changed from Step 3?** We evaluate the final client in the network topology.
 
@@ -297,10 +297,10 @@ The bottleneck is the **Shared Backbone Link** ($8\text{ Mbps}$). Client 3's fas
 **System State:**
 - Client 3 Throughput: $T_3 = 8\text{ Mbps}$
 - Client 3 Bottleneck: Shared Backbone
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary & Key Takeaways</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary & Key Takeaways</summary>
 
 **What are the final throughput results?**
 | Session | Server Link | Backbone Allocation | Client Access Link | Bottleneck Location | Final Throughput ($T$) |
@@ -314,6 +314,6 @@ The bottleneck is the **Shared Backbone Link** ($8\text{ Mbps}$). Client 3's fas
 2. **Different Flows, Different Bottlenecks:** Two users sharing the exact same backbone can experience bottlenecks in completely different places:
    - For **Client 1** and **Client 3**, the shared network core is the bottleneck. Upgrading their home internet plans would not make their downloads any faster because the backbone is saturated!
    - For **Client 2**, their own home internet is the bottleneck. The backbone has room to spare ($8\text{ Mbps}$ allocated vs. $5\text{ Mbps}$ used), but Client 2's hardware cannot handle it. Upgrading Client 2's local connection from $5\text{ Mbps}$ to $8\text{ Mbps}$ would directly improve their download speed!
-</div>
+</details>
 
 </div>

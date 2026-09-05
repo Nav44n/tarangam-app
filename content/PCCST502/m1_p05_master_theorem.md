@@ -50,18 +50,18 @@ Imagine a bacterial colony where each parent cell splits into 4 child cells, but
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Extract the parameters $a$, $b$, and $f(n)$</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Extract the parameters $a$, $b$, and $f(n)$</summary>
 **What are we doing?** We match our given recurrence against the template $T(n) = a T(n/b) + f(n)$.  
 **Why are we starting here?** We cannot calculate any exponents until we correctly identify the components.  
 **How do we do it?** * $a = 4$ (there are $4$ subproblems).
 * $b = 2$ (the input size $n$ is divided by $2$).
 * $f(n) = n$ (the outside additive work).
 * Check validity: $a \ge 1$ ($4 \ge 1$) and $b > 1$ ($2 > 1$). The standard form is satisfied.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Calculate the Critical Exponent and the Leaf Work $n^{\log_b a}$</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Calculate the Critical Exponent and the Leaf Work $n^{\log_b a}$</summary>
 **What are we doing?** We evaluate the expression $n^{\log_b a}$ step by step.  
 **Why are we doing this?** This quantity represents the total computational weight of the base-case leaves.  
 **How do we do it?** Substitute $a = 4$ and $b = 2$:
@@ -76,10 +76,10 @@ $$\log_2 4 = 2$$
 Now, put this exponent on $n$:
 
 $$n^{\log_b a} = n^2$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Compare $f(n)$ with $n^{\log_b a}$</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Compare $f(n)$ with $n^{\log_b a}$</summary>
 **What changed from Step 2?** We now compare our two competing forces:
 * Root Work: $f(n) = n = n^1$
 * Leaf Work: $n^{\log_b a} = n^2$
@@ -98,15 +98,15 @@ Set the exponents equal to find $\epsilon$:
 $$1 = 2 - \epsilon \implies \epsilon = 2 - 1 = 1$$
 
 Since $\epsilon = 1 > 0$, $f(n)$ is indeed polynomially smaller than $n^2$ by a factor of $n^1$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Apply Case 1 and State Conclusion</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Apply Case 1 and State Conclusion</summary>
 **What is the final answer?** $T(n) = \Theta(n^2)$.  
 **Why does this answer make sense?** The leaves do $\Theta(n^2)$ work while the root only does $\Theta(n)$ work. Because the leaves dominate, the total complexity is dictated entirely by the leaves:
 
 $$T(n) = \Theta\left(n^{\log_b a}\right) = \Theta(n^2)$$
-</div>
+</details>
 
 </div>
 
@@ -124,16 +124,16 @@ A beginner looks at $1000n^2$ and thinks: "A thousand is huge! The root must dom
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Extract parameters</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Extract parameters</summary>
 **What are we doing?** Identify the values from the recurrence.  
 **How do we do it?** * $a = 8$
 * $b = 2$
 * $f(n) = 1000n^2$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Calculate the Leaf Work $n^{\log_b a}$</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Calculate the Leaf Work $n^{\log_b a}$</summary>
 **What changed from Step 1?** Calculate the critical exponent:
 
 $$\log_b a = \log_2 8$$
@@ -142,10 +142,10 @@ Since $2^3 = 8$, we have $\log_2 8 = 3$.
 Therefore:
 
 $$n^{\log_b a} = n^3$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Compare $f(n) = 1000n^2$ against $n^3$</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Compare $f(n) = 1000n^2$ against $n^3$</summary>
 **What are we doing?** We check for a polynomial gap between $1000n^2$ and $n^3$.  
 **How do we do it?** In Big-$O$ notation, constant coefficients like $1000$ are dropped: $f(n) = 1000n^2 = O(n^2)$.  
 We test:
@@ -157,13 +157,13 @@ Setting $2 = 3 - \epsilon$ gives:
 $$\epsilon = 1 > 0$$
 
 Because $\epsilon = 1$ is strictly positive, $f(n)$ is polynomially smaller than the leaf work $n^3$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: State Conclusion</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: State Conclusion</summary>
 **What is the final answer?** $T(n) = \Theta(n^3)$.  
 **Why does this answer make sense?** No matter how large the constant $1000$ is, when $n = 10{,}000$, $n^3 = 10^{12}$ while $1000n^2 = 10^{11}$. The leaves overtake the root and win decisively.
-</div>
+</details>
 
 </div>
 
@@ -187,16 +187,16 @@ Think of a multi-story building where every single floor has exactly the same nu
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Extract parameters</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Extract parameters</summary>
 **What are we doing?** We identify $a$, $b$, and $f(n)$.  
 **How do we do it?** * $a = 2$
 * $b = 2$
 * $f(n) = n$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Calculate the Leaf Work $n^{\log_b a}$</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Calculate the Leaf Work $n^{\log_b a}$</summary>
 **What changed from Step 1?** Compute the critical exponent:
 
 $$\log_b a = \log_2 2 = 1$$
@@ -204,20 +204,20 @@ $$\log_b a = \log_2 2 = 1$$
 Therefore:
 
 $$n^{\log_b a} = n^1 = n$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Compare $f(n)$ and $n^{\log_b a}$</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Compare $f(n)$ and $n^{\log_b a}$</summary>
 **What are we doing?** We compare Root Work $f(n) = n$ with Leaf Work $n^{\log_b a} = n$.  
 **How do we do it?** Notice that both sides are identical:
 
 $$f(n) = \Theta\left(n^{\log_b a}\right) \implies n = \Theta(n)$$
 
 There is no polynomial gap. Neither side dominates. This is an exact tie.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Apply Case 2 Formula and Conclude</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Apply Case 2 Formula and Conclude</summary>
 **What is the final answer?** $T(n) = \Theta(n \log_2 n)$.  
 **Why does this answer make sense?** Under Case 2 of the Master Theorem:
 
@@ -226,7 +226,7 @@ $$T(n) = \Theta\left(n^{\log_b a} \log_2 n\right)$$
 Since $n^{\log_b a} = n$, we multiply by the tree depth factor $\log_2 n$:
 
 $$T(n) = \Theta(n \log_2 n)$$
-</div>
+</details>
 
 </div>
 
@@ -244,15 +244,15 @@ Here, the root does slightly more than $n$ because of the extra $\log_2 n$ facto
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Extract parameters and calculate critical exponent</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Extract parameters and calculate critical exponent</summary>
 **What are we doing?** * $a = 2$, $b = 2 \implies \log_b a = \log_2 2 = 1$.
 * Leaf Work: $n^{\log_b a} = n^1 = n$.
 * Root Work: $f(n) = n \log_2 n$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Recognize the Extended Case 2 Template</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Recognize the Extended Case 2 Template</summary>
 **What changed from Step 1?** We test if $f(n)$ matches the generalized Case 2 form:
 
 $$f(n) = \Theta\left(n^{\log_b a} \cdot \log^k n\right) \quad \text{for some } k \ge 0$$
@@ -262,10 +262,10 @@ $$f(n) = \Theta\left(n^{\log_b a} \cdot \log^k n\right) \quad \text{for some } k
 $$f(n) = n \cdot \log_2^1 n$$
 
 This matches the template with $k = 1$!
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Apply the Extended Case 2 Formula</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Apply the Extended Case 2 Formula</summary>
 **What is the final answer?** $T(n) = \Theta(n \log_2^2 n)$.  
 **Where did this formula come from?** When $f(n) = \Theta(n^{\log_b a} \log^k n)$, the solution is:
 
@@ -274,7 +274,7 @@ $$T(n) = \Theta\left(n^{\log_b a} \cdot \log^{k + 1} n\right)$$
 Plugging in $n^{\log_b a} = n$ and $k = 1$:
 
 $$T(n) = \Theta\left(n \log^{1 + 1} n\right) = \Theta(n \log^2 n)$$
-</div>
+</details>
 
 </div>
 
@@ -298,8 +298,8 @@ Imagine a pyramid where the top stone accounts for 90% of the entire pyramid's w
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Extract parameters and compute leaf exponent</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Extract parameters and compute leaf exponent</summary>
 **What are we doing?** We extract $a = 3$, $b = 4$, and $f(n) = n^2$.  
 **How do we calculate the exponent?** $$\log_b a = \log_4 3$$
 
@@ -311,10 +311,10 @@ $$\log_4 3 = \frac{\ln 3}{\ln 4} \approx \frac{1.0986}{1.3863} \approx 0.7925$$
 So the leaf work is:
 
 $$n^{\log_b a} = n^{0.7925}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Check for a Polynomial Gap (Case 3 condition)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Check for a Polynomial Gap (Case 3 condition)</summary>
 **What changed from Step 1?** We compare $f(n) = n^2$ against $n^{0.7925}$.  
 **How do we do it?** We must find $\epsilon > 0$ such that:
 
@@ -329,10 +329,10 @@ Solve for $\epsilon$:
 $$2 = 0.7925 + \epsilon \implies \epsilon = 2 - 0.7925 = 1.2075 > 0$$
 
 Because $\epsilon \approx 1.21 > 0$, $f(n)$ is polynomially larger than the leaf work.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Verify the Regularity Condition</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Verify the Regularity Condition</summary>
 **What are we doing?** We must prove that the children's combined non-recursive work is strictly smaller than the parent's work.  
 **Why are we doing this?** If an unusual function $f(n)$ oscillates or surges unpredictably at smaller sizes, Case 3 can give a false answer. The Regularity Condition guarantees stability.  
 **Where did this formula come from?** The definition of the Regularity Condition requires finding a constant $c < 1$ such that for all sufficiently large $n$:
@@ -362,15 +362,15 @@ $$\frac{3}{16} \le c$$
 Can we choose a constant $c < 1$?  
 Yes! We can choose $c = \frac{3}{16} = 0.1875 < 1$.  
 The Regularity Condition is satisfied!
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: State Conclusion</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: State Conclusion</summary>
 **What is the final answer?** $T(n) = \Theta(n^2)$.  
 **Why does this answer make sense?** The root does $\Theta(n^2)$ work, the lower levels shrink geometrically by a factor of $\frac{3}{16}$, and the regularity test confirms total stability. Thus, the root dominates:
 
 $$T(n) = \Theta(f(n)) = \Theta(n^2)$$
-</div>
+</details>
 
 </div>
 
@@ -394,16 +394,16 @@ Imagine two runners finishing a race just one millimeter apart. One runner is te
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Extract parameters and compute leaf exponent</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Extract parameters and compute leaf exponent</summary>
 **What are we doing?** * $a = 2$, $b = 2$.
 * Critical exponent: $\log_b a = \log_2 2 = 1$.
 * Leaf Work: $n^{\log_b a} = n^1 = n$.
 * Root Work: $f(n) = \frac{n}{\log_2 n} = n \cdot (\log_2 n)^{-1}$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Test Case 1 (Is there a polynomial gap?)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Test Case 1 (Is there a polynomial gap?)</summary>
 **What changed from Step 1?** Notice that $f(n) = \frac{n}{\log_2 n}$ is smaller than $n^{\log_b a} = n$.  
 So a beginner might guess **Case 1**. Let us test the mathematical requirement for Case 1:
 
@@ -420,24 +420,24 @@ $$\log_2 n \ge \frac{n^\epsilon}{c}$$
 **Where does this fail?** For ANY positive constant $\epsilon > 0$ (even $\epsilon = 0.0001$), any polynomial power $n^\epsilon$ grows strictly faster than $\log_2 n$ as $n \to \infty$.  
 Therefore, $\log_2 n$ can NEVER be greater than or equal to a positive power of $n$ for large $n$.  
 There is **NO valid $\epsilon > 0$**! The gap between $n$ and $\frac{n}{\log n}$ is purely logarithmic, not polynomial.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Test Case 2 (Is it a tie?)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Test Case 2 (Is it a tie?)</summary>
 **What changed from Step 2?** Can it be Case 2?  
 Case 2 requires $f(n) = \Theta(n^{\log_b a} \log^k n)$ with $k \ge 0$.  
 Here, our power of log is negative: $k = -1$ (since $\frac{1}{\log n} = \log^{-1} n$).  
 The standard Master Theorem explicitly requires $k \ge 0$. It does not apply to $k = -1$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: State Why the Master Theorem Fails and How to Solve It</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: State Why the Master Theorem Fails and How to Solve It</summary>
 **What is the final answer?** The Master Theorem **cannot be applied** because $f(n)$ falls into the non-polynomial gap between Case 1 and Case 2.  
 **How should it actually be solved?** It must be solved using a **Recursion Tree**:
 * Tree height: $h = \log_2 n$.
 * Cost at level $i$: $\frac{n}{\log_2(n / 2^i)} = \frac{n}{\log_2 n - i}$.
 * Summing this series yields $T(n) = \Theta(n \log \log n)$.
-</div>
+</details>
 
 </div>
 
@@ -453,32 +453,32 @@ The Master Theorem is like an automatic transmission in a car. It only works on 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Trap 1: The Branching Factor $a$ is Not Constant</div>
+<details class="step-card">
+<summary class="step-badge">Trap 1: The Branching Factor $a$ is Not Constant</summary>
 **Example:** $T(n) = 2^n T(n/2) + n$.  
 **Why it fails:** The parameter $a$ must be a fixed, constant positive number. Here, $a(n) = 2^n$ is a function of $n$, not a constant.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Trap 2: The Shrink Factor $b$ is Subtractive, Not Divisive</div>
+<details class="step-card">
+<summary class="step-badge">Trap 2: The Shrink Factor $b$ is Subtractive, Not Divisive</summary>
 **Example:** $T(n) = 2T(n - 1) + 1$.  
 **Why it fails:** The Master Theorem requires dividing the input size by a constant ($n/b$). Here, the size shrinks by subtraction ($n - 1$). This recurrence is an exponential linear recurrence ($O(2^n)$), not divide-and-conquer.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Trap 3: The Gap is Not Polynomial</div>
+<details class="step-card">
+<summary class="step-badge">Trap 3: The Gap is Not Polynomial</summary>
 **Example:** $T(n) = 2T(n/2) + n \log \log n$.  
 **Why it fails:** $n \log \log n$ is strictly larger than $n$, but NOT by a factor of $n^\epsilon$ for any $\epsilon > 0$. It falls into the crack between Case 2 and Case 3.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Trap 4: Failure of the Regularity Condition in Case 3</div>
+<details class="step-card">
+<summary class="step-badge">Trap 4: Failure of the Regularity Condition in Case 3</summary>
 **Example:** $T(n) = T(n/2) + n(2 - \cos n)$.  
 **Why it fails:** Here $a = 1$, $b = 2$, and $n^{\log_2 1} = n^0 = 1$. The function $f(n) = n(2 - \cos n) = \Omega(n^1)$, so it looks like Case 3. However, because $\cos n$ oscillates infinitely between $-1$ and $+1$, the inequality $a f(n/b) \le c f(n)$ cannot hold for any fixed constant $c < 1$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Diagnostic Flowchart for Any Recurrence</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Diagnostic Flowchart for Any Recurrence</summary>
 **What is the final rule of thumb?**
 1. Check: Is it $T(n) = aT(n/b) + f(n)$ with constant $a \ge 1, b > 1$? If no $\to$ Use Recursion Tree or Substitution.
 2. Compute $p = \log_b a$.
@@ -487,6 +487,6 @@ The Master Theorem is like an automatic transmission in a car. It only works on 
    * $n^p \approx f(n)$ (equal up to $\log^k n$) $\implies$ **Case 2:** $\Theta(n^p \log^{k+1} n)$.
    * $f(n) \gg n^p$ by $n^\epsilon$ AND $a f(n/b) \le c f(n) \implies$ **Case 3:** $\Theta(f(n))$.
    * Gap is non-polynomial or regularity fails $\to$ Master Theorem fails; use Recursion Tree!
-</div>
+</details>
 
 </div>

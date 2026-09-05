@@ -52,8 +52,8 @@ Imagine three people standing on the left side of a playground see-saw: a heavy 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Perform standard BST insertion of 30, 20, and 10</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Perform standard BST insertion of 30, 20, and 10</summary>
 **What are we doing?** We place the three numbers into the tree using standard binary search tree rules ($L < \text{Root} < R$).  
 **Why are we starting here?** An AVL tree is first and foremost a binary search tree. Every rotation happens *after* a BST insertion introduces an imbalance.  
 **How do we do it?** * Insert $30$: It becomes the root node.
@@ -69,10 +69,10 @@ The tree before rotation looks like this:
       /
     [10]
 ```
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Calculate heights and Balance Factors ($BF$) from bottom to top</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Calculate heights and Balance Factors ($BF$) from bottom to top</summary>
 **What are we doing?** We calculate the height and balance factor of every node along the insertion path, starting from the leaf and working upwards.  
 **Why are we starting here?** Imbalances can only occur along the ancestor path of the newly inserted leaf. Working bottom-up identifies the first node that violates the AVL property.  
 **How do we do it?**
@@ -93,10 +93,10 @@ The tree before rotation looks like this:
   * $\text{height}(\text{right}) = 0$ (null)
   * $\text{height}(30) = 1 + \max(2, 0) = 3$
   * $BF(30) = \text{height}(\text{left}) - \text{height}(\text{right}) = 2 - 0 = +2 \implies \textbf{CRITICAL IMBALANCE!}$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Diagnose the Imbalance Case (LL vs. LR)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Diagnose the Imbalance Case (LL vs. LR)</summary>
 **What changed from Step 2?** Node $30$ has $BF = +2$. We must classify the exact nature of the tilt.  
 **How do we do it?**
 Look at the path from the unbalanced node ($30$) toward the newly inserted leaf ($10$):
@@ -104,10 +104,10 @@ Look at the path from the unbalanced node ($30$) toward the newly inserted leaf 
 * From $20$, the newly inserted key $10$ was placed in its **Left** subtree ($BF(20) = +1$).
 * Two consecutive Left moves $\implies$ **LL Imbalance**.
 * **Prescribed Cure:** A single **Right Rotation** centered at Node $30$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Execute the Right Rotation mechanically (Clockwise Twist)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Execute the Right Rotation mechanically (Clockwise Twist)</summary>
 **What are we doing?** We rearrange the pointers between node $30$ and node $20$ without losing any data.  
 **How do we do it?**
 1. Let $Z = 30$ (the unbalanced node).
@@ -124,20 +124,20 @@ The tree transforms into:
        /    \
     [10]    [30]
 ```
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Verify the Binary Search Tree (BST) property</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Verify the Binary Search Tree (BST) property</summary>
 **What changed from Step 4?** We must prove that no keys were scrambled or misplaced during the rotation.  
 **Where did this rule come from?** The fundamental invariant of a BST: for every node $X$, $\text{all left descendants} < X < \text{all right descendants}$.  
 **How do we verify?**
 * Check left subtree of $20$: Contains $\{10\}$. Since $10 < 20$, the left property holds.
 * Check right subtree of $20$: Contains $\{30\}$. Since $30 > 20$, the right property holds.
 * The BST invariant is 100% preserved.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Recalculate heights and state final answer</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Recalculate heights and state final answer</summary>
 **What is the final answer?**
 * $\text{height}(10) = 1 \implies BF(10) = 1 - 1 = 0$
 * $\text{height}(30) = 1 \implies BF(30) = 1 - 1 = 0$
@@ -145,7 +145,7 @@ The tree transforms into:
 
 **Why does this answer make sense?**
 All three nodes now have balance factor $0$. The tree height dropped from $3$ down to $2$. The tree is perfectly symmetrical and completely balanced.
-</div>
+</details>
 
 </div>
 
@@ -161,8 +161,8 @@ Think of node $40$ as a piece of luggage caught between two people. Node $40$ is
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Draw the initial tree and locate the imbalance</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Draw the initial tree and locate the imbalance</summary>
 **What are we doing?** We draw the tree after inserting $10$ and calculate the balance factor of $50$.  
 **How do we do it?**
 
@@ -183,10 +183,10 @@ Heights and balance factors:
 * Node $30$: left height $= 2$, right height $= 1 \implies BF = 2 - 1 = +1$, height $= 3$
 * Node $70$: height $= 1$, $BF = 0$
 * Node $50$ (Root): left height $= 3$, right height $= 1 \implies BF = 3 - 1 = +2 \implies \textbf{Unbalanced!}$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Identify the conflict with subtree $T_2$ (Node 40)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Identify the conflict with subtree $T_2$ (Node 40)</summary>
 **What changed from Step 1?** In a right rotation, node $30$ will take node $50$'s place, and node $50$ will become the **right child** of $30$.  
 **Why is there a conflict?** Node $30$ *already* has a right child: node $40$! A binary tree node can only have ONE right child.  
 **Where does node 40 go?** Look at the value of $40$:
@@ -194,10 +194,10 @@ Heights and balance factors:
 * $40 < 50$ (it belongs to the left of $50$)
 
 Since node $50$ is moving down to the right of $30$, node $50$'s old left pointer is now completely empty! Therefore, node $50$ adopts node $40$ as its new **left child**.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Execute the Right Rotation with the Handover</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Execute the Right Rotation with the Handover</summary>
 **What are we doing?** We update the three pointers:
 1. $30$'s right child becomes $50$.
 2. $50$'s left child becomes $40$ (the transferred subtree).
@@ -210,10 +210,10 @@ Since node $50$ is moving down to the right of $30$, node $50$'s old left pointe
         /       /  \
      [10]    [40]  [70]
 ```
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Verify BST Invariant and Heights</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Verify BST Invariant and Heights</summary>
 **What is the final answer?**
 * In-order traversal before rotation: $10, 20, 30, 40, 50, 70$ (strictly sorted).
 * In-order traversal after rotation: $10, 20, 30, 40, 50, 70$ (strictly sorted).
@@ -227,7 +227,7 @@ Since node $50$ is moving down to the right of $30$, node $50$'s old left pointe
 
 **Why does this answer make sense?**
 The tree is completely balanced ($|BF| \le 1$ everywhere). The transferred subtree $40$ found its natural home as $50$'s left child, preserving the sorted order.
-</div>
+</details>
 
 </div>
 
@@ -249,8 +249,8 @@ This is the mirror opposite of Problem 1.1. Imagine three people standing on the
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Perform standard BST insertion of 10, 20, and 30</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Perform standard BST insertion of 10, 20, and 30</summary>
 **What are we doing?** We insert the keys sequentially using BST rules.  
 **How do we do it?** * Insert $10$: Root node.
 * Insert $20$: $20 > 10 \implies$ right child of $10$.
@@ -263,10 +263,10 @@ This is the mirror opposite of Problem 1.1. Imagine three people standing on the
           \
           [30]
 ```
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Calculate heights and Balance Factors ($BF$)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Calculate heights and Balance Factors ($BF$)</summary>
 **What are we doing?** We calculate heights and balance factors from the bottom leaf up to the root.  
 **How do we do it?**
 * **Node 30 (Leaf):**
@@ -282,10 +282,10 @@ This is the mirror opposite of Problem 1.1. Imagine three people standing on the
   * $\text{height}(\text{right}) = 2$
   * $\text{height}(10) = 1 + \max(0, 2) = 3$
   * $BF(10) = 0 - 2 = -2 \implies \textbf{CRITICAL IMBALANCE!}$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Diagnose the Imbalance Case</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Diagnose the Imbalance Case</summary>
 **What changed from Step 2?** The root node $10$ has $BF = -2$ (critically right-heavy).  
 **How do we do it?**
 Inspect the path from unbalanced node $10$ down to leaf $30$:
@@ -293,10 +293,10 @@ Inspect the path from unbalanced node $10$ down to leaf $30$:
 * Step 2: Key $30$ was placed in the **Right** subtree of $20$ ($BF(20) = -1$).
 * Two consecutive Right moves $\implies$ **RR Imbalance**.
 * **Prescribed Cure:** A single **Left Rotation** centered at Node $10$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Execute the Left Rotation mechanically (Counter-Clockwise Twist)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Execute the Left Rotation mechanically (Counter-Clockwise Twist)</summary>
 **What are we doing?** We elevate the right child $20$ and pull the root $10$ down to the left.  
 **How do we do it?**
 1. Let $Z = 10$ (unbalanced node).
@@ -311,10 +311,10 @@ Inspect the path from unbalanced node $10$ down to leaf $30$:
        /    \
     [10]    [30]
 ```
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Verify Heights, Balance Factors, and BST Invariant</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Verify Heights, Balance Factors, and BST Invariant</summary>
 **What is the final answer?**
 * Node $10$: height $= 1$, $BF = 0$
 * Node $30$: height $= 1$, $BF = 0$
@@ -323,7 +323,7 @@ Inspect the path from unbalanced node $10$ down to leaf $30$:
 
 **Why does this answer make sense?**
 A single counter-clockwise rotation leveled the right-leaning chain into a balanced binary tree of height 2 with zero balance factor on every node.
-</div>
+</details>
 
 </div>
 
@@ -349,8 +349,8 @@ Imagine a crooked bent pipe shaped like a lightning bolt: $30$ goes left to $10$
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Insert keys and calculate initial Balance Factors</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Insert keys and calculate initial Balance Factors</summary>
 **What are we doing?** We insert $30$, then $10$ ($< 30 \to$ left), then $20$ ($< 30 \to$ left, $> 10 \to$ right).  
 **How do we do it?**
 
@@ -367,10 +367,10 @@ Calculate bottom-up:
 * Node $10$: left height $= 0$, right height $= 1 \implies BF = 0 - 1 = -1$, height $= 2$
 * Node $30$ (Root): left height $= 2$, right height $= 0 \implies BF = 2 - 0 = +2 \implies \textbf{CRITICAL IMBALANCE!}$
 * Diagnosis: Unbalanced node has $BF = +2$, but its left child has $BF = -1$. The signs **differ** ($+2$ and $-1$). This is the unmistakable fingerprint of an **LR Imbalance**!
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Prove why a single Right Rotation FAILS</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Prove why a single Right Rotation FAILS</summary>
 **What are we doing?** We show what disaster occurs if a student blindly applies a single Right Rotation at $30$.  
 **Why are we showing this?** To prove beyond doubt why double rotations are mathematically necessary.  
 **What happens?**
@@ -393,10 +393,10 @@ Calculate the new $BF$ at root $10$:
 * $BF(10) = 0 - 2 = -2 \implies \textbf{STILL UNBALANCED!}$
 
 A single rotation did not fix the imbalance; it merely flipped an LR imbalance into an RL imbalance! The tree is still broken.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Part 1 of Double Rotation — Left Rotate the Child (Node 10)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Part 1 of Double Rotation — Left Rotate the Child (Node 10)</summary>
 **What are we doing?** We keep root $30$ fixed in place. We perform a **Left Rotation** exclusively on the subproblem formed by child $10$ and grandchild $20$.  
 **Why are we doing this?** To straighten the kink $\{30 \to 10 \to 20\}$ into a clean, straight LL line $\{30 \to 20 \to 10\}$.  
 **How do we do it?**
@@ -412,10 +412,10 @@ A single rotation did not fix the imbalance; it merely flipped an LR imbalance i
 ```
 
 Look at the tree now! The signs of the balance factors now match ($BF(30) = +2$ and $BF(20) = +1$). The kink has been completely converted into a standard **LL Imbalance**!
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Part 2 of Double Rotation — Right Rotate the Grandparent (Node 30)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Part 2 of Double Rotation — Right Rotate the Grandparent (Node 30)</summary>
 **What changed from Step 3?** We now have a pure LL tree. We can solve it using the familiar single Right Rotation from Problem 1.1.  
 **How do we do it?**
 * Right Rotate at $30$:
@@ -428,10 +428,10 @@ Look at the tree now! The signs of the balance factors now match ($BF(30) = +2$ 
        /    \
     [10]    [30]
 ```
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Recalculate Balance Factors and State Conclusion</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Recalculate Balance Factors and State Conclusion</summary>
 **What is the final answer?**
 * Node $10$: height $= 1$, $BF = 0$
 * Node $30$: height $= 1$, $BF = 0$
@@ -440,7 +440,7 @@ Look at the tree now! The signs of the balance factors now match ($BF(30) = +2$ 
 
 **Why does this answer make sense?**
 The middle value among the three keys ($20$) was buried at the bottom of the zig-zag. The first rotation lifted $20$ to the middle tier. The second rotation lifted $20$ to the very top, placing the smallest ($10$) on the left and largest ($30$) on the right.
-</div>
+</details>
 
 </div>
 
@@ -456,8 +456,8 @@ This is the exact mirror image of the LR imbalance. Node $10$ goes right to $30$
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Insert keys and calculate initial Balance Factors</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Insert keys and calculate initial Balance Factors</summary>
 **What are we doing?** We insert $10$, then $30$ ($> 10 \to$ right), then $20$ ($> 10 \to$ right, $< 30 \to$ left).  
 **How do we do it?**
 
@@ -474,10 +474,10 @@ Heights and balance factors:
 * Node $30$: left height $= 1$, right height $= 0 \implies BF = 1 - 0 = +1$, height $= 2$
 * Node $10$ (Root): left height $= 0$, right height $= 2 \implies BF = 0 - 2 = -2 \implies \textbf{CRITICAL IMBALANCE!}$
 * Diagnosis: Unbalanced node has $BF = -2$, but its right child has $BF = +1$. The signs differ ($-2$ and $+1$). This is an **RL Imbalance**.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Part 1 of Double Rotation — Right Rotate Child (Node 30)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Part 1 of Double Rotation — Right Rotate Child (Node 30)</summary>
 **What are we doing?** We keep root $10$ fixed. We perform a **Right Rotation** on the subtree rooted at $30$.  
 **Why are we doing this?** To straighten the kink $\{10 \to 30 \to 20\}$ into a straight RR line $\{10 \to 20 \to 30\}$.  
 **How do we do it?**
@@ -493,10 +493,10 @@ Heights and balance factors:
 ```
 
 The tree is now in a clean **RR Imbalance** configuration ($BF(10) = -2$ and $BF(20) = -1$).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Part 2 of Double Rotation — Left Rotate Grandparent (Node 10)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Part 2 of Double Rotation — Left Rotate Grandparent (Node 10)</summary>
 **What changed from Step 2?** We now perform the standard single Left Rotation at root $10$.  
 **How do we do it?**
 * Left Rotate at $10$:
@@ -509,10 +509,10 @@ The tree is now in a clean **RR Imbalance** configuration ($BF(10) = -2$ and $BF
        /    \
     [10]    [30]
 ```
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Recalculate Balance Factors and State Conclusion</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Recalculate Balance Factors and State Conclusion</summary>
 **What is the final answer?**
 * Node $10$: height $= 1$, $BF = 0$
 * Node $30$: height $= 1$, $BF = 0$
@@ -521,7 +521,7 @@ The tree is now in a clean **RR Imbalance** configuration ($BF(10) = -2$ and $BF
 
 **Why does this answer make sense?**
 The RL rotation successfully straightened the rightward kink into a linear chain and then balanced it. Across all 4 rotation scenarios (LL, RR, LR, RL), the middle of the three values ($20$) always ends up as the root, with the smallest on the left and largest on the right.
-</div>
+</details>
 
 </div>
 

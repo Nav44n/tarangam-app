@@ -27,8 +27,8 @@ Imagine you are handed a messy stack of $7$ test papers and told to sort them al
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: The Root Problem - Split Range [0 ... 6]</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: The Root Problem - Split Range [0 ... 6]</summary>
 
 **What are we doing?** We take the full array of $7$ items spanning indices $0$ to $6$ and calculate its exact midpoint to break it into a Left half and a Right half.
 
@@ -49,10 +49,10 @@ Imagine you are handed a messy stack of $7$ test papers and told to sort them al
 - Root: `[38, 27, 43, 3, 9, 82, 10]` (indices $0 \dots 6$)
   - Left Half: `[38, 27, 43, 3]` (indices $0 \dots 3$, size $4$)
   - Right Half: `[9, 82, 10]` (indices $4 \dots 6$, size $3$)
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Split Left Subarray [0 ... 3]</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Split Left Subarray [0 ... 3]</summary>
 
 **What changed from Step 1?** In accordance with standard left-first recursion (pre-order traversal), we pause the right half `[9, 82, 10]` and dive into the left range `[38, 27, 43, 3]`.
 
@@ -73,10 +73,10 @@ Imagine you are handed a messy stack of $7$ test papers and told to sort them al
      [0 ... 1]    [2 ... 3]
      [38, 27]      [43, 3]
 ```
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Split [0 ... 1] into Base-Case Singletons</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Split [0 ... 1] into Base-Case Singletons</summary>
 
 **What changed from Step 2?** We dive into the leftmost branch $[0 \dots 1]$.
 
@@ -95,10 +95,10 @@ Imagine you are handed a messy stack of $7$ test papers and told to sort them al
 - For $[1 \dots 1]$: $\text{left} = 1, \text{right} = 1 \implies \text{left} \ge \text{right}$ is **True!** Base case reached. Stop splitting.
 
 Both elements `[38]` and `[27]` are now single-element sorted arrays.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Split [2 ... 3] into Base-Case Singletons</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Split [2 ... 3] into Base-Case Singletons</summary>
 
 **What changed from Step 3?** Having resolved the left side of $[0 \dots 3]$, the algorithm visits the right sibling $[2 \dots 3]$ (holding elements `[43, 3]`).
 
@@ -113,10 +113,10 @@ Both elements `[38]` and `[27]` are now single-element sorted arrays.
    - Right: $[3 \dots 3] \implies [3]$ ($\text{left} == \text{right} \implies$ **Base Case**)
 
 At this point, the entire original left half $[0 \dots 3]$ has been broken down into four distinct size-$1$ arrays: `[38]`, `[27]`, `[43]`, `[3]`.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Split Original Right Subarray [4 ... 6]</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Split Original Right Subarray [4 ... 6]</summary>
 
 **What changed from Step 4?** Now we resolve the original right half of the array: `[9, 82, 10]` spanning indices $[4 \dots 6]$.
 
@@ -137,10 +137,10 @@ Subarray $[4 \dots 5]$ needs one final split:
 - Children:
   - Left: $[4 \dots 4] \implies [9]$ (**Base Case**)
   - Right: $[5 \dots 5] \implies [82]$ (**Base Case**)
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: The Complete Recursive Decomposition Tree</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: The Complete Recursive Decomposition Tree</summary>
 
 **What is the final state of the division phase?**
 All $7$ elements are completely isolated into independent subproblems of size $1$:
@@ -161,7 +161,7 @@ $$N \longrightarrow \frac{N}{2} \longrightarrow \frac{N}{4} \longrightarrow \dot
 The number of times an array of length $N$ can be halved until it reaches size $1$ is:
 $$\text{Tree Height} = \lceil \log_2(N) \rceil = \lceil \log_2(7) \rceil = 3 \text{ split levels}$$
 Because no data is compared during splitting—only indices are halved—the division step takes pure $O(1)$ time per node in the tree.
-</div>
+</details>
 
 </div>
 
@@ -205,8 +205,8 @@ Imagine you have two sorted decks of playing cards face-up on a table: Deck $L$ 
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Initialization of Pointers & Buffers</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Initialization of Pointers & Buffers</summary>
 
 **What are we doing?** We prepare our pointers $i, j, k$ and allocate an empty result array of size $n_1 + n_2 = 3 + 4 = 7$.
 
@@ -223,10 +223,10 @@ Imagine you have two sorted decks of playing cards face-up on a table: Deck $L$ 
 - $i = 0$ ($L[i] = 27$)
 - $j = 0$ ($R[j] = 3$)
 - `result = []`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Iteration 1 - Compare L[0] vs R[0]</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Iteration 1 - Compare L[0] vs R[0]</summary>
 
 **What changed from Step 1?** We perform our first comparison.
 
@@ -246,10 +246,10 @@ Imagine you have two sorted decks of playing cards face-up on a table: Deck $L$ 
 - $i = 0$ ($L[0] = 27$)
 - $j = 1$ ($R[1] = 9$)
 - `result = [3]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Iteration 2 - Compare L[0] vs R[1]</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Iteration 2 - Compare L[0] vs R[1]</summary>
 
 **What changed from Step 2?** $R[0]$ was placed. Right finger moved to index $1$.
 
@@ -269,10 +269,10 @@ Imagine you have two sorted decks of playing cards face-up on a table: Deck $L$ 
 - $i = 0$ ($L[0] = 27$)
 - $j = 2$ ($R[2] = 10$)
 - `result = [3, 9]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Iteration 3 - Compare L[0] vs R[2]</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Iteration 3 - Compare L[0] vs R[2]</summary>
 
 **What changed from Step 3?** $R[1]$ was placed. Right finger moved to index $2$.
 
@@ -292,10 +292,10 @@ Imagine you have two sorted decks of playing cards face-up on a table: Deck $L$ 
 - $i = 0$ ($L[0] = 27$)
 - $j = 3$ ($R[3] = 82$)
 - `result = [3, 9, 10]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Iteration 4 - Compare L[0] vs R[3]</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Iteration 4 - Compare L[0] vs R[3]</summary>
 
 **What changed from Step 4?** Right finger moved to index $3$ ($82$). Now the Left element is smaller!
 
@@ -317,10 +317,10 @@ Imagine you have two sorted decks of playing cards face-up on a table: Deck $L$ 
 - $i = 1$ ($L[1] = 38$)
 - $j = 3$ ($R[3] = 82$)
 - `result = [3, 9, 10, 27]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 6: Iteration 5 - Compare L[1] vs R[3]</div>
+<details class="step-card">
+<summary class="step-badge">Step 6: Iteration 5 - Compare L[1] vs R[3]</summary>
 
 **What changed from Step 5?** $L[0]$ was placed. Left finger moved to index $1$ ($38$).
 
@@ -340,10 +340,10 @@ Imagine you have two sorted decks of playing cards face-up on a table: Deck $L$ 
 - $i = 2$ ($L[2] = 43$)
 - $j = 3$ ($R[3] = 82$)
 - `result = [3, 9, 10, 27, 38]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 7: Iteration 6 - Compare L[2] vs R[3] & Exhaust Left Array</div>
+<details class="step-card">
+<summary class="step-badge">Step 7: Iteration 6 - Compare L[2] vs R[3] & Exhaust Left Array</summary>
 
 **What changed from Step 6?** $L[1]$ was placed. Left finger moved to index $2$ ($43$).
 
@@ -368,10 +368,10 @@ Is $i < n_1$ and $j < n_2$?
 - $i = 3$ (Out of bounds)
 - $j = 3$ ($R[3] = 82$)
 - `result = [3, 9, 10, 27, 38, 43, _]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 8: Residual Flush Phase</div>
+<details class="step-card">
+<summary class="step-badge">Step 8: Residual Flush Phase</summary>
 
 **What changed from Step 7?** The main while loop stopped. Array $R$ still has an uncopied element ($82$ at index $j = 3$).
 
@@ -394,10 +394,10 @@ while j < len(R):
 
 **Final State of result[]:**
 $$\text{result} = [3, 9, 10, 27, 38, 43, 82]$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Time & Space Complexity of the Merge Step</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Time & Space Complexity of the Merge Step</summary>
 
 **What is the final answer?** The combined, fully sorted array:
 $$[3, 9, 10, 27, 38, 43, 82]$$
@@ -416,6 +416,6 @@ $$[3, 9, 10, 27, 38, 43, 82]$$
 - Multiplying work per level by tree height:
   $$\text{Total Time} = O(N) \times O(\log N) = O(N \log N)$$
 - Space complexity requires an auxiliary buffer of size $O(N)$ to hold items during merging.
-</div>
+</details>
 
 </div>

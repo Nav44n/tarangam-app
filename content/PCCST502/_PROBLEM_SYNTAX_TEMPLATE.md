@@ -12,28 +12,28 @@
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: [What is the very first thing we look at?]</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: [What is the very first thing we look at?]</summary>
 **What are we doing?** [State the action clearly]
 **Why are we starting here?** [Explain why this step is necessary]
 **How do we do it?** [Explain the exact mechanical process]
 **Where did this formula/concept come from?** [Trace back to the root rule]
 
 $$ [Insert clear, step-by-step MathJax without skipping algebraic simplifications] $$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: [Next logical progression]</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: [Next logical progression]</summary>
 **What changed from Step 1?**
 **How do we manipulate the equation?**
 [Detailed, zero-leap explanation]
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: [Conclusion & Complexity]</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: [Conclusion & Complexity]</summary>
 **What is the final answer?**
 **Why does this answer make sense?**
-</div>
+</details>
 
 </div>
 

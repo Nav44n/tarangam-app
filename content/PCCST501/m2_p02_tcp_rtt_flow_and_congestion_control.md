@@ -27,8 +27,8 @@ $$\text{Average Delivery Time} + 4 \times (\text{Traffic Fluctuation Margin})$$
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Identify Given Variables and Align Units</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Identify Given Variables and Align Units</summary>
 
 **What are we doing?** Writing down all given variables and confirming they all share the exact same measurement unit (milliseconds, $\text{ms}$).
 
@@ -43,10 +43,10 @@ $$\text{Average Delivery Time} + 4 \times (\text{Traffic Fluctuation Margin})$$
 All time values are in milliseconds ($\text{ms}$), so no unit scaling is required.
 
 **Where did this formula/concept come from?** The standard parameters are specified by the Internet Engineering Task Force (IETF) in **RFC 6298** ("Computing TCP's Retransmission Timer").
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Understand the EWMA Formula for EstimatedRTT</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Understand the EWMA Formula for EstimatedRTT</summary>
 
 **What changed from Step 1?** We have listed our inputs. Now we inspect the mathematical engine used to update the average: the **Exponentially Weighted Moving Average (EWMA)**.
 
@@ -60,10 +60,10 @@ $$\text{EstimatedRTT}_{\text{new}} = (1 - \alpha) \times \text{EstimatedRTT}_{\t
 - $\alpha = 0.125$ (or $\frac{1}{8}$). This means only **$12.5\%$** of the new value is influenced by tonight's new sample.
 
 **Where did this formula/concept come from?** Signal processing and time-series statistics. It is a discrete low-pass filter that lets underlying long-term trends pass through while filtering out rapid, noisy fluctuations.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Calculate the New EstimatedRTT Line-by-Line</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Calculate the New EstimatedRTT Line-by-Line</summary>
 
 **What changed from Step 2?** We understand the equation; now we perform the exact decimal multiplication and addition.
 
@@ -84,10 +84,10 @@ $$\text{EstimatedRTT}_{\text{new}} = 35.0\text{ ms} + 7.5\text{ ms} = 42.5\text{
 Notice: The sample spiked dramatically from $40\text{ ms}$ to $60\text{ ms}$ ($+20\text{ ms}$ surge), but our new estimate only nudged up from $40.0\text{ ms}$ to $42.5\text{ ms}$. The EWMA successfully dampened the shock.
 
 **Where did this formula/concept come from?** RFC 6298 Section 2.3.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Compute the Absolute Estimation Error (Difference)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Compute the Absolute Estimation Error (Difference)</summary>
 
 **What changed from Step 3?** We now have $\text{EstimatedRTT}_{\text{new}} = 42.5\text{ ms}$. Before we can calculate deviation, we must figure out how far off our new estimate was from the raw reality of the link.
 
@@ -106,10 +106,10 @@ $$|+17.5\text{ ms}| = 17.5\text{ ms}$$
 *(Pedagogical Note: Older RFC 793 / Jacobson 1988 texts sometimes computed this error using $\text{EstimatedRTT}_{\text{old}}$, but RFC 6298 formally standardizes computing error against the newly updated $\text{EstimatedRTT}_{\text{new}}$).*
 
 **Where did this formula/concept come from?** Van Jacobson's 1988 seminal paper *"Congestion Avoidance and Control"*, adopted into RFC 6298.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Calculate the New DevRTT (Deviation / Jitter)</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Calculate the New DevRTT (Deviation / Jitter)</summary>
 
 **What changed from Step 4?** We have the raw error ($17.5\text{ ms}$). Now we update our running moving average of jitter ($\text{DevRTT}$).
 
@@ -134,10 +134,10 @@ $$\text{DevRTT}_{\text{new}} = 7.5\text{ ms} + 4.375\text{ ms} = 11.875\text{ ms
 Notice: The deviation expanded from $10.0\text{ ms}$ to $11.875\text{ ms}$ because a sudden $60\text{ ms}$ packet showed the link is experiencing higher variance.
 
 **Where did this formula/concept come from?** RFC 6298 Section 2.3.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 6: Compute the Retransmission Timeout (RTO)</div>
+<details class="step-card">
+<summary class="step-badge">Step 6: Compute the Retransmission Timeout (RTO)</summary>
 
 **What changed from Step 5?** We now possess both critical components: the updated center average ($\text{EstimatedRTT}_{\text{new}} = 42.5\text{ ms}$) and the updated safety spread ($\text{DevRTT}_{\text{new}} = 11.875\text{ ms}$).
 
@@ -162,10 +162,10 @@ $$\text{RTO} = 42.5\text{ ms} + 47.5\text{ ms} = 90.0\text{ ms}$$
 *(Rule Check: RFC 6298 states that if $\text{RTO} < 1{,}000\text{ ms}$, some conservative OS implementations clamp it to a minimum of $1\text{ second}$. In textbook theoretical computations, we report the unrounded formula result: $90.0\text{ ms}$).*
 
 **Where did this formula/concept come from?** Chebyshev's Inequality in probability theory. Adding $4$ standard deviations (or $4 \times \text{mean deviation}$) guarantees that over $98\%$ of legitimate packets will arrive safely without causing an accidental, false timeout alarm.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary of Level 1 Calculation</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary of Level 1 Calculation</summary>
 
 **What is the final answer?**
 - Old State: $\text{EstimatedRTT} = 40.0\text{ ms}$, $\text{DevRTT} = 10.0\text{ ms}$, Old $\text{RTO} = 40 + 4(10) = 80.0\text{ ms}$  
@@ -178,7 +178,7 @@ $$\text{RTO} = 42.5\text{ ms} + 47.5\text{ ms} = 90.0\text{ ms}$$
 1. The estimated average crept up slightly ($40 \to 42.5\text{ ms}$).  
 2. The measured jitter crept up ($10 \to 11.875\text{ ms}$).  
 3. The timeout timer widened from $80.0\text{ ms}$ to $90.0\text{ ms}$, giving future packets more breathing room so TCP does not panic unnecessarily.
-</div>
+</details>
 
 </div>
 
@@ -207,8 +207,8 @@ You have no way of knowing! If you guess wrong, you will corrupt your entire tim
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Process Sample 2 (SampleRTT2 = 30.0 ms) — Update Average</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Process Sample 2 (SampleRTT2 = 30.0 ms) — Update Average</summary>
 
 **What are we doing?** Updating our moving average after receiving a faster-than-average packet ($30.0\text{ ms}$).
 
@@ -230,10 +230,10 @@ $$\text{EstimatedRTT}_2 = 37.1875\text{ ms} + 3.75\text{ ms} = 40.9375\text{ ms}
 The estimated average gracefully floated down from $42.5\text{ ms}$ to $\approx 40.94\text{ ms}$.
 
 **Where did this formula/concept come from?** RFC 6298 EWMA update rule.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Process Sample 2 — Update DevRTT and RTO</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Process Sample 2 — Update DevRTT and RTO</summary>
 
 **What changed from Step 1?** We have $\text{EstimatedRTT}_2 = 40.9375\text{ ms}$. Now we update the deviation and the timeout timer.
 
@@ -255,10 +255,10 @@ $$4 \times 11.640625 = 46.5625\text{ ms}$$
 $$\text{RTO}_2 = 40.9375 + 46.5625 = 87.5\text{ ms}$$  
 
 Summary after Sample 2: Average is $40.9375\text{ ms}$, $\text{RTO}$ tightened from $90.0\text{ ms}$ down to $87.5\text{ ms}$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Process Sample 3 (SampleRTT3 = 70.0 ms) — Update Average</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Process Sample 3 (SampleRTT3 = 70.0 ms) — Update Average</summary>
 
 **What changed from Step 2?** The network suddenly hits a congestion queue. A packet takes $70.0\text{ ms}$ round-trip.
 
@@ -278,10 +278,10 @@ $$0.125 \times 70.0 = \frac{1}{8} \times 70.0 = 8.75\text{ ms}$$
 $$\text{EstimatedRTT}_3 = 35.8203125 + 8.75 = 44.5703125\text{ ms}$$  
 
 Notice: Despite a massive $70\text{ ms}$ spike, the average only rose from $40.94\text{ ms}$ to $44.57\text{ ms}$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Process Sample 3 — Update DevRTT and RTO</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Process Sample 3 — Update DevRTT and RTO</summary>
 
 **What changed from Step 3?** We have $\text{EstimatedRTT}_3 = 44.5703125\text{ ms}$. Now we recalculate the deviation and find the new safety threshold.
 
@@ -303,10 +303,10 @@ $$4 \times 15.087890625 = 60.3515625\text{ ms}$$
 $$\text{RTO}_3 = 44.5703125 + 60.3515625 = 104.921875\text{ ms}$$  
 
 The timeout timer reacted aggressively to the sudden spike: $\text{RTO}$ jumped from $87.5\text{ ms}$ up to $\approx 104.92\text{ ms}$.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: The ACK Ambiguity Problem and Karn's Algorithm</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: The ACK Ambiguity Problem and Karn's Algorithm</summary>
 
 **What changed from Step 4?** We finished calculating normal, healthy packet exchanges. Now we confront a failure condition: **packet retransmissions**.
 
@@ -342,10 +342,10 @@ $$\text{RTO}_{\text{new}} = 2 \times \text{RTO}_{\text{old}}$$
 Only resume normal EWMA calculations after an acknowledgment arrives for a segment that was sent exactly once without retransmission.
 
 **Where did this formula/concept come from?** Phil Karn and Craig Partridge, *"Improving Round-Trip Time Estimates in Reliable Transport Protocols"* (SIGCOMM 1987).
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary Comparison of State Evolution</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary Comparison of State Evolution</summary>
 
 **What is the final answer?** Let us review the complete numerical journey across the packet sequence:
 
@@ -358,7 +358,7 @@ Only resume normal EWMA calculations after an acknowledgment arrives for a segme
 | **If Retransmitted**| Ambiguous | **UNCHANGED** | **UNCHANGED** | **DOUBLED ($2 \times \text{RTO}$)** | **Karn's Algorithm applied** |
 
 **Why does this answer make sense?** The EWMA algorithm acts as an intelligent statistical shock absorber. When latency bounces ($60 \to 30 \to 70\text{ ms}$), the estimated center moves smoothly between $40.9\text{ ms}$ and $44.6\text{ ms}$ rather than swinging violently. Meanwhile, the $+4 \times \text{DevRTT}$ term ensures that the moment uncertainty increases, the timeout deadline ($\text{RTO}$) pulls back to give packets ample time to arrive without triggering false duplicate transmissions.
-</div>
+</details>
 
 </div>
 

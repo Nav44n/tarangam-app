@@ -36,8 +36,8 @@ Think of Prim's algorithm as an expanding ink stain or tree root:
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Initialize Distance Keys and Parent Pointers</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Initialize Distance Keys and Parent Pointers</summary>
 
 **What are we doing?** For every vertex $v \in V$, we initialize its minimum connection key `key[v]` and its parent pointer `parent[v]`.
 
@@ -49,10 +49,10 @@ Think of Prim's algorithm as an expanding ink stain or tree root:
 
 **Priority Queue State:**
 $$Q = \{ (A: 0), \; (B: \infty), \; (C: \infty), \; (D: \infty), \; (E: \infty) \}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Extract Minimum Vertex A (Cost 0)</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Extract Minimum Vertex A (Cost 0)</summary>
 
 * Minimum in $Q$ is $A$ with key $0$.
 * Add $A$ to visited set: $S = \{A\}$.
@@ -61,10 +61,10 @@ $$Q = \{ (A: 0), \; (B: \infty), \; (C: \infty), \; (D: \infty), \; (E: \infty) 
   * Neighbor $C$: Edge $(A, C)$ weight $= 2 < \text{key}[C] (\infty) \implies \text{key}[C] = 2, \text{parent}[C] = A$.
 * **Priority Queue after relaxation:**
   $$Q = \{ (C: 2), \; (B: 4), \; (D: \infty), \; (E: \infty) \}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Extract Minimum Vertex C (Cost 2)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Extract Minimum Vertex C (Cost 2)</summary>
 
 * Minimum in $Q$ is $C$ with key $2$.
 * Add $C$ to tree: $S = \{A, C\}$.
@@ -75,10 +75,10 @@ $$Q = \{ (A: 0), \; (B: \infty), \; (C: \infty), \; (D: \infty), \; (E: \infty) 
   * Neighbor $E$: Edge $(C, E)$ weight $= 10 < \text{key}[E] (\infty) \implies \text{key}[E] = 10, \text{parent}[E] = C$.
 * **Priority Queue:**
   $$Q = \{ (B: 1), \; (D: 8), \; (E: 10) \}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Extract Minimum Vertex B (Cost 1)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Extract Minimum Vertex B (Cost 1)</summary>
 
 * Minimum in $Q$ is $B$ with key $1$.
 * Add $B$ to tree: $S = \{A, B, C\}$.
@@ -87,10 +87,10 @@ $$Q = \{ (A: 0), \; (B: \infty), \; (C: \infty), \; (D: \infty), \; (E: \infty) 
   * Neighbor $D$: Edge $(B, D)$ weight $= 5 < \text{key}[D] (8) \implies \mathbf{key}[D] \text{ updated to } 5, \text{parent}[D] = B$.
 * **Priority Queue:**
   $$Q = \{ (D: 5), \; (E: 10) \}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Extract Minimum Vertex D (Cost 5)</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Extract Minimum Vertex D (Cost 5)</summary>
 
 * Minimum in $Q$ is $D$ with key $5$.
 * Add $D$ to tree: $S = \{A, B, C, D\}$.
@@ -99,19 +99,19 @@ $$Q = \{ (A: 0), \; (B: \infty), \; (C: \infty), \; (D: \infty), \; (E: \infty) 
   * Neighbor $E$: Edge $(D, E)$ weight $= 2 < \text{key}[E] (10) \implies \mathbf{key}[E] \text{ updated to } 2, \text{parent}[E] = D$.
 * **Priority Queue:**
   $$Q = \{ (E: 2) \}$$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 6: Extract Minimum Vertex E (Cost 2)</div>
+<details class="step-card">
+<summary class="step-badge">Step 6: Extract Minimum Vertex E (Cost 2)</summary>
 
 * Minimum in $Q$ is $E$ with key $2$.
 * Add $E$ to tree: $S = \{A, B, C, D, E\}$.
 * Edge added: $(D, E)$ with weight $2$. Total weight $= 8 + 2 = 10$.
 * All vertices are now visited ($Q = \emptyset$). Algorithm terminates.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: MST Summary & Edge List</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: MST Summary & Edge List</summary>
 
 * **Spanning Tree Edges:**
   * $(A, C)$: Weight $2$
@@ -120,6 +120,6 @@ $$Q = \{ (A: 0), \; (B: \infty), \; (C: \infty), \; (D: \infty), \; (E: \infty) 
   * $(D, E)$: Weight $2$
 * **Total MST Weight:** $2 + 1 + 5 + 2 = \mathbf{10}$.
 * Both Kruskal and Prim produce the identical total weight of 10 on this graph.
-</div>
+</details>
 
 </div>

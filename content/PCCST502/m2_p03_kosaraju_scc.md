@@ -47,8 +47,8 @@ Imagine getting dressed in the morning:
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Initialization of Timers and Arrays</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Initialization of Timers and Arrays</summary>
 
 **What are we doing?** We initialize our discovery time array $d$, finish time array $f$, a `Visited` set, an empty `Finish Stack`, and set a global integer variable $\text{time} = 0$.
 
@@ -68,10 +68,10 @@ Imagine getting dressed in the morning:
 - **Global Time:** $t = 0$
 - **Finish Stack [top ... bottom]:** `[]`
 - **Visited:** $\emptyset$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Start DFS(0) and Discover Node 0</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Start DFS(0) and Discover Node 0</summary>
 
 **What changed from Step 1?** We begin the outer DFS loop. The first unvisited node is $0$.
 
@@ -87,10 +87,10 @@ Imagine getting dressed in the morning:
 - **Global Time:** $t = 1$
 - **Discovery Times:** $d[0] = 1$
 - **Call Stack:** `[DFS(0)]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Discover Node 1 and Node 2</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Discover Node 1 and Node 2</summary>
 
 **What changed from Step 2?** Recursion pushes deeper into the graph: $0 \to 1 \to 2$.
 
@@ -112,10 +112,10 @@ Imagine getting dressed in the morning:
 - **Global Time:** $t = 3$
 - **Discovery Times:** $d[0] = 1, d[1] = 2, d[2] = 3$
 - **Call Stack:** `[DFS(0), DFS(1), DFS(2)]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Finish Node 2 (First Dead End)</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Finish Node 2 (First Dead End)</summary>
 
 **What changed from Step 3?** Node $2$ has no neighbors to explore. Its task is fully done.
 
@@ -133,10 +133,10 @@ Imagine getting dressed in the morning:
 - **Active Intervals:** Node $2$ is closed: $[d[2], f[2]] = [3, 4]$.
 - **Finish Stack [top ... bottom]:** `[2]`
 - **Call Stack:** `[DFS(0), DFS(1)]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 5: Finish Node 1</div>
+<details class="step-card">
+<summary class="step-badge">Step 5: Finish Node 1</summary>
 
 **What changed from Step 4?** Control returned to `DFS(1)`. Its only neighbor was $2$, which is now finished.
 
@@ -152,10 +152,10 @@ Imagine getting dressed in the morning:
 - **Closed Intervals:** Node $1$: $[2, 5]$, Node $2$: $[3, 4]$.
 - **Finish Stack [top ... bottom]:** `[1, 2]`
 - **Call Stack:** `[DFS(0)]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 6: Explore Remaining Neighbor of Node 0 (Node 3)</div>
+<details class="step-card">
+<summary class="step-badge">Step 6: Explore Remaining Neighbor of Node 0 (Node 3)</summary>
 
 **What changed from Step 5?** `DFS(0)` resumes. It checked neighbor $1$ (now finished). Its next neighbor in $\text{Adj}[0] = [1, 3]$ is $3$.
 
@@ -176,10 +176,10 @@ Imagine getting dressed in the morning:
 - **Closed Intervals:** Node $3$: $[6, 7]$.
 - **Finish Stack [top ... bottom]:** `[3, 1, 2]`
 - **Call Stack:** `[DFS(0)]`
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 7: Finish Node 0 (Root Completes Last)</div>
+<details class="step-card">
+<summary class="step-badge">Step 7: Finish Node 0 (Root Completes Last)</summary>
 
 **What changed from Step 6?** Node $0$ has exhausted all its neighbors ($1$ and $3$).
 
@@ -197,10 +197,10 @@ Imagine getting dressed in the morning:
 | **1** | Algorithms | 2 | 5 | $[2, 5]$ |
 | **2** | Interviews | 3 | 4 | $[3, 4]$ |
 | **3** | Machine Learning | 6 | 7 | $[6, 7]$ |
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Pop the Stack to Get Topological Order</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Pop the Stack to Get Topological Order</summary>
 
 **What is the final answer?** Pop elements from the `Finish Stack` from top to bottom:
 $$[0, 3, 1, 2]$$
@@ -212,7 +212,7 @@ For any directed edge $u \to v$ in a Directed Acyclic Graph:
 - Therefore, $f[u] > f[v]$ **always holds**.
 - Because $u$ finishes after $v$, $u$ is pushed onto the stack after $v$.
 - Thus, $u$ pops off the stack **before** $v$. The prerequisite $u$ will always appear before its dependent $v$ in the output!
-</div>
+</details>
 
 </div>
 
@@ -256,8 +256,8 @@ Imagine two islands, Island 1 and Island 2, connected by a one-way waterslide fr
 
 <div class="stepped-container">
 
-<div class="step-card">
-<div class="step-badge">Step 1: Pass 1 - DFS on Original Graph G for Finish Times</div>
+<details class="step-card">
+<summary class="step-badge">Step 1: Pass 1 - DFS on Original Graph G for Finish Times</summary>
 
 **What are we doing?** We run a full DFS on the original graph $G$, pushing nodes onto stack $S$ when each node finishes.
 
@@ -279,10 +279,10 @@ Stack $S$ (top to bottom):
 $$\text{Stack } S = [A, B, C, D, E]$$
 
 **Why did $A$ end up at the top?** Because $A$ is the source ancestor of the entire chain. Everything downstream had to finish before $A$ could finish. The top of the stack always belongs to the "source" component.
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 2: Construct the Transposed Graph G^T</div>
+<details class="step-card">
+<summary class="step-badge">Step 2: Construct the Transposed Graph G^T</summary>
 
 **What changed from Step 1?** We invert every single directed edge in the graph.
 
@@ -315,10 +315,10 @@ Transposed Graph G^T:
 - $\text{Adj}_{T}[C] = [B]$  *(Notice: $C$ cannot reach $D$ anymore!)*
 - $\text{Adj}_{T}[D] = [C, E]$
 - $\text{Adj}_{T}[E] = [D]$
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 3: Pass 2 - First Pop from Stack (Isolating SCC 1)</div>
+<details class="step-card">
+<summary class="step-badge">Step 3: Pass 2 - First Pop from Stack (Isolating SCC 1)</summary>
 
 **What changed from Step 2?** We reset our visited set: $\text{Visited} = \emptyset$. We start popping nodes from stack $S = [A, B, C, D, E]$.
 
@@ -341,10 +341,10 @@ Transposed Graph G^T:
 $$\mathbf{SCC}_1 = \{A, B, C\}$$
 
 **Why didn't the search leak into $D$ and $E$?** In the original graph, $C$ pointed to $D$. But in $G^T$, the arrow was flipped to $D \to C$. Node $C$ has zero outgoing paths to $D$. The search was trapped inside $\{A, B, C\}$!
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Step 4: Pass 2 - Inspecting Stack and Isolating SCC 2</div>
+<details class="step-card">
+<summary class="step-badge">Step 4: Pass 2 - Inspecting Stack and Isolating SCC 2</summary>
 
 **What changed from Step 3?** $\text{SCC}_1$ is recorded. $\text{Visited} = \{A, B, C\}$. Stack currently holds:
 $$S = [B, C, D, E]$$
@@ -369,10 +369,10 @@ $$\mathbf{SCC}_2 = \{D, E\}$$
 
 - Pop $E$: Already in $\text{Visited}$ $\implies$ skip.
 - Stack is empty!
-</div>
+</details>
 
-<div class="step-card">
-<div class="step-badge">Final Step: Summary of Kosaraju's Invariants & Complexity</div>
+<details class="step-card">
+<summary class="step-badge">Final Step: Summary of Kosaraju's Invariants & Complexity</summary>
 
 **What are the discovered Strongly Connected Components?**
 $$\text{Component 1: } \{A, B, C\}$$
@@ -393,6 +393,6 @@ $$\text{Total Time} = O(V + E) \quad (\text{Optimal Linear Time})$$
 
 **Space Complexity:**
 - Auxiliary Stack + Visited + Transpose adjacency list: $O(V + E)$.
-</div>
+</details>
 
 </div>

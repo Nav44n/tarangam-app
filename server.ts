@@ -3,10 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import { exec } from 'child_process';
 import compression from 'compression';
-import { createRequire } from 'module';
-
-const require = createRequire(import.meta.url);
-const { ZipArchive } = require('archiver');
+import { ZipArchive } from 'archiver';
 
 
 const app = express();
